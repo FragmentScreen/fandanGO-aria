@@ -1,6 +1,6 @@
 from .oauth import OAuth
 
-class AriaClient:
+class AriaClient :
     @staticmethod
     def login(username, password):
         oauth_instance = OAuth(username, password)
