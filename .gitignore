@@ -1,5 +1,5 @@
 # local configuration files
-.env.production
+.env.dev
 
 # auto-gen files
 __pycache__/
