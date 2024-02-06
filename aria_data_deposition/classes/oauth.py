@@ -60,4 +60,47 @@ class OAuth :
             click.echo(f"Error setting keyring: {e}")
         
         
+    def get_access_token(self) -> object or False :
+        token_data = self.get_keyring_token_data()
+
+        # if not self.token_keys_exist(token_data) :
+        #     click.echo('Keyring Error: Please log back into ARIA.')
+        #     return False
+
+        if not token_data['TIMESTAMP'] or not token_data['expires_in'] :
+            click.echo('Keyring Error: Please log back into ARIA.')
+            return False
+        
+        if self.check_token_valid(token_data['TIMESTAMP'], token_data['expires_in']) :
+            click.echo('Token valid')
+            return token_data['access_token']
+        else:
+            click.echo('Token Expired')
     
+    def get_keyring_token_data(self) -> object or False :
+        retrieval_pass = click.prompt('Enter your token password', default='optional')
+        retrieval_pass = '' if retrieval_pass == 'optional' else retrieval_pass
+        token_data_str = keyring.get_password(self.token_str_key, retrieval_pass)
+        if not token_data_str :
+            click.echo('Error: Either the password entered is incorrect, or no access token is stored.')
+            print_with_spaces('Please login to ARIA to retrieve another token if the problem persists or type aria-help for more options.')
+            return False
+        token_data_obj = json.loads(token_data_str)
+        return token_data_obj
+    
+    # enter pass
+    # get it 
+    # check timestamp
+    # if no, refresh token_str_key
+    # if stamp gone - error
+    
+    def check_token_valid (self, token_timestamp_str, expiry) -> bool :
+
+        current_time = datetime.datetime.now()
+        token_timestamp = datetime.datetime.strptime(token_timestamp_str, '%Y-%m-%d %H:%M:%S')
+        token_expiry_time = token_timestamp + datetime.timedelta(seconds=expiry)
+
+        if current_time < token_expiry_time :
+            return True
+        
+        return False
