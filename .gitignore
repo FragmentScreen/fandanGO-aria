@@ -3,42 +3,7 @@
 
 # auto-gen files
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.pyo
-*.pyc
-*.pyo
-*.pyz
-*.pyw
-*.pyz
-*.pyw
+
+# dev install auto-gen files (with the 'pip3 install -e .' command)
 *.egg-info/
-dist/
-build/
-*.egg
-*.egg-info
-*.dist-info
-*.pyc
-*.pyo
-*.pyd
-*.pyo
-*.pyc
-*.pyo
-*.pyz
-*.pyw
-*.pyz
-*.pyw
-*.log
-*.cache
-*.vscode/
-*.pyc
-*.pyo
-*.pyd
-*.pyo
-*.pyc
-*.pyo
-*.pyz
-*.pyw
-*.pyz
-*.pyw
+
