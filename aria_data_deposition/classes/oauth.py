@@ -57,7 +57,7 @@ class OAuth :
             return False
         if self.check_token_valid(token_data['TIMESTAMP'], token_data['expires_in']) :
             click.echo('Token valid')
-            return token_data['access_token']
+            return token_data
         elif self.check_token_valid(token_data['TIMESTAMP'], token_data['refresh_expires_in']) :
             print_with_spaces('Refreshing token..')
             token = self.refresh_token(token_data)

@@ -12,7 +12,8 @@ setup(
     entry_points={
         'console_scripts': [
             'aria-login=cli.cli:login',
-            'aria-help=cli.cli:help'
+            'aria-help=cli.cli:help',
+            'aria-get=cli.cli:set_token_password'
         ],
     },
 )
