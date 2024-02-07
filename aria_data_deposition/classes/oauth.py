@@ -1,12 +1,5 @@
-import requests
-import datetime
-import keyring
-import keyring.errors as key_err
-import click
-from dotenv import load_dotenv
-import os
-import json
-from aria_data_deposition.utils import get_formatted_datetime, print_with_spaces, check_headers
+from ..utils import get_formatted_datetime, print_with_spaces, check_headers
+from ..config import *
 
 load_dotenv('.env.dev')
 

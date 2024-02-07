@@ -1,5 +1,4 @@
-import click
-from datetime import datetime
+from .config import *
 
 def get_formatted_datetime(input_datetime=None, format_str='%Y-%m-%d %H:%M:%S'):
     if input_datetime is None:
