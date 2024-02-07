@@ -6,7 +6,7 @@ import click
 from dotenv import load_dotenv
 import os
 import json
-from aria_data_deposition.utils import get_formatted_datetime, print_with_spaces
+from aria_data_deposition.utils import get_formatted_datetime, print_with_spaces, check_headers
 
 load_dotenv('.env.dev')
 
@@ -19,16 +19,6 @@ class OAuth :
         self.client_secret = os.getenv("CLIENT_SECRET")
         self.token_str_key = os.getenv("SESSION_KEY")
 
-
-    def get_login_data(self, username, password) :
-        return {
-            'grant_type': self.grant_type,
-            'scope': self.scope,
-            'client_id': self.client_id,
-            'client_secret': self.client_secret,
-            'username': username,
-            'password': password
-        }
 
     def login(self, username, password) -> None :
         login_data = self.get_login_data(username, password)
@@ -62,21 +52,19 @@ class OAuth :
         
     def get_access_token(self) -> object or False :
         token_data = self.get_keyring_token_data()
-
-        # if not self.token_keys_exist(token_data) :
-        #     click.echo('Keyring Error: Please log back into ARIA.')
-        #     return False
-
-        if not token_data['TIMESTAMP'] or not token_data['expires_in'] :
+        if not check_headers(token_data) :
             click.echo('Keyring Error: Please log back into ARIA.')
             return False
-        
         if self.check_token_valid(token_data['TIMESTAMP'], token_data['expires_in']) :
             click.echo('Token valid')
             return token_data['access_token']
-        else:
-            click.echo('Token Expired')
-    
+        elif self.check_token_valid(token_data['TIMESTAMP'], token_data['refresh_expires_in']) :
+            print_with_spaces('Refreshing token..')
+            token = self.refresh_token(token_data)
+            if token :
+                return token
+        else : click.echo('invalid refresh')
+
     def get_keyring_token_data(self) -> object or False :
         retrieval_pass = click.prompt('Enter your token password', default='optional')
         retrieval_pass = '' if retrieval_pass == 'optional' else retrieval_pass
@@ -88,14 +76,7 @@ class OAuth :
         token_data_obj = json.loads(token_data_str)
         return token_data_obj
     
-    # enter pass
-    # get it 
-    # check timestamp
-    # if no, refresh token_str_key
-    # if stamp gone - error
-    
     def check_token_valid (self, token_timestamp_str, expiry) -> bool :
-
         current_time = datetime.datetime.now()
         token_timestamp = datetime.datetime.strptime(token_timestamp_str, '%Y-%m-%d %H:%M:%S')
         token_expiry_time = token_timestamp + datetime.timedelta(seconds=expiry)
@@ -104,3 +85,37 @@ class OAuth :
             return True
         
         return False
+    
+    def refresh_token(self, token_data) : 
+        refresh_token = token_data['refresh_token']
+        try :
+            response = requests.post(self.url, {
+                'grant_type': 'refresh_token',
+                'client_id': self.client_id,
+                'client_secret': self.client_secret,
+                'refresh_token': refresh_token
+            })
+            response.raise_for_status()
+            response_data = response.json()
+            response_data['TIMESTAMP'] = get_formatted_datetime()
+            response_str = json.dumps(response_data)
+            if response_str:
+                print_with_spaces('Successfully refreshed token')  
+                self.set_token_data(response_str)
+                token = json.loads(response_str)
+                return token
+            else:
+                click.echo('Error: Access token not found in the server response.')
+        except requests.exceptions.RequestException as e:
+            click.echo(f'Error: {e}')
+            click.echo('Login failed. Please check your credentials and try again.')
+
+    def get_login_data(self, username, password) :
+        return {
+            'grant_type': self.grant_type,
+            'scope': self.scope,
+            'client_id': self.client_id,
+            'client_secret': self.client_secret,
+            'username': username,
+            'password': password
+        }

@@ -11,3 +11,6 @@ class AriaClient :
     def get_token(self) : 
         return self.oauth.get_access_token()
     
+    def do_something(self) : 
+        token = self.get_token()
+        DoSomething.dispatch_hook(token)
