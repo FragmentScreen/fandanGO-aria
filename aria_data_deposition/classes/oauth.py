@@ -50,7 +50,8 @@ class OAuth :
 
     def set_token_data(self, token_data) -> bool or None :
         try :
-            retrieval_password = click.prompt('Set token retrieval password [optional]')
+            retrieval_password = click.prompt('Set token retrieval password', default='optional')
+            retrieval_password = '' if retrieval_password == 'optional' else retrieval_password
             if retrieval_password.strip() :
                 click.echo('Attempting to store Token...')
                 keyring.set_password(self.token_str_key, retrieval_password, token_data)
@@ -74,7 +75,8 @@ class OAuth :
             print_with_spaces('Token expired. Please log back into ARIA')
 
     def get_keyring_token_data(self) -> dict or False :
-        retrieval_pass = click.prompt('Enter your token password [optional]')
+        retrieval_pass = click.prompt('Enter your token password', default='optional')
+        retrieval_pass = '' if retrieval_pass == 'optional' else retrieval_pass
         if retrieval_pass.strip() :
             token_data_str = keyring.get_password(self.token_str_key, retrieval_pass)
             if not token_data_str :
