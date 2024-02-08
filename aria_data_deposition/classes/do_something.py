@@ -1,4 +1,7 @@
 class DoSomething :
+    '''
+    Demo class for testing encapsulation of Oauth/Client
+    '''
     def __init__(self) :
         self.random = 'blah'
 

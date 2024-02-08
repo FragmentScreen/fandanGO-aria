@@ -1,5 +1,9 @@
 class Client:
     def __init__(self, oauth):
+        '''
+        Initiates new Client. When called, it will encapsulated a new Oauth() instance to 
+        have access to Oauth methods.
+        '''
         self.oauth = oauth
 
     def authenticate(self, username, password):

@@ -12,6 +12,8 @@ def print_with_spaces(str) :
     click.echo(str)
     click.echo('')
 
+def space() : click.echo('')
+
 def check_headers(json):
     required_headers = ['access_token', 'expires_in', 'refresh_expires_in', 'refresh_token', 'token_type', 'not-before-policy', 'session_state', 'scope', 'TIMESTAMP']
     for header in required_headers:

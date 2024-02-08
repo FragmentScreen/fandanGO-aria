@@ -1,4 +1,4 @@
-from ..utils import get_formatted_datetime, print_with_spaces, check_headers
+from ..utils import get_formatted_datetime, print_with_spaces, check_headers, space
 from ..config import *
 
 load_dotenv('.env.dev')
@@ -11,16 +11,20 @@ class OAuth :
         self.url = os.getenv("LOGIN_URL")
         self.client_secret = os.getenv("CLIENT_SECRET")
         self.token_str_key = os.getenv("SESSION_KEY")
+        self.refresh_grant = os.getenv("REFRESH_GRANT")
 
 
     def login(self, username, password) -> None:
+        '''username and password passed from the commands 'login'. Gets login_data from pre-set env vars.'''
         login_data = self.get_login_data(username, password)
         try : 
             response = self.send_login_request(login_data)
             if response:
                 self.handle_login_response(response)
         except Exception as e : 
-            logging.error(f'Login to ARIA failed: {e}')
+            space()
+            logging.error(f' Login to ARIA failed')
+            print_with_spaces('Please check your credentials and try again.')
         
 
     def send_login_request(self, login_data) -> dict or None :
@@ -28,12 +32,14 @@ class OAuth :
             response = requests.post(self.url, login_data)
             response.raise_for_status()
             return response.json()
-        except requests.exceptions.RequestException as e:
-            logging.error(f'Error sending login request: {e}')
+        except requests.exceptions.RequestException:
             raise
 
     
     def handle_login_response(self, response_data) -> None:
+        '''
+        Timestamps token data before storing on keychain for expiry comparison upon reuse
+        '''
         response_data['TIMESTAMP'] = get_formatted_datetime()
         response_str = json.dumps(response_data)
         if response_str:
@@ -42,22 +48,20 @@ class OAuth :
         else:
             logging.error('Error: Access token not found in the server response.')
 
-    def set_token_data(self, token_data) -> None :
+    def set_token_data(self, token_data) -> bool or None :
         try :
-            retrieval_password = click.prompt('Set token retrieval password', default='optional')
-            retrieval_password = '' if retrieval_password == 'optional' else retrieval_password
-            click.echo('Attempting to store Token...')
-            keyring.set_password(self.token_str_key, retrieval_password, token_data)
-            print_with_spaces('Token data successfully stored in keyring.')
+            retrieval_password = click.prompt('Set token retrieval password [optional]')
+            if retrieval_password.strip() :
+                click.echo('Attempting to store Token...')
+                keyring.set_password(self.token_str_key, retrieval_password, token_data)
+                print_with_spaces('Token data successfully stored in keyring.')
         except key_err.PasswordSetError as e :
             logging.error(f"Error setting keyring: {e}")
         
         
     def get_access_token(self) -> dict or False :
         token_data = self.get_keyring_token_data()
-        token_data['expires_in'] = 0
-        if not check_headers(token_data) :
-            logging.error('Keyring Error: Please log back into ARIA.')
+        if token_data == False or not check_headers(token_data) :
             return False
         if self.check_token_valid(token_data['TIMESTAMP'], token_data['expires_in']) :
             return token_data
@@ -67,14 +71,15 @@ class OAuth :
             if token :
                 return token
         else : 
-            logging.info('Token expired. Please log back into ARIA')
+            print_with_spaces('Token expired. Please log back into ARIA')
 
     def get_keyring_token_data(self) -> dict or False :
         retrieval_pass = click.prompt('Enter your token password [optional]')
         if retrieval_pass.strip() :
             token_data_str = keyring.get_password(self.token_str_key, retrieval_pass)
             if not token_data_str :
-                logging.error('Error: Either the password entered is incorrect, or no access token is stored.')
+                space()
+                logging.error(' Either the password entered is incorrect, or no access token is stored.')
                 print_with_spaces('Please login to ARIA to retrieve another token if the problem persists or type aria-help for more options.')
                 return False
             return json.loads(token_data_str)
@@ -91,6 +96,7 @@ class OAuth :
         return False
     
     def refresh_token(self, token_data) -> dict or False : 
+        '''Posts refresh_token to retrieve new access_token. Some conversion between json string/object for storage and manipulation respectively '''
         refresh_token = token_data['refresh_token']
         refresh_data = self.get_refresh_data(refresh_token)
         try :
@@ -101,13 +107,11 @@ class OAuth :
             response_str = json.dumps(response_data)
             if response_str:
                 print_with_spaces('Successfully refreshed token')  
-                self.set_token_data(response_str)
-                token = json.loads(response_str)
-                return token
+                if self.set_token_data(response_str) :
+                    return json.loads(response_str)
             else :
                 logging.error('Error: No token found in server response. If the problem persists, log back into ARIA.')
         except requests.exceptions.RequestException as e:
-            click.echo(f'Error: {e}')
             click.echo('Login failed. Please check your credentials and try again.')
             logging.error(f'Error refreshing token: {e}')
 
@@ -123,7 +127,7 @@ class OAuth :
     
     def get_refresh_data(self, refresh_token) -> dict :
         return {
-                'grant_type': 'refresh_token',
+                'grant_type': self.refresh_grant,
                 'client_id': self.client_id,
                 'client_secret': self.client_secret,
                 'refresh_token': refresh_token

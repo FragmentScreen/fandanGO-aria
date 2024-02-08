@@ -3,6 +3,9 @@ from .client import Client
 from .do_something import DoSomething
 
 class AriaClient :
+    '''
+    Super class. New instances initiated in the `commands`. All functionality will start with one of these methods.
+    '''
     def __init__(self) :
         self.client = Client(OAuth())
 
