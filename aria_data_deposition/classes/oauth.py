@@ -1,7 +1,7 @@
 from ..utils import get_formatted_datetime, print_with_spaces, check_headers, space
 from ..config import *
 
-load_dotenv('.env.dev')
+load_dotenv('.env')
 
 class OAuth :
     def __init__(self) -> None:
