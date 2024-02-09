@@ -7,3 +7,4 @@ __pycache__/
 # dev install auto-gen files (with the 'pip3 install -e .' command)
 *.egg-info/
 
+/build
