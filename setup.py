@@ -8,6 +8,7 @@ setup(
         'click',
         'requests',
         'python-dotenv',
+        'keyring'
     ],
     entry_points={
         'console_scripts': [
