@@ -1,5 +1,6 @@
 # local configuration files
 .env.dev
+.env
 
 # auto-gen files
 __pycache__/

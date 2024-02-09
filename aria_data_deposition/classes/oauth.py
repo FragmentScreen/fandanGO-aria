@@ -52,10 +52,9 @@ class OAuth :
         try :
             retrieval_password = click.prompt('Set token retrieval password', default='optional')
             retrieval_password = '' if retrieval_password == 'optional' else retrieval_password
-            if retrieval_password.strip() :
-                click.echo('Attempting to store Token...')
-                keyring.set_password(self.token_str_key, retrieval_password, token_data)
-                print_with_spaces('Token data successfully stored in keyring.')
+            click.echo('Attempting to store Token...')
+            keyring.set_password(self.token_str_key, retrieval_password, token_data)
+            print_with_spaces('Token data successfully stored in keyring.')
         except key_err.PasswordSetError as e :
             logging.error(f"Error setting keyring: {e}")
         
@@ -77,15 +76,13 @@ class OAuth :
     def get_keyring_token_data(self) -> dict or False :
         retrieval_pass = click.prompt('Enter your token password', default='optional')
         retrieval_pass = '' if retrieval_pass == 'optional' else retrieval_pass
-        if retrieval_pass.strip() :
-            token_data_str = keyring.get_password(self.token_str_key, retrieval_pass)
-            if not token_data_str :
-                space()
-                logging.error(' Either the password entered is incorrect, or no access token is stored.')
-                print_with_spaces('Please login to ARIA to retrieve another token if the problem persists or type aria-help for more options.')
-                return False
-            return json.loads(token_data_str)
-        return False
+        token_data_str = keyring.get_password(self.token_str_key, retrieval_pass)
+        if not token_data_str :
+            space()
+            logging.error(' Either the password entered is incorrect, or no access token is stored.')
+            print_with_spaces('Please login to ARIA to retrieve another token if the problem persists or type aria-help for more options.')
+            return False
+        return json.loads(token_data_str)
     
     def check_token_valid (self, token_timestamp_str, expiry) -> bool :
         current_time = datetime.now()
