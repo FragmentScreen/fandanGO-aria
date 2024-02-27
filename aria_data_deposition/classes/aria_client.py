@@ -58,3 +58,4 @@ class AriaClient :
             print('No records with that ID for this facilty')
         else :
             print(json.dumps(visits, indent=4))
+
