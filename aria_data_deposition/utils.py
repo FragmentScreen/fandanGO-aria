@@ -20,3 +20,10 @@ def check_headers(json):
         if header not in json:
             return False
     return True
+
+def pretty_print(json_data) : 
+    print(json.dumps(json_data, indent=4))
+
+
+def set_headers(token) :
+    return {'Authorization': f'Bearer {token}'}
