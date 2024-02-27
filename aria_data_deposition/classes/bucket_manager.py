@@ -1,12 +1,12 @@
 from ..config import * 
-from ..utils import pretty_print
+from ..utils import pretty_print, set_headers
 
 class DataBucketManager:
     def __init__(self):
         self.hello = 'd'
 
     def create_bucket(self, fields, token) -> str :
-        headers = {'Authorization': f'Bearer {token}'}
+        headers = set_headers(token)
         some_url = 'http://localhost:8281/api/v1/createDataBucket'
         response = requests.post(some_url, json=fields, headers=headers)
         response.raise_for_status()
@@ -15,7 +15,7 @@ class DataBucketManager:
         pass
     
     def list_buckets(self, token):
-        headers = {'Authorization': f'Bearer {token}'}
+        headers = set_headers(token)
         some_url = 'http://localhost:8281/api/v1/bucket'
         response = requests.get(some_url, headers=headers)
         response.raise_for_status()
@@ -26,7 +26,7 @@ class DataBucketManager:
     def create_record(self, token, bucket_id='3274f598-6eb5-4209-bf9b-a0305f4835ee', record_data=None,):
         some_url = 'http://localhost:8281/api/v1/createDataRecord'
         print(token)
-        headers = {'Authorization': f'Bearer {token}'}
+        headers = set_headers(token)
         schema = 'TestSchema'
         context = None
         resp = requests.post(some_url, {'schema' : schema, 'bucket': bucket_id}, headers=headers)
@@ -37,8 +37,7 @@ class DataBucketManager:
     
     def list_records(self, token):
         some_url = 'http://localhost:8281/api/v1/record'
-        print(token)
-        headers = {'Authorization': f'Bearer {token}'}
+        headers = set_headers(token)
         resp = requests.get(some_url, headers=headers)
         resp.raise_for_status()
         resp = resp.json()
@@ -47,7 +46,7 @@ class DataBucketManager:
     
     def create_field(self, token):
         some_url = 'http://localhost:8281/api/v1/createDataField'
-        headers = {'Authorization': f'Bearer {token}'}
+        headers = set_headers(token)
         record = "d7f7be48-24c4-4440-83ca-dc46cff2c596"
         type = "TestFieldType"
         content = "hello lui"
@@ -64,7 +63,7 @@ class DataBucketManager:
     
     def list_fields(self, token):
         some_url = 'http://localhost:8281/api/v1/field?record=d7f7be48-24c4-4440-83ca-dc46cff2c596'
-        headers = {'Authorization': f'Bearer {token}'}
+        headers = set_headers(token)
         resp = requests.get(some_url, headers=headers)
         resp.raise_for_status()
         resp = resp.json()
