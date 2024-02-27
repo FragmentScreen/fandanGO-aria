@@ -16,6 +16,9 @@ def cli():
     """Aria Data Deposition CLI."""
     pass
 
+
+
+
 cli.add_command(login)
 cli.add_command(help)
 cli.add_command(create_bucket)
@@ -25,6 +28,17 @@ cli.add_command(list_records)
 cli.add_command(create_field)
 cli.add_command(list_fields)
 cli.add_command(get_visits)
+=======
+cli.add_command(login)
+cli.add_command(help)
+cli.add_command(create_bucket)
+cli.add_command(list_buckets)
+cli.add_command(create_record)
+cli.add_command(list_records)
+cli.add_command(create_field)
+cli.add_command(list_fields)
+
+>>>>>>> de58f25 (add to cli)
 
 if __name__ == '__main__':
     cli()
