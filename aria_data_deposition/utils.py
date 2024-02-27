@@ -27,3 +27,28 @@ def pretty_print(json_data) :
 
 def set_headers(token) :
     return {'Authorization': f'Bearer {token}'}
+
+
+def command_with_options(prompt_message, options):
+    questions = [
+        inquirer.List('option',
+                      message=prompt_message,
+                      choices=options,
+                      ),
+    ]
+    answer = inquirer.prompt(questions)
+    return answer['option']
+
+def format_datetime_to_json_serializable(date):
+    """
+    Converts a datetime object to a string in the format 'dd-mm-yyyy 00:00:00'.
+    
+    Args:
+        dt (datetime): The datetime object to be formatted.
+        
+    Returns:
+        str: The formatted datetime string.
+    """
+    return date.strftime('%d-%m-%Y 00:00:00')
+    
+
