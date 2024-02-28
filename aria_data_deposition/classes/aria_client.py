@@ -2,7 +2,7 @@ from .oauth import OAuth
 from .client import Client
 from .data_manager import DataManager
 from .visit import Visit
-from .data_manager import DataManager as DataManager
+from .data_manager import DataManager
 class AriaClient :
     '''
     Super class. New instances initiated in the `commands`. All functionality will start with one of these methods.
