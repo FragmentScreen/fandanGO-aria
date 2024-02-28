@@ -21,6 +21,7 @@ class Fields :
         pretty_print(resp)
     
     def list_fields(self):
+        self.generate_url()
         resp = requests.get(self.list_url, headers=self.headers)
         resp.raise_for_status()
         resp = resp.json()
@@ -39,7 +40,6 @@ class Fields :
             "options" : options
         }
 
-
     
     def options_manager(self, options={}):
         if click.confirm('Would you like to add an option key-value?'):
@@ -49,5 +49,9 @@ class Fields :
             return self.options_manager(options)
         else:
             return json.dumps(options)
+        
+    def generate_url(self) :
+        self.list_url = f'http://localhost:8281/api/v1/field?filter[record]={self.record_id}'
+
 
         
