@@ -15,7 +15,7 @@ setup(
             'aria=cli.cli:help',
             'aria-login=cli.cli:login',
             'aria-help=cli.cli:help',
-            'aria-get=cli.cli:get_token_password'
+            'aria-visits=cli.cli:get_visits'
         ],
     },
 )
