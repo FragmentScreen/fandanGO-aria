@@ -105,9 +105,11 @@ class OAuth :
             response_data['TIMESTAMP'] = get_formatted_datetime()
             response_str = json.dumps(response_data)
             if response_str:
+                # sort this out lu, the if block is a falsy even if true
                 print_with_spaces('Successfully refreshed token')  
                 if self.set_token_data(response_str) :
                     return json.loads(response_str)
+                return json.loads(response_str)
             else :
                 logging.error('Error: No token found in server response. If the problem persists, log back into ARIA.')
         except requests.exceptions.RequestException as e:
