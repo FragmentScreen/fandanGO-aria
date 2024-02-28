@@ -1,6 +1,5 @@
 from .oauth import OAuth
 from .client import Client
-from .do_something import DoSomething
 from .data_manager import DataManager
 class AriaClient :
     '''
@@ -29,9 +28,6 @@ class AriaClient :
 
     def get_access_token(self):
         return self.client.get_access_token()
-
-    def do_something(self):
-        DoSomething.dispatch_hook(self.token)
 
     def create_bucket(self):
         self.data_manager.create_bucket()
