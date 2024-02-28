@@ -1,6 +1,9 @@
 from .oauth import OAuth
 from .client import Client
 from .data_manager import DataManager
+from .visit import Visit
+from ..utils import *
+
 class AriaClient :
     '''
     Super class. New instances initiated in the `commands`. All functionality will start with one of these methods.
@@ -19,6 +22,7 @@ class AriaClient :
     
     def _get_classes(self) :
         self.data_manager = DataManager(self.token)
+        self.visit_manager = Visit()
 
     def _fetch_token(self):
         self._token = self.client.get_access_token()['access_token']
@@ -46,3 +50,11 @@ class AriaClient :
 
     def list_fields(self):
         self.data_manager.list_fields()
+    
+    def get_visits(self, vid=None) : 
+        token = self.token
+        visits = self.visit_manager.get_visits(token, vid)
+        if len(visits) < 1 :
+            print('No records with that ID for this facilty')
+        else :
+            print(json.dumps(visits, indent=4))
