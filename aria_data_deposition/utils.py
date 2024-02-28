@@ -28,16 +28,35 @@ def pretty_print(json_data) :
 def set_headers(token) :
     return {'Authorization': f'Bearer {token}'}
 
+def command_with_options(prompt_message, options, json_param=False, json_fields=None):
 
-def command_with_options(prompt_message, options):
+    if json_param and json_fields:
+        options_display = []
+        for option in options:
+            display_info = " - ".join([f"{field}: {option[field]}" for field in json_fields])
+            options_display.append(display_info)
+        options_values = options
+    else:
+        options_display = options
+        options_values = options
+
     questions = [
         inquirer.List('option',
                       message=prompt_message,
-                      choices=options,
+                      choices=options_display,
                       ),
     ]
     answer = inquirer.prompt(questions)
-    return answer['option']
+    selected_option = answer['option']
+
+    for option in options_values:
+        if json_param and json_fields:
+            display_info = " - ".join([f"{field}: {option[field]}" for field in json_fields])
+            if display_info == selected_option:
+                return option
+        else:
+            if option == selected_option:
+                return option
 
 def format_datetime_to_json_serializable(date):
     """
