@@ -18,7 +18,8 @@ class Fields :
         resp = requests.post(self.create_url, fields, headers=self.headers)
         # resp.raise_for_status()
         resp = resp.json()
-        pretty_print(resp)
+        print_with_spaces(f'New Field for Record {self.record_id} created:')
+        pretty_print(resp['data']['items'])
     
     def list_fields(self):
         self.generate_url()

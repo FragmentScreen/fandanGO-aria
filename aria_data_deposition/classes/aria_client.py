@@ -19,12 +19,9 @@ class AriaClient :
             self._fetch_token()
         return self._token
 
-    def _fetch_token(self):
-        self._token = self.client.get_access_token()['access_token']
-
     def _get_classes(self) :
         self.data_manager = DataManager(self.token)
-        self.visit_manager = Visit()
+        self.visit_manager = Visit(self.token)
         
     def login(self, username, password):
         self.client.authenticate(username, password)
@@ -49,3 +46,13 @@ class AriaClient :
 
     def list_fields(self):
         self.data_manager.list_fields()
+
+    def get_visits(self, vid=None) : 
+        visits = self.visit_manager.get_visits(vid)
+        if len(visits) < 1 :
+            print('No records with that ID for this facilty')
+        else :
+            print(visits)
+
+    def _fetch_token(self):
+        self._token = self.client.get_access_token()['access_token']
