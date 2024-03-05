@@ -1,6 +1,6 @@
 
 import click
-from aria_data_deposition.classes.aria_client import AriaClient
+from ..aria_client import AriaClient
 
 @click.command()
 def create_bucket():

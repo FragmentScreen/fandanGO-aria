@@ -1,5 +1,5 @@
-from ..config import *
-from ..utils import *
+from .config import *
+from .utils import *
 
 class Records :
     def __init__(self, token) : 

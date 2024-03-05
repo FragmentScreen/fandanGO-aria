@@ -1,5 +1,5 @@
-from ..config import * 
-from ..utils import pretty_print, set_headers
+from .config import * 
+from .utils import pretty_print, set_headers
 
 class DataBucketManager:
     def __init__(self):
@@ -25,7 +25,6 @@ class DataBucketManager:
     
     def create_record(self, token, bucket_id='3274f598-6eb5-4209-bf9b-a0305f4835ee', record_data=None,):
         some_url = 'http://localhost:8281/api/v1/createDataRecord'
-        print(token)
         headers = set_headers(token)
         schema = 'TestSchema'
         context = None

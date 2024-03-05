@@ -29,8 +29,8 @@ class AriaClient :
     def get_access_token(self):
         return self.client.get_access_token()
 
-    def create_bucket(self):
-        self.data_manager.create_bucket()
+    def create_bucket(self, fields=None):
+        self.data_manager.create_bucket(fields)
 
     def list_buckets(self) :
         self.data_manager.list_buckets()
@@ -55,4 +55,5 @@ class AriaClient :
             print(visits)
 
     def _fetch_token(self):
-        self._token = self.client.get_access_token()['access_token']
+        token = self.get_access_token()
+        self._token = token['access_token']

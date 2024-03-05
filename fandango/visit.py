@@ -1,7 +1,11 @@
-from ..config import *
-from ..utils import *
+from .config import *
+from .utils import *
+import yaml
 
-load_dotenv('.env')
+root_project_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
+config_path = os.path.join(root_project_dir, "config.yml")
+with open(config_path, "r") as f:
+    config = yaml.safe_load(f)
 
 class Visit:
     '''
@@ -10,7 +14,7 @@ class Visit:
     '''
     def __init__(self, token):
         self.token = token
-        self.rest_server = os.getenv('VISIT_URL')
+        self.rest_server = config["login"]["VISIT_URL"]
 
     def get_visits(self, vid):
         if not self.token:

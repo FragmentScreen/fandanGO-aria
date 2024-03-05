@@ -1,5 +1,5 @@
 import click
-from aria_data_deposition.utils import print_with_spaces
+from ..utils import print_with_spaces
 
 @click.command()
 def help():
