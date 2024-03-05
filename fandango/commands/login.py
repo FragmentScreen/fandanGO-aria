@@ -1,6 +1,7 @@
 
 import click
-from aria_data_deposition.classes.aria_client import AriaClient
+from ..aria_client import AriaClient
+
 
 @click.command()
 @click.option('--username', prompt='Your ARIA email address', help='Your ARIA email address', default='lui.holliday@instruct-eric.org')

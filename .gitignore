@@ -1,6 +1,5 @@
 # local configuration files
-.env.dev
-.env
+config.yml
 
 # development productivity files 
 TODO.md
@@ -10,6 +9,9 @@ __pycache__/
 
 # dev install auto-gen files (with the 'pip3 install -e .' command)
 *.egg-info/
+
+# test files
+test_*
 
 
 # build or python virtual env files

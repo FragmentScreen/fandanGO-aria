@@ -1,5 +1,5 @@
-from ..config import * 
-from ..utils import pretty_print, set_headers
+from .config import * 
+from .utils import pretty_print
 from .bucket import Bucket
 from .record import Records
 from .field import Fields
@@ -11,8 +11,8 @@ class DataManager:
         self.records = Records(self.token)
         self.fields = Fields(self.token)
 
-    def create_bucket(self) : 
-        self.bucket.create_bucket()
+    def create_bucket(self, fields) : 
+        self.bucket.create_bucket(fields)
     
     def list_buckets(self):
         buckets = self.bucket.list_buckets()

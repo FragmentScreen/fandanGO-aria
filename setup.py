@@ -1,8 +1,13 @@
 from setuptools import setup, find_packages
 
+
 setup(
-    name='aria-data-deposition',
-    version='1.0',
+    name='fandango',
+    version='0.0.2',
+    description="A Public Client library and CLI for interacting with ARIA's Data Deposition Service.",
+    author="Lui Holliday, Instruct-ERIC",
+    author_email="lui.holliday@instruct-eric.org",
+    license='MIT',
     packages=find_packages(),
     install_requires=[
         'click',
@@ -12,16 +17,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'aria=cli.cli:help',
-            'aria-login=cli.cli:login',
-            'aria-help=cli.cli:help',
-            'aria-bucket-create=cli.cli:create_bucket',
-            'aria-bucket-list=cli.cli:list_buckets',
-            'aria-record-create=cli.cli:create_record',
-            'aria-record-list=cli.cli:list_records',
-            'aria-field-create=cli.cli:create_field',
-            'aria-field-list=cli.cli:list_fields',
-            'aria-visits=cli.cli:get_visits'
+            'fandango=cli:cli',
         ],
     },
 )

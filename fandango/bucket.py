@@ -1,5 +1,5 @@
-from ..config import *
-from ..utils import *
+from .config import *
+from .utils import *
 
 class Bucket :
 
@@ -8,11 +8,13 @@ class Bucket :
         self.headers = set_headers(self.token)
         self.id = None
 
-    def create_bucket(self) -> dict | None :
-        fields = self.get_fields()
+    def create_bucket(self, fields=None) -> dict | None :
+        if not fields :
+            fields = self.get_fields()
         some_url = 'http://localhost:8281/api/v1/createDataBucket'
         response = requests.post(some_url, json=fields, headers=self.headers)
         resp = response.json()
+        pretty_print(resp)
         return resp
     
     def list_buckets(self) -> str | None : 

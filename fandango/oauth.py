@@ -1,17 +1,22 @@
-from ..utils import get_formatted_datetime, print_with_spaces, check_headers, space
-from ..config import *
+from .utils import get_formatted_datetime, print_with_spaces, check_headers, space
+from .config import *
+import yaml
 
 load_dotenv('.env')
+root_project_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
+config_path = os.path.join(root_project_dir, "config.yml")
+with open(config_path, "r") as f:
+    config = yaml.safe_load(f)
 
 class OAuth :
     def __init__(self) -> None:
-        self.grant_type = os.getenv("GRANT_TYPE")
-        self.scope = os.getenv("SCOPE")
-        self.client_id = os.getenv("CLIENT_ID")
-        self.url = os.getenv("LOGIN_URL")
-        self.client_secret = os.getenv("CLIENT_SECRET")
-        self.token_str_key = os.getenv("SESSION_KEY")
-        self.refresh_grant = os.getenv("REFRESH_GRANT")
+        self.grant_type = config["login"]["GRANT_TYPE"]
+        self.scope = config["login"]["SCOPE"]
+        self.client_id = config["login"]["CLIENT_ID"]
+        self.url = config["login"]["LOGIN_URL"]
+        self.client_secret = config["login"]["CLIENT_SECRET"]
+        self.token_str_key = config["login"]["SESSION_KEY"]
+        self.refresh_grant = config["login"]["REFRESH_GRANT"]
 
 
     def login(self, username, password) -> None:
@@ -77,6 +82,7 @@ class OAuth :
         retrieval_pass = click.prompt('Enter your token password', default='optional')
         retrieval_pass = '' if retrieval_pass == 'optional' else retrieval_pass
         token_data_str = keyring.get_password(self.token_str_key, retrieval_pass)
+        print('password worked')
         if not token_data_str :
             space()
             logging.error(' Either the password entered is incorrect, or no access token is stored.')
