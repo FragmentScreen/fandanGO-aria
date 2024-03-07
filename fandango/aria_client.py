@@ -11,7 +11,7 @@ class AriaClient :
         self.client = Client(OAuth())
         if not login:
             self._fetch_token()
-            self._get_classes()
+            # self._get_classes()
 
     @property
     def token(self):
@@ -19,12 +19,15 @@ class AriaClient :
             self._fetch_token()
         return self._token
 
-    def _get_classes(self) :
-        self.data_manager = DataManager(self.token)
-        self.visit_manager = Visit(self.token)
+    # def _get_classes(self) :
+    #     self.data_manager = DataManager(self.token)
+    #     self.visit_manager = Visit(self.token)
         
     def login(self, username, password):
         self.client.authenticate(username, password)
+
+    def new_data_manager(self, bucket_id=None):
+        return (DataManager(self.token, bucket_id))
 
     def get_access_token(self):
         return self.client.get_access_token()

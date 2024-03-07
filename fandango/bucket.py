@@ -3,19 +3,31 @@ from .utils import *
 
 class Bucket :
 
-    def __init__(self,token) -> None :
+    def __init__(self,token, bucket_id) -> None :
         self.token = token
         self.headers = set_headers(self.token)
-        self.id = None
+        self.id = bucket_id
+        self.bucket = None
 
     def create_bucket(self, fields=None) -> dict | None :
         if not fields :
             fields = self.get_fields()
         some_url = 'http://localhost:8281/api/v1/createDataBucket'
         response = requests.post(some_url, json=fields, headers=self.headers)
-        resp = response.json()
-        pretty_print(resp)
-        return resp
+        response.raise_for_status()
+        response = response.json()
+        bucket = response['data']['items'][0]
+        self.bucket = bucket
+    
+    def populate(self) :
+        url = f'http://localhost:8281/api/v1/bucket?filter[id]={self.id}'
+        response = requests.get(url, headers=self.headers)
+        response.raise_for_status()
+        response = response.json()
+        bucket = response['data']['items'][0]
+        self.bucket = bucket
+        print(f'populate success for Bucket ID: {self.id}')
+
     
     def list_buckets(self) -> str | None : 
         some_url = 'http://localhost:8281/api/v1/bucket'

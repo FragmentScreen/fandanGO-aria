@@ -5,7 +5,7 @@ class Fields :
 
     def __init__(self, token) : 
         self.token = token
-        self.record_id = None
+        self.record_id = []
         self.headers = set_headers(token)
         self.options = ['TestFieldType', 'OtherFieldType']
         self.list_url = f'http://localhost:8281/api/v1/field?filter[record]={self.record_id}'
