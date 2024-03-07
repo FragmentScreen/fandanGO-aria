@@ -18,6 +18,7 @@ class Bucket :
         response = response.json()
         bucket = response['data']['items'][0]
         self.bucket = bucket
+        return bucket
     
     def populate(self) :
         url = f'http://localhost:8281/api/v1/bucket?filter[id]={self.id}'

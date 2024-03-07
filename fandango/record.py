@@ -5,7 +5,7 @@ class Records :
     def __init__(self, token) : 
         self.token = token
         self.bucket_id = None
-        self.records = None
+        self.records = []
 
     def get_records(self) : 
         some_url = f'http://localhost:8281/api/v1/record?filter[bucket]={self.bucket_id}' 
@@ -15,6 +15,7 @@ class Records :
         resp = resp.json()
         records = resp['data']['items']
         self.records = records
+        # print(records[0])
         return records
     
     def print_class_info(self):
@@ -26,10 +27,11 @@ class Records :
         fields = self.get_fields(fields) if not input_fields else input_fields
         fields['bucket'] = self.bucket_id
         resp = requests.post(some_url, fields, headers=headers)
-        # resp.raise_for_status()
+        resp.raise_for_status()
         resp = resp.json()
-        records = resp['data']['items']
-        self.records = records
+        record = resp['data']['items'][0]
+        self.records.append(record)
+        return record['id']
 
     def populate_records(self) :
         some_url = f'http://localhost:8281/api/v1/record?filter[bucket]={self.bucket_id}' 
