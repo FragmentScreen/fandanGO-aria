@@ -16,8 +16,6 @@ class DataManager:
         bucket = self.bucket_manager.create_bucket(fields)
         self.records_manager.bucket_id = bucket['id']
         return bucket['id']
-        
-
 
     def populate(self, bucket_id) :
         self.bucket_manager.populate()
@@ -32,7 +30,7 @@ class DataManager:
 
     def get_records_for_bucket(self) :
         # if not self.check_bucket_exists() :
-        #     return False
+            #  return False
         return self.records_manager.get_records()
     
     def get_fields_for_records(self) :
@@ -43,7 +41,7 @@ class DataManager:
 
     
     def print_bucket_info(self) :
-        if self.bucket_manager :
+        if self.bucket_manager.bucket :
             bucket = self.bucket_manager.bucket
             records = self.records_manager.records
             fields = self.fields_manager.fields
@@ -53,16 +51,17 @@ class DataManager:
             print('No bucket set')
 
 
-    def create_record(self, fields):
+    def create_record(self, fields=None):
         record_id = self.records_manager.create_record(fields)
         return record_id
     
     def select_record(self) :
-        self.select_bucket()
-        record = self.records.select_record()
-        self.fields.record_id = record['id']
+        # self.select_bucket()
+        record = self.records_manager.select_record()
+        self.fields_manager.record_id = record['id']
+        return self.fields_manager.record_id
 
-    def create_field(self, record_id, data):
+    def create_field(self, record_id=None, data=None):
         # self.select_record()
         self.fields_manager.create_field(record_id, data)
     
@@ -70,9 +69,11 @@ class DataManager:
         self.select_record()
         self.fields.list_fields()
 
-    # def select_bucket(self) : 
-    #     bucket = self.bucket.select_bucket()
-    #     self.records.bucket_id = bucket['id']
+    def select_bucket(self) : 
+        bucket = self.bucket_manager.select_bucket()
+        bucket_id = bucket['id']
+        self.populate(bucket_id)
+        return bucket_id
 
     # def list_records(self):
     #     self.select_bucket()

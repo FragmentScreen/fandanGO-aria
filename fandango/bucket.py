@@ -41,6 +41,7 @@ class Bucket :
         bucket_options = buckets['data']['items']
         bucket_fields = ['id','aria_entity_type', 'embargoed_until', 'created']
         bucket = command_with_options('select the bucket', bucket_options, True, bucket_fields)
+        self.id = bucket['id']
         return bucket
         
 

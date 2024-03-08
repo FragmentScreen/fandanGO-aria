@@ -15,7 +15,6 @@ class Records :
         resp = resp.json()
         records = resp['data']['items']
         self.records = records
-        # print(records[0])
         return records
     
     def print_class_info(self):
@@ -24,7 +23,7 @@ class Records :
     def create_record(self, input_fields) :
         some_url = 'http://localhost:8281/api/v1/createDataRecord'
         headers = set_headers(self.token)
-        fields = self.get_fields(fields) if not input_fields else input_fields
+        fields = self.get_fields() if not input_fields else input_fields
         fields['bucket'] = self.bucket_id
         resp = requests.post(some_url, fields, headers=headers)
         resp.raise_for_status()
@@ -43,9 +42,8 @@ class Records :
 
 
     def select_record(self) :
-        records = self.get_records()
         record_fields = ['id', 'schema', 'created']
-        record = command_with_options('select the record',records['data']['items'], True, record_fields)
+        record = command_with_options('select the record',self.records, True, record_fields)
         return record
 
     def get_fields(self) -> str :
