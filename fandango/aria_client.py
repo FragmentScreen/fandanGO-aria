@@ -11,17 +11,12 @@ class AriaClient :
         self.client = Client(OAuth())
         if not login:
             self._fetch_token()
-            # self._get_classes()
 
     @property
     def token(self):
         if not self._token:
             self._fetch_token()
         return self._token
-
-    # def _get_classes(self) :
-    #     self.data_manager = DataManager(self.token)
-    #     self.visit_manager = Visit(self.token)
         
     def login(self, username, password):
         self.client.authenticate(username, password)
@@ -29,26 +24,17 @@ class AriaClient :
     def new_data_manager(self, bucket_id=None):
         return (DataManager(self.token, bucket_id))
 
+    def new_data_managers(self, bucket_ids=None):
+        if bucket_ids is None:
+            bucket_ids = []
+
+        data_managers = {}
+        for bucket_id in bucket_ids:
+            data_managers[f'data_manager_{bucket_id}'] = DataManager(self.token, bucket_id)
+        return data_managers
+    
     def get_access_token(self):
         return self.client.get_access_token()
-
-    def create_bucket(self, fields=None):
-        self.data_manager.create_bucket(fields)
-
-    def list_buckets(self) :
-        self.data_manager.list_buckets()
-
-    def create_record(self) :
-        self.data_manager.create_record()
-
-    def list_records(self) :
-        self.data_manager.list_records()
-
-    def create_field(self) :
-        self.data_manager.create_field()
-
-    def list_fields(self):
-        self.data_manager.list_fields()
 
     def get_visits(self, vid=None) : 
         visits = self.visit_manager.get_visits(vid)
