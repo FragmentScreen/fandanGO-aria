@@ -5,5 +5,8 @@ from ..aria_client import AriaClient
 @click.command()
 def create_bucket():
     cli = AriaClient()
-    cli.create_bucket()
+    microscopy = cli.new_data_manager()
+    microscopy.create_bucket()
+    microscopy.print_bucket_info()
+
 
