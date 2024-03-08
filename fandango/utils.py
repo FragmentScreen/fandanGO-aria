@@ -40,14 +40,13 @@ def command_with_options(prompt_message, options, json_param=False, json_fields=
         options_display = options
         options_values = options
 
-    questions = [
-        inquirer.List('option',
-                      message=prompt_message,
-                      choices=options_display,
-                      ),
-    ]
-    answer = inquirer.prompt(questions)
-    selected_option = answer['option']
+
+    answer = questionary.select(
+        prompt_message,
+        choices=options_display,
+    ).ask()
+
+    selected_option = answer
 
     for option in options_values:
         if json_param and json_fields:
@@ -57,6 +56,36 @@ def command_with_options(prompt_message, options, json_param=False, json_fields=
         else:
             if option == selected_option:
                 return option
+# def command_with_options(prompt_message, options, json_param=False, json_fields=None):
+
+#     if json_param and json_fields:
+#         options_display = []
+#         for option in options:
+#             display_info = " - ".join([f"{field}: {option[field]}" for field in json_fields])
+#             options_display.append(display_info)
+#         options_values = options
+#     else:
+#         options_display = options
+#         options_values = options
+
+#     questions = [
+#         inquirer.List('option',
+#                       message=prompt_message,
+#                       choices=options_display,
+#                       carousel=True,
+#                       ),
+#     ]
+#     answer = inquirer.prompt(questions)
+#     selected_option = answer['option']
+
+#     for option in options_values:
+#         if json_param and json_fields:
+#             display_info = " - ".join([f"{field}: {option[field]}" for field in json_fields])
+#             if display_info == selected_option:
+#                 return option
+#         else:
+#             if option == selected_option:
+#                 return option
 
 def format_datetime_to_json_serializable(date):
     """
