@@ -1,6 +1,7 @@
 from .oauth import OAuth
 from .client import Client
 from .data_manager import DataManager
+from .bucket import Bucket
 from .visit import Visit
 from .data_manager import DataManager
 class AriaClient :
@@ -21,8 +22,8 @@ class AriaClient :
     def login(self, username, password):
         self.client.authenticate(username, password)
 
-    def new_data_manager(self, bucket_id=None):
-        return (DataManager(self.token, bucket_id))
+    def new_data_manager(self, id, type):
+        return (DataManager(self.token, id, type))
 
     def new_data_managers(self, bucket_ids=None):
         if bucket_ids is None:
