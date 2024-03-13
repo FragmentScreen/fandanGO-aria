@@ -5,13 +5,18 @@ from .record import Record
 from .field import Field
 from .client_data_manager import DataManagerClient as EntityClient
 class DataManager:
-    def __init__(self, token, entity_id, entity_type, populate=False) :
+    def __init__(self, token, entity_id : int, entity_type : str, populate : bool) :
+        """Initiate a new DataManager for Entity ID & Type's Buckets, Records & Fields"""
+
         self.entity_type = entity_type
         self.entity_id = entity_id
         self.buckets = {}
         self.records = {}
         self.fields = {}
         self.client = EntityClient(token, entity_id, entity_type)
+
+        if populate :
+            self.populate()
 
     def create_bucket(self, embargo : str) -> None : 
         """Create a bucket and push to the DataManager Class Buckets dictionary"""
@@ -20,6 +25,7 @@ class DataManager:
         created_bucket = self.client.push_bucket(bucket)
         bucket.populate(created_bucket)
         self.buckets[bucket._bucket_id] = bucket
+        return bucket
 
 
     def create_record(self, bucket_id : str, schema_type : str) -> None : 
@@ -38,6 +44,31 @@ class DataManager:
         created_field = self.client.push_field(field)
         field.populate(created_field)
         self.fields[field.id] = field
+
+    def populate(self) : 
+        """Populate new Bucket classes and add to Data Manager based on API request"""
+
+        buckets = self.client.pull_buckets(self.entity_id, self.entity_type)
+        for b in buckets : 
+            new_bucket = Bucket(b['aria_id'], b['aria_entity_type'], b['embargoed_until'], bucket_id=b['id'], owner=b['owner'], created=b['created'], updated=b['updated'])
+            self.buckets[b['id']] = new_bucket
+        
+        for bucket_id, obj in self.buckets.items():
+            records = self.client.pull_records(bucket_id)
+            if records != [] :
+                for r in records :
+                    new_record = Record(r['bucket'], r['schema'])
+                    new_record.populate(r)
+                    self.records[r['id']] = new_record
+
+        for record_id, obj in self.records.items():
+            fields = self.client.pull_fields(record_id)
+            if fields != [] :
+                for field in fields :
+                    new_field = Field(field['record'], field['type'], field['content'], field['options'], field['order'], id=field['id'])
+                    self.fields[field['id']] = new_field
+
+
 
 
     
