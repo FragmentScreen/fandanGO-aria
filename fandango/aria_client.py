@@ -4,6 +4,7 @@ from .data_manager import DataManager
 from .bucket import Bucket
 from .visit import Visit
 from .data_manager import DataManager
+from .cli_data_manager import DataManagerCLI
 class AriaClient :
     '''
     Super class. New instances initiated in the `commands`. All functionality will start with one of these methods.
@@ -22,16 +23,19 @@ class AriaClient :
     def login(self, username, password):
         self.client.authenticate(username, password)
 
-    def new_data_manager(self, id, type):
-        return (DataManager(self.token, id, type))
+    def new_data_manager(self, id, type, populate=False):
+        return (DataManager(self.token, id, type, populate))
+    
+    def new_cli_manager(self, id, type, populate=False) :
+        return (DataManagerCLI(self.token, id, type, populate))
 
-    def new_data_managers(self, bucket_ids=None):
-        if bucket_ids is None:
-            bucket_ids = []
+    def new_data_managers(self, entities=None):
+        if entities is None:
+            entities = {}
 
         data_managers = {}
-        for bucket_id in bucket_ids:
-            data_managers[f'data_manager_{bucket_id}'] = DataManager(self.token, bucket_id)
+        for key, value in entities.items():
+            data_managers[f'data_manager_{key}_{value}'] = DataManager(self.token, key, value, True)
         return data_managers
     
     def get_access_token(self):

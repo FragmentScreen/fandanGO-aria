@@ -33,7 +33,7 @@ def command_with_options(prompt_message, options, json_param=False, json_fields=
     if json_param and json_fields:
         options_display = []
         for option in options:
-            display_info = " - ".join([f"{field}: {option[field]}" for field in json_fields])
+            display_info = " - ".join([f"{field[1:]}: {option[field]}" for field in json_fields])
             options_display.append(display_info)
         options_values = options
     else:
@@ -50,7 +50,7 @@ def command_with_options(prompt_message, options, json_param=False, json_fields=
 
     for option in options_values:
         if json_param and json_fields:
-            display_info = " - ".join([f"{field}: {option[field]}" for field in json_fields])
+            display_info = " - ".join([f"{field[1:]}: {option[field]}" for field in json_fields])
             if display_info == selected_option:
                 return option
         else:
@@ -98,5 +98,11 @@ def format_datetime_to_json_serializable(date):
         str: The formatted datetime string.
     """
     return date.strftime('%d-%m-%Y 00:00:00')
-    
 
+def get_entity() :
+    aria_id = click.prompt('Set ARIA ID', type=int)
+    aria_entity_type = command_with_options('aria entity', ['proposal', 'visit'])
+    return {
+        'id': aria_id,
+        'type': aria_entity_type
+    }
