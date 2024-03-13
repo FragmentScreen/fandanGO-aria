@@ -3,13 +3,13 @@ from .config import *
 from .abstract_field import AbstractField
 
 class Field(AbstractField) :
-    def __init__(self, record_id: str, field_type : str, content : str, options : dict = None, order: int = 0):
+    def __init__(self, record_id: str, field_type : str, content : str, options : dict = None, order: int = 0, **kwargs):
         self._record_id = record_id
         self._field_type = field_type
         self._content = content
         self._options = options if options is not None else {}
         self._order = order
-        self._id = None
+        self._id = kwargs.get('id')
         
 
     @property

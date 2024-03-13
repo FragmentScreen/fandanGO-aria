@@ -3,14 +3,15 @@ from .utils import *
 from .abstract_bucket import AbstractBucket
 
 class Bucket(AbstractBucket):
-    def __init__(self, entity_id : int, entity_type : str, embargo_date : str):
+    
+    def __init__(self, entity_id : int, entity_type : str, embargo_date : str, **kwargs):
         self._entity_type = entity_type
         self._entity_id = entity_id
         self._embargo_date = embargo_date
-        self._bucket_id = None
-        self._owner = None
-        self._created = None
-        self._updated = None
+        self._bucket_id = kwargs.get('bucket_id')
+        self._owner = kwargs.get('owner')
+        self._created = kwargs.get('created')
+        self._updated = kwargs.get('updated')
 
     @property
     def entity_type(self):
@@ -41,6 +42,52 @@ class Bucket(AbstractBucket):
     def embargo_date(self, value):
         """Setter for the embargo date."""
         self._embargo_date = value
+
+    @property
+    def bucket_id(self):
+        """Getter for the Bucket ID."""
+        return self._bucket_id
+    
+    @bucket_id.setter
+    def bucket_id(self, value):
+        """Setter for the Bucket ID."""
+        self._bucket_id = value    
+    
+    @property
+    def owner(self):
+        """Getter for the owner."""
+        return self._owner
+
+    @owner.setter
+    def owner(self, value):
+        """Setter for the owner."""
+        self._owner = value
+
+    @property
+    def created(self):
+        """Getter for the Created Date"""
+        return self._created
+
+    @created.setter
+    def created(self, value):
+        """Setter for the created date."""
+        self._created = value
+
+    @property
+    def updated(self):
+        """Getter for the updated date."""
+        return self._updated
+
+    @updated.setter
+    def updated(self, value):
+        """Setter for the updated date."""
+        self._updated = value
+
+    # def __setattr__(self, name, value):
+    #     properties = ['entity_type', '_entity_id', '_embargo_date', '_bucket_id', '_owner', '_created', '_updated']
+    #     if name not in properties:
+    #         raise AttributeError(f"Cannot set attribute '{name}'. It's not defined in __init__.")
+    #     super().__setattr__(name, value)
 
     def populate(self,data):
         """Generate additional properties like bucket ID, owner, created, and updated."""
