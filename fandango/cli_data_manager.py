@@ -53,7 +53,7 @@ class DataManagerCLI(DataManager):
     def create_field_cli(self, menu_return=True) :
         existing_record = click.confirm('Create field for existing Record?')
         if not existing_record :
-            record_id = self.create_record(False)
+            record_id = self.create_record_cli(False)
         else :
             bucket_id = self.select_bucket_cli()
             record_id = self.select_record_cli(bucket_id)

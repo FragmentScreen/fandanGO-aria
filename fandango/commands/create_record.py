@@ -1,22 +1,16 @@
-
+from ..utils import get_entity, pretty_print, command_with_options
 import click
 from ..aria_client import AriaClient
 
 
 @click.command()
 def create_record():
+    """Create a new Record for a Visit or Proposal"""
+    
     cli = AriaClient()
-    manager = cli.new_data_manager()
+    entity_details = get_entity()
+    manager = cli.new_cli_manager(entity_details.get('id'),entity_details.get('type'),True)
+    manager.create_record_cli()
 
-    exisiting_bucket = click.confirm('Create record for existing bucket?', default='n')
-    if not exisiting_bucket :
-        click.echo('Creating new Bucket...')
-        manager.create_bucket()
-        manager.create_record()
-    else:
-        id = manager.select_bucket()
-        manager.bucket_manager.id = id
-        manager.create_record()
-        manager.print_bucket_info()
         
 

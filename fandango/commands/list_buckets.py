@@ -1,10 +1,14 @@
 
+from ..utils import get_entity
 import click
 from ..aria_client import AriaClient
 
-
 @click.command()
 def list_buckets():
+    """Display buckets associated with a Visit or Proposal"""
+
     cli = AriaClient()
-    cli.list_buckets()
+    entity_details = get_entity()
+    manager = cli.new_cli_manager(entity_details.get('id'),entity_details.get('type'),True)
+    manager.printer_cli('Bucket')
 
