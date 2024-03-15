@@ -1,18 +1,20 @@
 import requests
 from .api_client import APIClient
 from .config import *
-from .utils import set_headers, pretty_print
+from .utils import set_headers, pretty_print, get_config
 
+config = get_config()
 class DataManagerClient(APIClient):
     def __init__(self, token, entity_id, entity_type):
         super().__init__(token)
         self.token = token
-        self.pull_buckets_url = "bucket"
-        self.pull_records_url = "record"
-        self.pull_fields_url = "field"
-        self.create_bucket_url = 'createDataBucket'
-        self.create_record_url = 'createDataRecord'
-        self.create_field_url = 'createDataField'
+        self.pull_buckets_url = config["endpoints"]["get"]["bucket"]
+        self.pull_records_url = config["endpoints"]["get"]["record"]
+        self.pull_fields_url = config["endpoints"]["get"]["field"]
+        self.create_bucket_url = config["endpoints"]["create"]['bucket']
+        self.create_record_url = config["endpoints"]['create']['record']
+        self.create_field_url = config["endpoints"]['create']['field']
+
         self.id = entity_id
         self.type = entity_type
 

@@ -8,7 +8,7 @@ class Bucket(AbstractBucket):
         self._entity_type = entity_type
         self._entity_id = entity_id
         self._embargo_date = embargo_date
-        self._bucket_id = kwargs.get('bucket_id')
+        self._id = kwargs.get('id')
         self._owner = kwargs.get('owner')
         self._created = kwargs.get('created')
         self._updated = kwargs.get('updated')
@@ -44,14 +44,14 @@ class Bucket(AbstractBucket):
         self._embargo_date = value
 
     @property
-    def bucket_id(self):
+    def id(self):
         """Getter for the Bucket ID."""
-        return self._bucket_id
+        return self._id
     
-    @bucket_id.setter
-    def bucket_id(self, value):
+    @id.setter
+    def id(self, value):
         """Setter for the Bucket ID."""
-        self._bucket_id = value    
+        self._id = value    
     
     @property
     def owner(self):
@@ -91,10 +91,10 @@ class Bucket(AbstractBucket):
 
     def populate(self,data):
         """Generate additional properties like bucket ID, owner, created, and updated."""
-        self._bucket_id = data['id']
-        self._owner = data['owner']
-        self._created = data['created']
-        self._updated = data['updated']
+        self.id = data['id']
+        self.owner = data['owner']
+        self.created = data['created']
+        self.updated = data['updated']
 
 
     # def __init__(self,token, bucket_id) -> None :

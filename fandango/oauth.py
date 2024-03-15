@@ -1,13 +1,8 @@
-from .utils import get_formatted_datetime, print_with_spaces, check_headers, space
+from .utils import get_formatted_datetime, print_with_spaces, check_headers, space, get_config
 from .config import *
 import yaml
 
-load_dotenv('.env')
-root_project_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
-config_path = os.path.join(root_project_dir, "config.yml")
-with open(config_path, "r") as f:
-    config = yaml.safe_load(f)
-
+config = get_config()
 class OAuth :
     def __init__(self) -> None:
         self.grant_type = config["login"]["GRANT_TYPE"]
@@ -20,7 +15,7 @@ class OAuth :
 
 
     def login(self, username, password) -> None:
-        '''username and password passed from the commands 'login'. Gets login_data from pre-set env vars.'''
+        '''username and password passed from the commands 'login'. Gets login_data from pre-set config vars.'''
         login_data = self.get_login_data(username, password)
         try : 
             response = self.send_login_request(login_data)

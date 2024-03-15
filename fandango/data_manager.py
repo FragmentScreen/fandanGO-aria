@@ -1,5 +1,5 @@
 from .config import * 
-from .utils import pretty_print, print_with_spaces
+from .utils import pretty_print, print_with_spaces, print_created_message
 from .bucket import Bucket
 from .record import Record 
 from .field import Field
@@ -18,17 +18,30 @@ class DataManager:
         if populate :
             self.populate()
 
-    def create_bucket(self, embargo : str) -> None : 
+    def create_bucket(self, embargo : str) -> Bucket : 
         """Create a bucket and push to the DataManager Class Buckets dictionary"""
 
         bucket = Bucket(self.entity_id, self.entity_type, embargo)
         created_bucket = self.client.push_bucket(bucket)
         bucket.populate(created_bucket)
-        self.buckets[bucket._bucket_id] = bucket
+        self.buckets[bucket._id] = bucket
         return bucket
 
+    def push(self, obj):
+        """Push an object to the appropriate endpoint"""
 
-    def create_record(self, bucket_id : str, schema_type : str) -> None : 
+        if isinstance(obj, Bucket):
+            new_bucket = self.client.push_bucket(obj)
+            obj.populate(new_bucket)
+            self.buckets[obj._id] = obj
+        elif isinstance(obj, Record):
+            endpoint = "push_record"
+        elif isinstance(obj, Field):
+            endpoint = "push_field"
+        else:
+            raise ValueError("Unsupported object type for pushing")
+
+    def create_record(self, bucket_id : str, schema_type : str) -> Record : 
         """Create a record and push to the DataManager Class Records dictionary"""
 
         record = Record(bucket_id, schema_type)
@@ -37,20 +50,21 @@ class DataManager:
         self.records[record.id] = record
         return record
     
-    def create_field(self, record_id: str, type: str, content: str, options: dict = None) -> None :
+    def create_field(self, record_id: str, type: str, content: str, options: dict = None) -> Field :
         """Create a field and push to the DataManager Class Fields dictionary"""
 
         field = Field(record_id, type, content, options)
         created_field = self.client.push_field(field)
         field.populate(created_field)
         self.fields[field.id] = field
+        return field
 
     def populate(self) : 
         """Populate new Bucket classes and add to Data Manager based on API request"""
 
         buckets = self.client.pull_buckets(self.entity_id, self.entity_type)
         for b in buckets : 
-            new_bucket = Bucket(b['aria_id'], b['aria_entity_type'], b['embargoed_until'], bucket_id=b['id'], owner=b['owner'], created=b['created'], updated=b['updated'])
+            new_bucket = Bucket(b['aria_id'], b['aria_entity_type'], b['embargoed_until'], id=b['id'], owner=b['owner'], created=b['created'], updated=b['updated'])
             self.buckets[b['id']] = new_bucket
         
         for bucket_id, obj in self.buckets.items():

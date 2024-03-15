@@ -4,9 +4,20 @@ import click
 
 class DataManagerCLI(DataManager):
     def __init__(self, token, entity_id, entity_type, populate):
+        """
+        Initialize DataManagerCLI instance.
+
+        :param token: Token for authentication.
+        :param entity_id: Entity ID.
+        :param entity_type: Entity type.
+        :param populate: Flag to indicate whether to populate data.
+        """
         super().__init__(token, entity_id, entity_type, populate)
 
     def menu(self) : 
+        """
+        Display the main menu and handle user input for menu navigation.
+        """
         action = command_with_options('What would you like to do?', ['Create', 'Print', 'Exit'])
         if action == 'Exit': 
             print('Ciao!')
@@ -51,7 +62,7 @@ class DataManagerCLI(DataManager):
         else :
             return record.id
     
-    def create_field_cli(self, menu_return=True) :
+    def create_field_cli(self) :
         existing_record = click.confirm('Create field for existing Record?')
         if not existing_record :
             record_id = self.create_record_cli(False)
