@@ -31,7 +31,7 @@ class DataManagerCLI(DataManager):
         embargo= click.prompt('Emargoed Until (dd/mm/yy)', type=click.DateTime(formats=['%d/%m/%y']), default='', show_default=False)
         embargo = format_datetime_to_json_serializable(embargo)
         bucket = self.create_bucket(embargo)
-        print(f"Bucket created with ID: {bucket.bucket_id}")
+        print_created_message(bucket)
         if menu_return :
             return self.menu()
         else:
@@ -45,6 +45,7 @@ class DataManagerCLI(DataManager):
             bucket_id = self.select_bucket_cli()
         schema = command_with_options('Select Schema Type', ['TestSchema', 'WrongSchema'])
         record = self.create_record(bucket_id, schema)
+        print_created_message(record)
         if menu_return : 
             self.menu()
         else :
@@ -55,28 +56,31 @@ class DataManagerCLI(DataManager):
         if not existing_record :
             record_id = self.create_record_cli(False)
         else :
+            print_with_spaces('Selecting bucket....')
             bucket_id = self.select_bucket_cli()
             record_id = self.select_record_cli(bucket_id)
+        if not record_id : 
+            print(f'No records exist for bucket {bucket_id}, returning to menu.')
+            return self.menu()
         type = command_with_options('Select Field Type', ['TestFieldType'])
         content = click.prompt('Enter content')
-        options = self.options_manager()
+        options = options_manager()
         field = self.create_field(record_id, type, content, options)
-        if menu_return :
-            self.menu()
-        else :
-            return field.id
+        print_created_message(field)
+        self.menu()
         
     # SELECT 
 
     def select_bucket_cli(self) :
-        buckets_details = self.get_dicts_from_objects(self.buckets.values())
-        bucket_fields = ['_bucket_id', '_embargo_date', '_created', '_owner']
+        buckets_details = get_dicts_from_objects(self.buckets.values())
+        bucket_fields = ['_id', '_embargo_date', '_created', '_owner']
         bucket = command_with_options('select bucket', buckets_details, True, bucket_fields)
-        return bucket['_bucket_id']
+        return bucket['_id']
     
-    def select_record_cli(self, bucket_id) :
+    def select_record_cli(self, bucket_id : str) -> str or False:
         filtered_records = [record.__dict__ for record in self.records.values() if record.bucket_id == bucket_id]
-        # record_details = self.get_dicts_from_objects(record_fields)
+        if not filtered_records :
+            return False
         record_fields = ['_id', '_schema_type', '_created', '_owner']
         record = command_with_options('select record', filtered_records, True, record_fields)
         return record['_id']
@@ -85,30 +89,13 @@ class DataManagerCLI(DataManager):
 
     def printer_cli(self, data) :
         if data == 'Bucket' :
-            buckets_details = self.get_dicts_from_objects(self.buckets.values())
-            pretty_print(buckets_details)
-            self.menu()
+            object_display = get_dicts_from_objects(self.buckets.values())
         if data == 'Record' :
-            records_details = self.get_dicts_from_objects(self.records.values())
-            pretty_print(records_details)
-            self.menu()
+            object_display = get_dicts_from_objects(self.records.values())
         if data == 'Field' :
-            fields_details = self.get_dicts_from_objects(self.fields.values())
-            pretty_print(fields_details)
-            self.menu()
+            object_display = get_dicts_from_objects(self.fields.values())
 
-    # MISC 
+        pretty_print(object_display)
 
-    def get_dicts_from_objects(self, objects):
-        return [obj.__dict__ for obj in objects]
-    
 
-    def options_manager(self, options={}):
-        if click.confirm('Would you like to add an option key-value?'):
-            key = click.prompt('Enter Key Name')
-            value = click.prompt(f'Enter Value for {key}')
-            options[key] = value
-            return self.options_manager(options)
-        else:
-            return options
     
