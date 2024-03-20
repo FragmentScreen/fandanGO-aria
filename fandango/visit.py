@@ -14,7 +14,7 @@ class Visit:
     '''
     def __init__(self, token):
         self.token = token
-        self.rest_server = config["login"]["VISIT_URL"]
+        self.rest_server = config["api"]["VISIT_URL"]
 
     def get_visits(self, vid):
         if not self.token:

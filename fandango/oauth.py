@@ -1,13 +1,8 @@
-from .utils import get_formatted_datetime, print_with_spaces, check_headers, space
+from .utils import get_formatted_datetime, print_with_spaces, check_headers, space, get_config
 from .config import *
 import yaml
 
-load_dotenv('.env')
-root_project_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
-config_path = os.path.join(root_project_dir, "config.yml")
-with open(config_path, "r") as f:
-    config = yaml.safe_load(f)
-
+config = get_config()
 class OAuth :
     def __init__(self) -> None:
         self.grant_type = config["login"]["GRANT_TYPE"]
@@ -20,7 +15,7 @@ class OAuth :
 
 
     def login(self, username, password) -> None:
-        '''username and password passed from the commands 'login'. Gets login_data from pre-set env vars.'''
+        '''username and password passed from the commands 'login'. Gets login_data from pre-set config vars.'''
         login_data = self.get_login_data(username, password)
         try : 
             response = self.send_login_request(login_data)
@@ -55,8 +50,9 @@ class OAuth :
 
     def set_token_data(self, token_data) -> bool or None :
         try :
-            retrieval_password = click.prompt('Set token retrieval password', default='optional')
-            retrieval_password = '' if retrieval_password == 'optional' else retrieval_password
+            # retrieval_password = click.prompt('Set token retrieval password', default='optional')
+            # retrieval_password = '' if retrieval_password == 'optional' else retrieval_password\
+            retrieval_password = ''
             click.echo('Attempting to store Token...')
             keyring.set_password(self.token_str_key, retrieval_password, token_data)
             print_with_spaces('Token data successfully stored in keyring.')
@@ -79,10 +75,10 @@ class OAuth :
             print_with_spaces('Token expired. Please log back into ARIA')
 
     def get_keyring_token_data(self) -> dict or False :
-        retrieval_pass = click.prompt('Enter your token password', default='optional')
-        retrieval_pass = '' if retrieval_pass == 'optional' else retrieval_pass
+        # retrieval_pass = click.prompt('Enter your token password', default='optional')
+        # retrieval_pass = '' if retrieval_pass == 'optional' else retrieval_pass
+        retrieval_pass = ''
         token_data_str = keyring.get_password(self.token_str_key, retrieval_pass)
-        print('password worked')
         if not token_data_str :
             space()
             logging.error(' Either the password entered is incorrect, or no access token is stored.')

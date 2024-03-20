@@ -1,14 +1,36 @@
 login : 
-  LOGIN_URL : 
-  VISIT_URL : 
-  CLIENT_SECRET :
+  LOGIN_URL : https://auth.aria.services/auth/realms/TEST/protocol/openid-connect/token
+  CLIENT_SECRET : 
   CLIENT_ID :
-  SCOPE :
-  GRANT_TYPE :
-  REFRESH_GRANT : 
-  SESSION_KEY :
-  USERNAME :
-  DEBUG :
+  SCOPE : account
+  GRANT_TYPE : password
+  REFRESH_GRANT : refresh_token
+  SESSION_KEY : aria_key
+  USERNAME : 
+  PASSWORD :
+
+
+apis :
+  DATA_DEPOSITION_BASE :
+  VISIT_URL : 
+
+endpoints : 
+  create :
+    bucket : createDataBucket
+    record : createDataRecord
+    field : createDataField
+  get : 
+    bucket : bucket
+    record : record
+    field : field
+
+
+
+
+
+
+dev : 
+DEBUG : True
 
 
 

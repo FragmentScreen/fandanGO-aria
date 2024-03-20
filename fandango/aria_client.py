@@ -1,8 +1,10 @@
 from .oauth import OAuth
 from .client import Client
 from .data_manager import DataManager
+from .bucket import Bucket
 from .visit import Visit
 from .data_manager import DataManager
+from .cli_data_manager import DataManagerCLI
 class AriaClient :
     '''
     Super class. New instances initiated in the `commands`. All functionality will start with one of these methods.
@@ -11,41 +13,33 @@ class AriaClient :
         self.client = Client(OAuth())
         if not login:
             self._fetch_token()
-            self._get_classes()
 
     @property
     def token(self):
         if not self._token:
             self._fetch_token()
         return self._token
-
-    def _get_classes(self) :
-        self.data_manager = DataManager(self.token)
-        self.visit_manager = Visit(self.token)
         
     def login(self, username, password):
         self.client.authenticate(username, password)
 
+    def new_data_manager(self, id, type, populate=False):
+        return (DataManager(self.token, id, type, populate))
+    
+    def new_cli_manager(self, id, type, populate=False) :
+        return (DataManagerCLI(self.token, id, type, populate))
+
+    def new_data_managers(self, entities=None):
+        if entities is None:
+            entities = {}
+
+        data_managers = {}
+        for key, value in entities.items():
+            data_managers[f'data_manager_{key}_{value}'] = DataManager(self.token, key, value, True)
+        return data_managers
+    
     def get_access_token(self):
         return self.client.get_access_token()
-
-    def create_bucket(self, fields=None):
-        self.data_manager.create_bucket(fields)
-
-    def list_buckets(self) :
-        self.data_manager.list_buckets()
-
-    def create_record(self) :
-        self.data_manager.create_record()
-
-    def list_records(self) :
-        self.data_manager.list_records()
-
-    def create_field(self) :
-        self.data_manager.create_field()
-
-    def list_fields(self):
-        self.data_manager.list_fields()
 
     def get_visits(self, vid=None) : 
         visits = self.visit_manager.get_visits(vid)

@@ -9,7 +9,7 @@ from fandango.commands.create_record import create_record
 from fandango.commands.list_records import list_records
 from fandango.commands.create_field import create_field
 from fandango.commands.list_fields import list_fields
-from fandango.commands.get_visits import get_visits
+# from fandango.commands.get_visits import get_visits
 
 @click.group()
 def cli():
@@ -17,8 +17,6 @@ def cli():
     💃🕺 💃🕺 💃🕺💃 🕺💃🕺 💃🕺💃 🕺💃🕺 💃🕺 💃🕺 💃🕺
     
                 Welcome to Fandango
-
-              ¿Dónde está la biblioteca 
        
     
     💃🕺 💃🕺 💃🕺💃 🕺💃 🕺💃🕺 💃🕺 💃🕺💃 🕺💃🕺 💃🕺
@@ -33,7 +31,7 @@ cli.add_command(create_record)
 cli.add_command(list_records)
 cli.add_command(create_field)
 cli.add_command(list_fields)
-cli.add_command(get_visits)
+# cli.add_command(get_visits)
 
 if __name__ == '__main__':
     cli()
