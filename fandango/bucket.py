@@ -3,7 +3,6 @@ from .utils import *
 from .abstract_bucket import AbstractBucket
 
 class Bucket(AbstractBucket):
-    
     def __init__(self, entity_id : int, entity_type : str, embargo_date : str, **kwargs):
         self._entity_type = entity_type
         self._entity_id = entity_id

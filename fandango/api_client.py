@@ -1,11 +1,11 @@
-import requests
 from .config import *
-from .utils import set_headers, pretty_print
+from .utils import set_headers, get_config
 
+config = get_config()
 class APIClient:
     def __init__(self,token):
         self.token = token
-        self.base_url = 'http://localhost:8281/api/v1'
+        self.base_url = config['apis']['DATA_DEPOSITION_BASE']
 
     def get(self, endpoint, params=None):
         url = f"{self.base_url}/{endpoint}"

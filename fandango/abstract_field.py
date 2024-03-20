@@ -1,12 +1,6 @@
 from abc import ABC, abstractmethod
 
 class AbstractField(ABC):
-    def __init__(self, record_id: str, field_type: str, content: str, options: dict = None):
-        self.record_id = record_id
-        self.field_type = field_type
-        self.content = content
-        self.options = options if options is not None else {}
-
     @property
     @abstractmethod
     def record_id(self):

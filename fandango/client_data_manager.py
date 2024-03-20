@@ -1,7 +1,9 @@
-import requests
+from .field import Field
+from .bucket import Bucket
+from .record import Record
 from .api_client import APIClient
 from .config import *
-from .utils import set_headers, pretty_print, get_config
+from .utils import get_config
 
 config = get_config()
 class DataManagerClient(APIClient):
@@ -20,7 +22,7 @@ class DataManagerClient(APIClient):
 
     # BUCKETS
         
-    def push_bucket(self, bucket) -> dict | None :
+    def push_bucket(self, bucket : Bucket) -> dict | None :
         data = {
             'aria_id': bucket.entity_id,
             "aria_entity_type" : bucket.entity_type, 
@@ -30,7 +32,7 @@ class DataManagerClient(APIClient):
         bucket = response['data']['items'][0]
         return bucket
     
-    def pull_buckets(self, id : int, type : str) -> list[dict[str, any]] or [] : 
+    def pull_buckets(self, id : int, type : str) -> list[dict[str, Bucket]] : 
         data = {
             'aria_id' : id,
             'aria_entity_type': type
@@ -41,7 +43,7 @@ class DataManagerClient(APIClient):
     
     # RECORDS
     
-    def push_record(self, record) -> dict or None :
+    def push_record(self, record : Record) -> dict | list :
         data = {
             "bucket" : record.bucket_id,
             "schema" : record.schema_type
@@ -50,7 +52,7 @@ class DataManagerClient(APIClient):
         record = response['data']['items'][0]
         return record
 
-    def pull_records(self, bucket_id : str) -> list[dict[str, any]] or [] : 
+    def pull_records(self, bucket_id : str) -> list[dict[str, Record]] | list : 
         data = {
             'bucket' : bucket_id,
         }
@@ -60,8 +62,7 @@ class DataManagerClient(APIClient):
 
     # FIELDS 
 
-    def push_field(self, field) -> dict or None :
-        # field.options = json.dumps(field.options)
+    def push_field(self, field : Field) -> dict | None :
         field.content = json.dumps(field.content)
         data = {
             "record" : field.record_id,
@@ -73,7 +74,7 @@ class DataManagerClient(APIClient):
         field = response['data']['items'][0]
         return field
     
-    def pull_fields(self, record_id : str) -> list[dict[str, any]] or [] : 
+    def pull_fields(self, record_id : str) -> list[dict[str, Field]] : 
         data = {
             'record' : record_id,
         }
