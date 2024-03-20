@@ -28,16 +28,20 @@ class DataManager:
         return bucket
 
     def push(self, obj):
-        """Push an object to the appropriate endpoint"""
+        """Push an object to the appropriate client endpoint"""
 
         if isinstance(obj, Bucket):
             new_bucket = self.client.push_bucket(obj)
             obj.populate(new_bucket)
             self.buckets[obj._id] = obj
         elif isinstance(obj, Record):
-            endpoint = "push_record"
+            new_record = self.client.push_record(obj)
+            obj.populate(new_record)
+            self.records[obj._id] = obj
         elif isinstance(obj, Field):
-            endpoint = "push_field"
+            new_field = self.client.push_field(obj)
+            obj.populate(new_field)
+            self.fields[obj._id] = obj
         else:
             raise ValueError("Unsupported object type for pushing")
 
@@ -82,92 +86,3 @@ class DataManager:
                     new_field = Field(field['record'], field['type'], field['content'], field['options'], field['order'], id=field['id'])
                     self.fields[field['id']] = new_field
 
-
-
-
-    
-    
-
-    # def __init__(self, token, bucket_id):
-    #     self.bucket_manager = Bucket(token, bucket_id)
-    #     self.records_manager = Records(token)
-    #     self.fields_manager = Fields(token)
-    #     if bucket_id is not None :
-    #         self.populate(bucket_id)
-
-    # # check commit working
-    # # BUCKET
-
-    # def create_bucket(self, fields=None) :
-    #     bucket = self.bucket_manager.create_bucket(fields)
-    #     self.records_manager.bucket_id = bucket['id']
-    #     return bucket['id']
-    
-    # def select_bucket(self) : 
-    #     bucket = self.bucket_manager.select_bucket()
-    #     bucket_id = bucket['id']
-    #     self.populate(bucket_id)
-    #     return bucket_id
-    
-    # def print_bucket_info(self) :
-    #     if self.bucket_manager.bucket :
-    #         bucket = self.bucket_manager.bucket
-    #         records = self.records_manager.records
-    #         fields = self.fields_manager.fields
-    #         print_with_spaces(f"Bucket info for ID: {self.bucket_manager.bucket['id']}")
-    #         pretty_print({'Bucket' : bucket, 'Records' : records, 'Fields': fields })
-    #     else :
-    #         print('No bucket set')
-
-
-    # # RECORDS 
-
-    # def get_records_for_bucket(self) :
-    #     return self.records_manager.get_records()
-    
-    # def print_records(self) :
-    #     pretty_print(self.records_manager.records)
-
-    # def create_record(self, fields=None):
-    #     record_id = self.records_manager.create_record(fields)
-    #     return record_id
-    
-    # def select_record(self) :
-    #     record = self.records_manager.select_record()
-    #     self.fields_manager.record_id = record['id']
-    #     return self.fields_manager.record_id
-    
-    # def get_fields_for_records(self) :
-    #     pretty_print(self.fields_manager.fields)
-    
-
-
-    
-
-
-
-
-    
-    # def select_record(self) :
-    #     # self.select_bucket()
-    #     record = self.records_manager.select_record()
-    #     self.fields_manager.record_id = record['id']
-    #     return self.fields_manager.record_id
-
-    # def create_field(self, record_id=None, data=None):
-    #     # self.select_record()
-    #     self.fields_manager.create_field(record_id, data)
-    
-    # def list_fields(self):
-    #     self.select_record()
-    #     self.fields.list_fields()
-
-
-    # # INITIATOR (When bucket_id supplier)
-
-    # def populate(self, bucket_id) :
-    #     self.bucket_manager.populate()
-    #     self.records_manager.bucket_id = bucket_id
-    #     self.records_manager.records= self.get_records_for_bucket()
-    #     self.fields_manager.record_id  = self.records_manager.records
-    #     self.fields_manager.populate_fields_for_records()
