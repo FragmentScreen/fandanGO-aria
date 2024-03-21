@@ -4,7 +4,11 @@ from .bucket import Bucket
 from .visit import Visit
 from .data_manager import DataManager
 from .cli_data_manager import DataManagerCLI
+<<<<<<< HEAD
 from .token import Token
+=======
+from .entity_manager import EntityManager
+>>>>>>> b548e25 (entity fetching)
 class AriaClient :
     '''
     Super class. New instances initiated in the `commands`. All functionality will start with one of these methods.
@@ -28,6 +32,9 @@ class AriaClient :
     
     def new_cli_manager(self, id, type, populate=False) :
         return (DataManagerCLI(self.token, id, type, populate))
+    
+    def new_entity_manager(self) :
+        return (EntityManager(self.token))
 
     def new_data_managers(self, entities=None):
         if entities is None:
@@ -40,13 +47,6 @@ class AriaClient :
     
     def get_access_token(self):
         return self.oauth.get_access_token()
-
-    def get_visits(self, vid=None) : 
-        visits = self.visit_manager.get_visits(vid)
-        if len(visits) < 1 :
-            print('No records with that ID for this facilty')
-        else :
-            print(visits)
 
     def _fetch_token(self):
         token : Token = self.get_access_token()

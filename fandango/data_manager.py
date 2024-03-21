@@ -3,7 +3,7 @@ from .utils import pretty_print, print_with_spaces, print_created_message
 from .bucket import Bucket
 from .record import Record 
 from .field import Field
-from .client_data_manager import DataManagerClient as EntityClient
+from .client_data_manager import DataManagerClient as DataClient
 class DataManager:
     def __init__(self, token, entity_id : int, entity_type : str, populate : bool) :
         """Initiate a new DataManager for Entity ID & Type's Buckets, Records & Fields"""
@@ -13,7 +13,7 @@ class DataManager:
         self.buckets = {}
         self.records = {}
         self.fields = {}
-        self.client = EntityClient(token, entity_id, entity_type)
+        self.client = DataClient(token, entity_id, entity_type)
 
         if populate :
             self.populate()
