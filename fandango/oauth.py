@@ -1,10 +1,13 @@
 from .utils import get_formatted_datetime, print_with_spaces, check_headers, space, get_config
+from .client_oauth import ClientOauth
 from .config import *
-import yaml
+from .token import Token
+from typing import Union
 
 config = get_config()
 class OAuth :
     def __init__(self) -> None:
+        self.client = ClientOauth()
         self.grant_type = config["login"]["GRANT_TYPE"]
         self.scope = config["login"]["SCOPE"]
         self.client_id = config["login"]["CLIENT_ID"]
@@ -14,110 +17,84 @@ class OAuth :
         self.refresh_grant = config["login"]["REFRESH_GRANT"]
 
 
+    # LOGIN
+
     def login(self, username, password) -> None:
         '''username and password passed from the commands 'login'. Gets login_data from pre-set config vars.'''
         login_data = self.get_login_data(username, password)
         try : 
-            response = self.send_login_request(login_data)
-            if response:
-                self.handle_login_response(response)
+            response = self.client.login(login_data)
+            self.handle_auth_response(response)
+            click.echo('Successfully logged into ARIA.')
         except Exception as e : 
-            space()
-            logging.error(f' Login to ARIA failed')
+            logging.error(f' Login to ARIA failed : {e.args}')
             print_with_spaces('Please check your credentials and try again.')
-        
 
-    def send_login_request(self, login_data) -> dict or None :
-        try:
-            response = requests.post(self.url, login_data)
-            response.raise_for_status()
-            return response.json()
-        except requests.exceptions.RequestException:
-            raise
 
+    # AUTH HANDLING
     
-    def handle_login_response(self, response_data) -> None:
+    def handle_auth_response(self, response_data) -> Token:
         '''
         Timestamps token data before storing on keychain for expiry comparison upon reuse
         '''
-        response_data['TIMESTAMP'] = get_formatted_datetime()
-        response_str = json.dumps(response_data)
-        if response_str:
-            click.echo('Successfully logged into ARIA.')
-            self.set_token_data(response_str)
-        else:
-            logging.error('Error: Access token not found in the server response.')
+        token = Token(response_data)
+        token.timestamp = get_formatted_datetime()
+        self.set_token_keyring_data(token)
+        return token
 
-    def set_token_data(self, token_data) -> bool or None :
-        try :
-            # retrieval_password = click.prompt('Set token retrieval password', default='optional')
-            # retrieval_password = '' if retrieval_password == 'optional' else retrieval_password\
-            retrieval_password = ''
-            click.echo('Attempting to store Token...')
-            keyring.set_password(self.token_str_key, retrieval_password, token_data)
-            print_with_spaces('Token data successfully stored in keyring.')
-        except key_err.PasswordSetError as e :
-            logging.error(f"Error setting keyring: {e}")
+
+    # TOKEN 
         
-        
-    def get_access_token(self) -> dict or False :
+    def get_access_token(self) -> Union[dict, False, None]:
         token_data = self.get_keyring_token_data()
-        if token_data == False or not check_headers(token_data) :
-            return False
-        if self.check_token_valid(token_data['TIMESTAMP'], token_data['expires_in']) :
-            return token_data
-        elif self.check_token_valid(token_data['TIMESTAMP'], token_data['refresh_expires_in']) :
-            print_with_spaces('Refreshing token..')
-            token = self.refresh_token(token_data)
-            if token :
-                return token
-        else : 
-            print_with_spaces('Token expired. Please log back into ARIA')
-
-    def get_keyring_token_data(self) -> dict or False :
-        # retrieval_pass = click.prompt('Enter your token password', default='optional')
-        # retrieval_pass = '' if retrieval_pass == 'optional' else retrieval_pass
-        retrieval_pass = ''
-        token_data_str = keyring.get_password(self.token_str_key, retrieval_pass)
-        if not token_data_str :
-            space()
-            logging.error(' Either the password entered is incorrect, or no access token is stored.')
-            print_with_spaces('Please login to ARIA to retrieve another token if the problem persists or type aria-help for more options.')
-            return False
-        return json.loads(token_data_str)
-    
-    def check_token_valid (self, token_timestamp_str, expiry) -> bool :
-        current_time = datetime.now()
-        token_timestamp = datetime.strptime(token_timestamp_str, '%Y-%m-%d %H:%M:%S')
-        token_expiry_time = token_timestamp + timedelta(seconds=expiry)
-
-        if current_time < token_expiry_time :
-            return True
         
-        return False
+        if token_data is None or not check_headers(token_data):
+            raise Exception("Failed to fetch token.")
+
+        token = Token(token_data)
+        if token.is_valid():
+            return token
+        elif token.is_valid(True) :
+            print_with_spaces('Refreshing token..')
+            return self.refresh_token(token)
+        else:
+            raise Exception("Token expired. Please log back into ARIA")
     
-    def refresh_token(self, token_data) -> dict or False : 
+    def refresh_token(self, token : Token) -> Union[Token, None] : 
         '''Posts refresh_token to retrieve new access_token. Some conversion between json string/object for storage and manipulation respectively '''
-        refresh_token = token_data['refresh_token']
+        refresh_token = token.refresh_token
         refresh_data = self.get_refresh_data(refresh_token)
         try :
-            response = requests.post(self.url, refresh_data)
-            response.raise_for_status()
-            response_data = response.json()
-            response_data['TIMESTAMP'] = get_formatted_datetime()
-            response_str = json.dumps(response_data)
-            if response_str:
-                # sort this out lu, the if block is a falsy even if true
-                print_with_spaces('Successfully refreshed token')  
-                if self.set_token_data(response_str) :
-                    return json.loads(response_str)
-                return json.loads(response_str)
-            else :
-                logging.error('Error: No token found in server response. If the problem persists, log back into ARIA.')
+            token_data = self.client.login(refresh_data)
+            token = self.handle_auth_response(token_data)
+            return token
         except requests.exceptions.RequestException as e:
             click.echo('Login failed. Please check your credentials and try again.')
             logging.error(f'Error refreshing token: {e}')
 
+
+    #  KEYRING STORAGE
+            
+    def get_keyring_token_data(self) -> Union[dict, None] :
+        token_data_str = keyring.get_password(self.token_str_key, '')
+        if not token_data_str :
+            logging.error(' Either the password entered is incorrect, or no access token is stored.')
+            print_with_spaces('Please login to ARIA to retrieve another token if the problem persists or type aria-help for more options.')
+            return None
+        return json.loads(token_data_str)
+    
+    def set_token_keyring_data(self, token : Token) -> None :
+        try :
+            click.echo('Attempting to store Token...')
+            token_json = json.dumps(token.to_dict())
+            keyring.set_password(self.token_str_key, '', token_json)
+            print_with_spaces('Token data successfully stored in keyring.')
+        except key_err.PasswordSetError as e :
+            logging.error(f"Error setting keyring: {e}")
+
+
+    # GET DATA OBJECTS
+            
     def get_login_data(self, username, password) -> dict :
         return {
             'grant_type': self.grant_type,
