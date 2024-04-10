@@ -1,16 +1,16 @@
 from .oauth import OAuth
-from .client import Client
 from .data_manager import DataManager
 from .bucket import Bucket
 from .visit import Visit
 from .data_manager import DataManager
 from .cli_data_manager import DataManagerCLI
+from .token import Token
 class AriaClient :
     '''
     Super class. New instances initiated in the `commands`. All functionality will start with one of these methods.
     '''
     def __init__(self, login=False):
-        self.client = Client(OAuth())
+        self.oauth = OAuth()
         if not login:
             self._fetch_token()
 
@@ -21,7 +21,7 @@ class AriaClient :
         return self._token
         
     def login(self, username, password):
-        self.client.authenticate(username, password)
+        self.oauth.login(username, password)
 
     def new_data_manager(self, id, type, populate=False):
         return (DataManager(self.token, id, type, populate))
@@ -39,7 +39,7 @@ class AriaClient :
         return data_managers
     
     def get_access_token(self):
-        return self.client.get_access_token()
+        return self.oauth.get_access_token()
 
     def get_visits(self, vid=None) : 
         visits = self.visit_manager.get_visits(vid)
@@ -49,5 +49,5 @@ class AriaClient :
             print(visits)
 
     def _fetch_token(self):
-        token = self.get_access_token()
-        self._token = token['access_token']
+        token : Token = self.get_access_token()
+        self._token = token.access_token
