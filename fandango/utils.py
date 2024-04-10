@@ -35,7 +35,7 @@ def get_formatted_datetime(input_datetime=None, format_str='%Y-%m-%d %H:%M:%S'):
 
 def check_headers(json):
     """Checks all the properties of an ARIA token exist before attempting to store"""
-    required_headers = ['access_token', 'expires_in', 'refresh_expires_in', 'refresh_token', 'token_type', 'not-before-policy', 'session_state', 'scope', 'TIMESTAMP']
+    required_headers = ['access_token', 'expires_in', 'refresh_expires_in', 'refresh_token', 'token_type', 'not_before_policy', 'session_state', 'scope', 'timestamp']
     for header in required_headers:
         if header not in json:
             return False
