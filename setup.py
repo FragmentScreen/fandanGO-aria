@@ -9,15 +9,20 @@ setup(
     author_email="lui.holliday@instruct-eric.org",
     license='MIT',
     packages=find_packages(),
+    url='https://github.com/FragmentScreen/fandango-aria-plugin',
     install_requires=[
         'click',
         'requests',
         'python-dotenv',
-        'keyring'
+        'keyring',
+        'questionary',
+        'inquirer',
+        'datetime',
+        'PyYAML'
     ],
     entry_points={
         'console_scripts': [
-            'fandango=cli:cli',
+            'fandango=fandango.commands.cli:cli',
         ],
     },
 )
