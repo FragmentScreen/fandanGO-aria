@@ -1,5 +1,5 @@
 from .utils import *
-from .config import *
+from .imports_config import *
 from .abstract_field import AbstractField
 
 class Field(AbstractField) :

@@ -1,4 +1,4 @@
-from .config import *
+from .imports_config import *
 from .utils import *
 from .visit import Visit
 from .client_entity_manager import EntityManagerClient as EntityClient
