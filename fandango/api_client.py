@@ -7,7 +7,7 @@ class APIClient:
         self.token = token
         self.base_url = config['apis']['DATA_DEPOSITION_BASE']
         self.aria_login_url = config["login"]["LOGIN_URL"]
-        self.headers = self.token if self.token else {}
+        self.headers = set_headers(self.token) if self.token else None
 
     def get(self, endpoint, params=None):
         url = f"{self.base_url}/{endpoint}"
