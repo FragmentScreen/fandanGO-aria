@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='fandango-aria-plugin',
-    version='0.1.0',
+    version='0.1.1',
     description="A Public Client library and CLI for interacting with ARIA's Data Deposition Service.",
     author="Lui Holliday, Instruct-ERIC",
     author_email="lui.holliday@instruct-eric.org",
