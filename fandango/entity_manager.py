@@ -19,9 +19,7 @@ class EntityManager():
         for visit in visits :
             new_visit = Visit(visit)
             id = int(new_visit._id)
-            print(id)
             self.visits[id] = new_visit
-            print(new_visit.__dict__)
 
     def get_proposal_data(self, pid) :
         proposal_data = self.client.pull_proposal_data(pid)
