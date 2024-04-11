@@ -51,8 +51,8 @@ def set_headers(token) :
 
 def get_config(config_file='config.yml'):
     """Get the path to the config.yml file"""
-    current_dir = os.path.abspath(os.path.dirname(__file__))
-    config_path = os.path.join(current_dir, config_file)
+    fandango_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    config_path = os.path.join(fandango_dir, "config", config_file)
     with open(config_path, "r") as f:
         config = yaml.safe_load(f)
     return config
