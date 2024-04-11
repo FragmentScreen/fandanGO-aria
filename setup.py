@@ -3,12 +3,12 @@ from setuptools import setup, find_packages
 
 setup(
     name='fandango-aria-plugin',
-    version='0.0.7',
+    version='0.0.8',
     description="A Public Client library and CLI for interacting with ARIA's Data Deposition Service.",
     author="Lui Holliday, Instruct-ERIC",
     author_email="lui.holliday@instruct-eric.org",
     license='MIT',
-    package_data={'': ['config.yml']},
+    package_data={'fandango': ['config/config.yml']},
     packages=find_packages(exclude=['ez_setup', 'examples','tests', 'tests.*', 'release']),
     include_package_data=True,
     url='https://github.com/FragmentScreen/fandango-aria-plugin',

@@ -1,4 +1,4 @@
-from .config import * 
+from .imports_config import * 
 from .utils import pretty_print, print_with_spaces, print_created_message
 from .bucket import Bucket
 from .record import Record 

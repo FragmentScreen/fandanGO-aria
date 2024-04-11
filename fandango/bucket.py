@@ -1,4 +1,4 @@
-from .config import *
+from .imports_config import *
 from .utils import *
 from .abstract_bucket import AbstractBucket
 

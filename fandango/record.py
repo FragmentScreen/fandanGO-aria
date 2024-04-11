@@ -1,4 +1,4 @@
-from .config import *
+from .imports_config import *
 from .abstract_record import AbstractRecord
 from .utils import *
 

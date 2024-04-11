@@ -1,4 +1,4 @@
-from .config import *
+from .imports_config import *
 
 #  PRINTING
 

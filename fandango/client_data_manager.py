@@ -2,7 +2,7 @@ from .field import Field
 from .bucket import Bucket
 from .record import Record
 from .api_client import APIClient
-from .config import *
+from .imports_config import *
 from .utils import get_config
 
 config = get_config()

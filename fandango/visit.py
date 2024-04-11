@@ -1,4 +1,4 @@
-from .config import *
+from .imports_config import *
 from .utils import *
 class Visit:
     def __init__(self, data):

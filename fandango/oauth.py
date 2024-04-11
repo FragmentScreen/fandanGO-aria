@@ -1,6 +1,6 @@
 from .utils import get_formatted_datetime, print_with_spaces, check_headers, space, get_config
 from .client_oauth import ClientOauth
-from .config import *
+from .imports_config import *
 from .token import Token
 from typing import Union
 

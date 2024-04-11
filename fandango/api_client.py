@@ -1,4 +1,4 @@
-from .config import *
+from .imports_config import *
 from .utils import set_headers, get_config
 
 config = get_config()
