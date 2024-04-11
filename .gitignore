@@ -16,4 +16,5 @@ test_*
 
 # build or python virtual env files
 /venv
+/myenv
 /build
