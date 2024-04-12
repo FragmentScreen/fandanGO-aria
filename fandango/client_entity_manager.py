@@ -17,7 +17,7 @@ class EntityManagerClient(APIClient):
         self.base_url = config['apis']["ENTITY_BASE"]
 
         
-    def pull_fac_visits(self, vid : int = None) -> dict | None :
+    def pull_fac_visits(self, vid : int = None) -> Union[dict, list] :
         data = {
             'cid' : self.facility,
             'id' : vid if vid else ''
@@ -26,7 +26,7 @@ class EntityManagerClient(APIClient):
         visits = response['data']['items']
         return visits
     
-    def pull_proposal_data(self, pid) -> dict | None :
+    def pull_proposal_data(self, pid) -> Union[dict, list] :
         data = {
             'pid' : pid
         }
@@ -39,7 +39,7 @@ class EntityManagerClient(APIClient):
 
 
         
-    def pull_proposal(self, pid) -> dict | None :
+    def pull_proposal(self, pid) -> Union[dict, list] :
         try :
             response = self.get(f'{self.proposal_url}{pid}')
             proposal = response['data']['items'][0]

@@ -51,9 +51,7 @@ def set_headers(token) :
 
 def get_config(config_file='config.yml'):
     """Get the path to the config.yml file"""
-    print(os.path.dirname(__file__))
     fandango_dir = os.path.abspath(os.path.join(os.path.dirname(__file__)))
-    print(fandango_dir)
     config_path = os.path.join(fandango_dir, "config", config_file)
     with open(config_path, "r") as f:
         config = yaml.safe_load(f)
@@ -108,7 +106,7 @@ def format_datetime_to_json_serializable(date):
     """
     return date.strftime('%d-%m-%Y 00:00:00')
 
-def get_entity() :
+def get_entity() -> dict :
     aria_id = click.prompt('Set ARIA ID', type=int)
     aria_entity_type = command_with_options('aria entity', ['proposal', 'visit'])
     return {

@@ -1,6 +1,8 @@
 from .data_manager import DataManager
 from .utils import *
+from imports_config import Union
 import click
+
 
 class DataManagerCLI(DataManager):
     def __init__(self, token, entity_id, entity_type, populate):
@@ -38,7 +40,7 @@ class DataManagerCLI(DataManager):
         if data == 'Field' :
             self.create_field_cli()
 
-    def create_bucket_cli(self, menu_return=True) -> str | None :
+    def create_bucket_cli(self, menu_return=True) -> Union[str, None] :
         embargo= click.prompt('Emargoed Until (dd/mm/yy)', type=click.DateTime(formats=['%d/%m/%y']), default='', show_default=False)
         embargo = format_datetime_to_json_serializable(embargo)
         bucket = self.create_bucket(embargo)
@@ -48,7 +50,7 @@ class DataManagerCLI(DataManager):
         else:
             return bucket.id 
         
-    def create_record_cli(self, menu_return=True) -> str | None:
+    def create_record_cli(self, menu_return=True) -> Union[str, None] :
         existing_bucket = click.confirm('Create record for existing Bucket?')
         if not existing_bucket :
             bucket_id = self.create_bucket_cli(False)
@@ -82,13 +84,13 @@ class DataManagerCLI(DataManager):
         
     # SELECT 
 
-    def select_bucket_cli(self) -> str | None :
+    def select_bucket_cli(self) -> Union[str, None] :
         buckets_details = get_dicts_from_objects(self.buckets.values())
         bucket_fields = ['_id', '_embargo_date', '_created', '_owner']
         bucket = command_with_options('select bucket', buckets_details, True, bucket_fields)
         return bucket['_id']
     
-    def select_record_cli(self, bucket_id : str) -> str | None :
+    def select_record_cli(self, bucket_id : str) -> Union[str, None] :
         filtered_records = [record.__dict__ for record in self.records.values() if record.bucket_id == bucket_id]
         if not filtered_records :
             return False

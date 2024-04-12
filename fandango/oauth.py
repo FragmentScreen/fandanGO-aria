@@ -2,7 +2,7 @@ from .utils import get_formatted_datetime, print_with_spaces, check_headers, spa
 from .client_oauth import ClientOauth
 from .imports_config import *
 from .token import Token
-from typing import Union
+
 
 config = get_config()
 class OAuth :
@@ -45,7 +45,7 @@ class OAuth :
 
     # TOKEN 
         
-    def get_access_token(self) -> Union[dict, False, None]:
+    def get_access_token(self) -> Union[dict, None]:
         token_data = self.get_keyring_token_data()
         
         if token_data is None or not check_headers(token_data):

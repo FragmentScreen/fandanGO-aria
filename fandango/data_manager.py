@@ -27,7 +27,7 @@ class DataManager:
         self.buckets[bucket._id] = bucket
         return bucket
 
-    def push(self, obj):
+    def push(self, obj) -> None:
         """Push an object to the appropriate client endpoint"""
 
         if isinstance(obj, Bucket):
@@ -63,7 +63,7 @@ class DataManager:
         self.fields[field.id] = field
         return field
 
-    def populate(self) : 
+    def populate(self) -> None : 
         """Populate new Bucket classes and add to Data Manager based on API request"""
 
         buckets = self.client.pull_buckets(self.entity_id, self.entity_type)

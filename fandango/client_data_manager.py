@@ -22,7 +22,7 @@ class DataManagerClient(APIClient):
 
     # BUCKETS
         
-    def push_bucket(self, bucket : Bucket) -> dict | None :
+    def push_bucket(self, bucket : Bucket) -> Union[dict, None] :
         data = {
             'aria_id': bucket.entity_id,
             "aria_entity_type" : bucket.entity_type, 
@@ -43,7 +43,7 @@ class DataManagerClient(APIClient):
     
     # RECORDS
     
-    def push_record(self, record : Record) -> dict | list :
+    def push_record(self, record : Record) -> Union[dict, list] :
         data = {
             "bucket" : record.bucket_id,
             "schema" : record.schema_type
@@ -52,7 +52,7 @@ class DataManagerClient(APIClient):
         record = response['data']['items'][0]
         return record
 
-    def pull_records(self, bucket_id : str) -> list[dict[str, Record]] | list : 
+    def pull_records(self, bucket_id : str) -> Union[list[dict[str, Record]], list] : 
         data = {
             'bucket' : bucket_id,
         }
@@ -62,7 +62,7 @@ class DataManagerClient(APIClient):
 
     # FIELDS 
 
-    def push_field(self, field : Field) -> dict | None :
+    def push_field(self, field : Field) -> Union[dict, None] :
         field.content = json.dumps(field.content)
         data = {
             "record" : field.record_id,

@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='fandango-aria-plugin',
-    version='0.1.4',
+    version='0.1.8',
     description="A Public Client library and CLI for interacting with ARIA's Data Deposition Service.",
     author="Lui Holliday, Instruct-ERIC",
     author_email="lui.holliday@instruct-eric.org",
@@ -15,12 +15,9 @@ setup(
     install_requires=[
         'click',
         'requests',
-        'python-dotenv',
         'keyring',
         'questionary',
-        'inquirer',
-        'datetime',
-        'PyYAML'
+        'PyYAML',
     ],
     entry_points={
         'console_scripts': [
