@@ -1,38 +1,39 @@
-login : 
-  LOGIN_URL : https://auth.aria.services/auth/realms/TEST/protocol/openid-connect/token
-  CLIENT_SECRET : 
-  CLIENT_ID :
-  SCOPE : account
-  GRANT_TYPE : password
-  REFRESH_GRANT : refresh_token
-  SESSION_KEY : aria_key
-  USERNAME : 
-  PASSWORD :
+LOGIN : 
+  ARIA :
+    LOGIN_URL : 
+    CLIENT_SECRET : 
+    CLIENT_ID : 
+    SCOPE : account
+    GRANT_TYPE : password
+    REFRESH_GRANT : refresh_token
+    SESSION_KEY : 
+    USERNAME : 
+    PASSWORD : 
+    EMAIL : 
 
+FACILITY :
+  ID : 
 
-apis :
-  DATA_DEPOSITION_BASE :
-  VISIT_URL : 
+API :
+  LOCAL : 
+    DATA_DEPOSITION_BASE : 
+    ENTITY_BASE : 
+  
+  BETA : 
+    DATA_DEPOSITION_BASE :
+    ENTITY_BASE :
 
-endpoints : 
-  create :
-    bucket : createDataBucket
-    record : createDataRecord
-    field : createDataField
-  get : 
-    bucket : bucket
-    record : record
-    field : field
+ENDPOINTS : 
+  CREATE :
+    BUCKET : createDataBucket
+    RECORD : createDataRecord
+    FIELD : createDataField
+  GET : 
+    BUCKET : bucket
+    RECORD : record
+    FIELD : field
+    VISITS : visit/feed
+    PROPOSAL_DATA : proposal_data/find
+    PROPOSAL : proposal/
 
-
-
-
-
-
-dev : 
-DEBUG : True
-
-
-
-
-
+DEV : LOCAL
