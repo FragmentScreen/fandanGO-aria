@@ -4,11 +4,8 @@ from .bucket import Bucket
 from .visit import Visit
 from .data_manager import DataManager
 from .cli_data_manager import DataManagerCLI
-<<<<<<< HEAD
 from .token import Token
-=======
 from .entity_manager import EntityManager
->>>>>>> b548e25 (entity fetching)
 class AriaClient :
     '''
     Super class. New instances initiated in the `commands`. All functionality will start with one of these methods.
