@@ -9,12 +9,13 @@ __pycache__/
 
 # dev install auto-gen files (with the 'pip3 install -e .' command)
 *.egg-info/
+*.egg
 
 # test files
 test_*
-
 
 # build or python virtual env files
 /venv
 /myenv
 /build
+/dist
