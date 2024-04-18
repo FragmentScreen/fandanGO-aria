@@ -1,18 +1,30 @@
-## Data Deposition / Fandango CLI
 
-### Intro
+## Intro
 
-Welcome to the FandanGO ARIA plugin. 
+Welcome to the FandanGO ARIA plugin.
 
-**This is a WIP: some functionality is not currently available**
+This package acts as a broker for ARIA's data deposition REST endpoints.
+
+## Installation
+
+Install via [PYPI](https://pypi.org/project/fandango-aria-plugin)
+
+`pip install fandango-aria-plugin`
 
 
+### Note
 
-### Quickstart
+This package uses [Keyring](https://pypi.org/project/keyring) to store token information securely.
+Keyring is usable accross multiple os and supports the following backends:
 
-- [ ] Clone Repository 
-- [ ] Set up `config.yml` (copy structure from example)
-- [ ] run `pip install .` in root repository
-- [ ] run `fandango`
-- [ ] run `fandango login`. This will require an ARIA account and a populated `config.yml`
-  - currently the login command is hard coded to use a password in the config.yml. Change this in `fandango/commands/login.py` if needed
+- macOS Keychain
+- Freedesktop Secret Service supports many DE including GNOME (requires [secretstorage](https://pypi.org/project/SecretStorage/))
+- KDE4 & KDE5 KWallet (requires dbus)
+- Windows Credential Locker
+
+**Linux**
+
+If problems arise when storing tokens on a Linux device, it may be required to download `dbus-python`.
+
+Please use the [dbus package](https://pypi.org/project/dbus-python/) to solve the issue
+
