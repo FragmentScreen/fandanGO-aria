@@ -5,9 +5,10 @@ config = get_config()
 class APIClient:
     def __init__(self, token):
         self.token = token
-        self.base_url = config['apis']['DATA_DEPOSITION_BASE']
-        self.aria_login_url = config["login"]["LOGIN_URL"]
+        self.aria_login_url = config["LOGIN"]['ARIA']["LOGIN_URL"]
         self.headers = set_headers(self.token) if self.token else None
+        # base_url to be passed up from child class
+        self.base_url = None 
 
     def get(self, endpoint, params=None):
         url = f"{self.base_url}/{endpoint}"
@@ -25,5 +26,14 @@ class APIClient:
         return resp.json()
 
     def _construct_query_string(self, params):
-        query_string = "&".join([f"filter[{key}]={value}" for key, value in params.items()])
+        query_string_parts = []
+        for key, value in params.items():
+            if value is None or (isinstance(value, list) and None in value):
+                continue
+            if isinstance(value, (list, tuple)):
+                for item in value:
+                    query_string_parts.append(f"filter[{key}][]={item}")
+            else:
+                query_string_parts.append(f"filter[{key}]={value}")
+        query_string = "&".join(query_string_parts)
         return query_string

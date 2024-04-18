@@ -8,13 +8,13 @@ config = get_config()
 class OAuth :
     def __init__(self) -> None:
         self.client = ClientOauth()
-        self.grant_type = config["login"]["GRANT_TYPE"]
-        self.scope = config["login"]["SCOPE"]
-        self.client_id = config["login"]["CLIENT_ID"]
-        self.url = config["login"]["LOGIN_URL"]
-        self.client_secret = config["login"]["CLIENT_SECRET"]
-        self.token_str_key = config["login"]["SESSION_KEY"]
-        self.refresh_grant = config["login"]["REFRESH_GRANT"]
+        self.grant_type = config["LOGIN"]['ARIA']["GRANT_TYPE"]
+        self.scope = config["LOGIN"]['ARIA']["SCOPE"]
+        self.client_id = config["LOGIN"]['ARIA']["CLIENT_ID"]
+        self.url = config["LOGIN"]['ARIA']["LOGIN_URL"]
+        self.client_secret = config["LOGIN"]['ARIA']["CLIENT_SECRET"]
+        self.token_str_key = config["LOGIN"]['ARIA']["SESSION_KEY"]
+        self.refresh_grant = config["LOGIN"]['ARIA']["REFRESH_GRANT"]
 
 
     # LOGIN

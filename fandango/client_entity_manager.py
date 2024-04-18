@@ -10,17 +10,22 @@ class EntityManagerClient(APIClient):
     def __init__(self, token):
         super().__init__(token)
         self.token = token
-        self.facility = config['fac']['ID']
-        self.visits_url = config["apis"]["VISITS"]
-        self.proposal_data_url = config['apis']['PROPOSAL_DATA']
-        self.proposal_url = config['apis']['PROPOSAL']
-        self.base_url = config['apis']["ENTITY_BASE"]
+        self.facility = config['FACILITY']['ID']
+        self.visits_url = config["ENDPOINTS"]['GET']["VISITS"]
+        self.proposal_data_url = config['ENDPOINTS']['GET']['PROPOSAL_DATA']
+        self.proposal_url = config['ENDPOINT']['GET']['PROPOSAL']
+
+        self.load_url()
+
+    def load_url(self) :
+        dev = config.get('DEV', 'LOCAL')
+        self.base_url = config['API'][dev]['ENTITY_BASE']
 
         
     def pull_fac_visits(self, vid : int = None) -> Union[dict, list] :
         data = {
-            'cid' : self.facility,
-            'id' : vid if vid else ''
+            'cid' : [self.facility],
+            'id' : vid if vid else None
         }
         response = self.get(self.visits_url, data)
         visits = response['data']['items']

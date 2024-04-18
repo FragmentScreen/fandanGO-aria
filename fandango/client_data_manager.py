@@ -10,15 +10,19 @@ class DataManagerClient(APIClient):
     def __init__(self, token, entity_id, entity_type):
         super().__init__(token)
         self.token = token
-        self.pull_buckets_url = config["endpoints"]["get"]["bucket"]
-        self.pull_records_url = config["endpoints"]["get"]["record"]
-        self.pull_fields_url = config["endpoints"]["get"]["field"]
-        self.create_bucket_url = config["endpoints"]["create"]['bucket']
-        self.create_record_url = config["endpoints"]['create']['record']
-        self.create_field_url = config["endpoints"]['create']['field']
-
+        self.pull_buckets_url = config["ENDPOINTS"]["GET"]["BUCKET"]
+        self.pull_records_url = config["ENDPOINTS"]["GET"]["RECORD"]
+        self.pull_fields_url = config["ENDPOINTS"]["GET"]["FIELD"]
+        self.create_bucket_url = config["ENDPOINTS"]["CREATE"]['BUCKET']
+        self.create_record_url = config["ENDPOINTS"]['CREATE']['RECORD']
+        self.create_field_url = config["ENDPOINTS"]['CREATE']['FIELD']
         self.id = entity_id
         self.type = entity_type
+        self.load_url()
+
+    def load_url(self) :
+        dev = config.get('DEV', 'LOCAL')
+        self.base_url = config['API'][dev]['DATA_DEPOSITION_BASE']
 
     # BUCKETS
         
@@ -32,7 +36,7 @@ class DataManagerClient(APIClient):
         bucket = response['data']['items'][0]
         return bucket
     
-    def pull_buckets(self, id : int, type : str) -> list[dict[str, Bucket]] : 
+    def pull_buckets(self, id : int, type : str) : 
         data = {
             'aria_id' : id,
             'aria_entity_type': type
@@ -52,7 +56,7 @@ class DataManagerClient(APIClient):
         record = response['data']['items'][0]
         return record
 
-    def pull_records(self, bucket_id : str) -> Union[list[dict[str, Record]], list] : 
+    def pull_records(self, bucket_id : str) : 
         data = {
             'bucket' : bucket_id,
         }
@@ -74,7 +78,7 @@ class DataManagerClient(APIClient):
         field = response['data']['items'][0]
         return field
     
-    def pull_fields(self, record_id : str) -> list[dict[str, Field]] : 
+    def pull_fields(self, record_id : str) : 
         data = {
             'record' : record_id,
         }

@@ -1,6 +1,6 @@
 from .data_manager import DataManager
 from .utils import *
-from imports_config import Union
+from .imports_config import Union
 import click
 
 
@@ -46,7 +46,7 @@ class DataManagerCLI(DataManager):
         bucket = self.create_bucket(embargo)
         print_created_message(bucket)
         if menu_return :
-            self.menu()
+            return self.menu()
         else:
             return bucket.id 
         
@@ -56,11 +56,14 @@ class DataManagerCLI(DataManager):
             bucket_id = self.create_bucket_cli(False)
         else : 
             bucket_id = self.select_bucket_cli()
+        if not bucket_id :
+            print(f'No buckets exist for this Entity, returning to menu.')
+            return self.menu()
         schema = command_with_options('Select Schema Type', ['TestSchema', 'WrongSchema'])
         record = self.create_record(bucket_id, schema)
         print_created_message(record)
         if menu_return : 
-            self.menu()
+           return self.menu()
         else :
             return record.id
     
