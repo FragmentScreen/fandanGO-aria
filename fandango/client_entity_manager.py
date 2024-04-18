@@ -13,7 +13,7 @@ class EntityManagerClient(APIClient):
         self.facility = config['FACILITY']['ID']
         self.visits_url = config["ENDPOINTS"]['GET']["VISITS"]
         self.proposal_data_url = config['ENDPOINTS']['GET']['PROPOSAL_DATA']
-        self.proposal_url = config['ENDPOINT']['GET']['PROPOSAL']
+        self.proposal_url = config['ENDPOINTS']['GET']['PROPOSAL']
 
         self.load_url()
 
