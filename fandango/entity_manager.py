@@ -23,10 +23,11 @@ class EntityManager():
 
     def get_proposal_data(self, pid) :
         proposal_data = self.client.pull_proposal_data(pid)
-        pretty_print(proposal_data)
+        if proposal_data :
+            return proposal_data
 
     def get_proposal(self, pid) :
         proposal = self.client.pull_proposal(pid)
         if proposal :
-            pretty_print(proposal)
+            return proposal
     
