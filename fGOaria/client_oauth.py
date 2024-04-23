@@ -1,8 +1,6 @@
 from .api_client import APIClient
-from .utils import get_config
 from .imports_config import requests
 
-config = get_config()
 
 
 class ClientOauth(APIClient) :

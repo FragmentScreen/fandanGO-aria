@@ -1,11 +1,13 @@
 from .imports_config import *
 from .utils import set_headers, get_config
+from dotenv import load_dotenv
 
-config = get_config()
+load_dotenv()
 class APIClient:
     def __init__(self, token):
         self.token = token
-        self.aria_login_url = config["LOGIN"]['ARIA']["LOGIN_URL"]
+        self.aria_login_url = os.getenv('ARIA_CONNECTION_LOGIN_URL')
+        # self.aria_login_url = config["LOGIN"]['ARIA']["LOGIN_URL"]
         self.headers = set_headers(self.token) if self.token else None
         # base_url to be passed up from child class
         self.base_url = None 

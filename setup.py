@@ -5,28 +5,25 @@ long_description = (this_directory / "README.md").read_text()
 
 
 setup(
-    name='fandango-aria-plugin',
-    version='1.0.3',
-    description="A Public Client library and CLI for interacting with ARIA's Data Deposition Service.",
+    name='fandanGO-aria',
+    version='1.1.0',
+    description="ARIA plguin for data deposition in FandanGO",
     long_description=long_description,
     long_description_content_type='text/markdown',
     author="Lui Holliday, Instruct-ERIC",
     author_email="lui.holliday@instruct-eric.org",
     license='MIT',
-    package_data={'fandango': ['config/*.yml']},
     packages=find_packages(exclude=['ez_setup', 'examples','tests', 'tests.*', 'release']),
-    include_package_data=True,
     url='https://github.com/FragmentScreen/fandango-aria-plugin',
     install_requires=[
         'click',
         'requests',
         'keyring',
+        'python-dotenv',
         'questionary',
         'PyYAML',
     ],
     entry_points={
-        'console_scripts': [
-            'fandango=fandango.commands.cli:cli',
-        ],
+        'fandango.plugin' : 'fandanGO-aria = fGOaria'
     },
 )
