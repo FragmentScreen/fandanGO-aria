@@ -1,1 +1,1 @@
-ACTION_DEPOSIT_FIELD = 'sendfield'
+ACTION_DEPOSIT_FIELD = 'send-metadata'
