@@ -7,9 +7,7 @@ class APIClient:
     def __init__(self, token):
         self.token = token
         self.aria_login_url = os.getenv('ARIA_CONNECTION_LOGIN_URL')
-        # self.aria_login_url = config["LOGIN"]['ARIA']["LOGIN_URL"]
         self.headers = set_headers(self.token) if self.token else None
-        # base_url to be passed up from child class
         self.base_url = None 
 
     def get(self, endpoint, params=None):

@@ -18,18 +18,8 @@ class DataManagerClient(APIClient):
         self.create_record_url = os.getenv('ARIA_ENDPOINTS_CREATE_RECORD')
         self.create_field_url = os.getenv('ARIA_ENDPOINTS_CREATE_FIELD')
         self.base_url = os.getenv('ARIA_DATA_DEPOSITION_URL')
-        # self.pull_buckets_url = config["ENDPOINTS"]["GET"]["BUCKET"]
-        # self.pull_records_url = config["ENDPOINTS"]["GET"]["RECORD"]
-        # self.pull_fields_url = config["ENDPOINTS"]["GET"]["FIELD"]
-        # self.create_bucket_url = config["ENDPOINTS"]["CREATE"]['BUCKET']
-        # self.create_record_url = config["ENDPOINTS"]['CREATE']['RECORD']
-        # self.create_field_url = config["ENDPOINTS"]['CREATE']['FIELD']
         self.id = entity_id
         self.type = entity_type
-
-    # def load_url(self) :
-    #     dev = config.get('DEV', 'LOCAL')
-    #     self.base_url = config['API'][dev]['DATA_DEPOSITION_BASE']
 
     # BUCKETS
         

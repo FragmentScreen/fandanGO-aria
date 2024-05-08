@@ -1,8 +1,6 @@
 from .api_client import APIClient
 from .imports_config import requests
 
-
-
 class ClientOauth(APIClient) :
 
     def __init__(self, token=None):
