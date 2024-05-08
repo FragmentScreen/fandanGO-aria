@@ -1,27 +1,28 @@
-from .utils import get_formatted_datetime, print_with_spaces, check_headers, space, get_config
+from .utils import get_formatted_datetime, print_with_spaces, check_headers, space
 from .client_oauth import ClientOauth
 from .imports_config import *
 from .token import Token
 
 
-config = get_config()
 class OAuth :
     def __init__(self) -> None:
         self.client = ClientOauth()
-        self.grant_type = config["LOGIN"]['ARIA']["GRANT_TYPE"]
-        self.scope = config["LOGIN"]['ARIA']["SCOPE"]
-        self.client_id = config["LOGIN"]['ARIA']["CLIENT_ID"]
-        self.url = config["LOGIN"]['ARIA']["LOGIN_URL"]
-        self.client_secret = config["LOGIN"]['ARIA']["CLIENT_SECRET"]
-        self.token_str_key = config["LOGIN"]['ARIA']["SESSION_KEY"]
-        self.refresh_grant = config["LOGIN"]['ARIA']["REFRESH_GRANT"]
+        self.username = os.getenv('ARIA_CONNECTION_USERNAME')
+        self.password = os.getenv('ARIA_CONNECTION_PASSWORD')
+        self.grant_type = os.getenv('ARIA_CONNECTION_GRANT_TYPE')
+        self.scope = os.getenv('ARIA_CONNECTION_SCOPE')
+        self.client_id = os.getenv('ARIA_CLIENT_ID')
+        self.url = os.getenv('ARIA_CONNECTION_LOGIN_URL')
+        self.client_secret =  os.getenv('ARIA_CLIENT_SECRET')
+        self.token_str_key = os.getenv('ARIA_KEYRING')
+        self.refresh_grant = os.getenv('ARIA_CONNECTION_REFRESH_GRANT')
 
 
     # LOGIN
 
-    def login(self, username, password) -> None:
+    def login(self) -> None:
         '''username and password passed from the commands 'login'. Gets login_data from pre-set config vars.'''
-        login_data = self.get_login_data(username, password)
+        login_data = self.get_login_data(self.username, self.password)
         try : 
             response = self.client.login(login_data)
             self.handle_auth_response(response)

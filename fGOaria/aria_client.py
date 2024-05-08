@@ -12,8 +12,10 @@ class AriaClient :
     '''
     def __init__(self, login=False):
         self.oauth = OAuth()
-        if not login:
-            self._fetch_token()
+        if login:
+            self.login()
+        self._fetch_token()
+        
 
     @property
     def token(self):
@@ -21,8 +23,8 @@ class AriaClient :
             self._fetch_token()
         return self._token
         
-    def login(self, username, password):
-        self.oauth.login(username, password)
+    def login(self):
+        self.oauth.login()
 
     def new_data_manager(self, id, type, populate=False):
         return (DataManager(self.token, id, type, populate))

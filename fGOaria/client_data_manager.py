@@ -4,25 +4,22 @@ from .record import Record
 from .api_client import APIClient
 from .imports_config import *
 from .utils import get_config
+from dotenv import load_dotenv
 
-config = get_config()
+load_dotenv()
 class DataManagerClient(APIClient):
     def __init__(self, token, entity_id, entity_type):
         super().__init__(token)
         self.token = token
-        self.pull_buckets_url = config["ENDPOINTS"]["GET"]["BUCKET"]
-        self.pull_records_url = config["ENDPOINTS"]["GET"]["RECORD"]
-        self.pull_fields_url = config["ENDPOINTS"]["GET"]["FIELD"]
-        self.create_bucket_url = config["ENDPOINTS"]["CREATE"]['BUCKET']
-        self.create_record_url = config["ENDPOINTS"]['CREATE']['RECORD']
-        self.create_field_url = config["ENDPOINTS"]['CREATE']['FIELD']
+        self.pull_buckets_url = os.getenv('ARIA_ENDPOINTS_PULL_BUCKETS')
+        self.pull_records_url = os.getenv('ARIA_ENDPOINTS_PULL_RECORDS')
+        self.pull_fields_url = os.getenv('ARIA_ENDPOINTS_PULL_FIELDS')
+        self.create_bucket_url = os.getenv('ARIA_ENDPOINTS_CREATE_BUCKET')
+        self.create_record_url = os.getenv('ARIA_ENDPOINTS_CREATE_RECORD')
+        self.create_field_url = os.getenv('ARIA_ENDPOINTS_CREATE_FIELD')
+        self.base_url = os.getenv('ARIA_DATA_DEPOSITION_URL')
         self.id = entity_id
         self.type = entity_type
-        self.load_url()
-
-    def load_url(self) :
-        dev = config.get('DEV', 'LOCAL')
-        self.base_url = config['API'][dev]['DATA_DEPOSITION_BASE']
 
     # BUCKETS
         

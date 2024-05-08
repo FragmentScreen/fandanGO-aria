@@ -82,12 +82,6 @@ class Bucket(AbstractBucket):
         """Setter for the updated date."""
         self._updated = value
 
-    # def __setattr__(self, name, value):
-    #     properties = ['entity_type', '_entity_id', '_embargo_date', '_bucket_id', '_owner', '_created', '_updated']
-    #     if name not in properties:
-    #         raise AttributeError(f"Cannot set attribute '{name}'. It's not defined in __init__.")
-    #     super().__setattr__(name, value)
-
     def populate(self,data):
         """Generate additional properties like bucket ID, owner, created, and updated."""
         self.id = data['id']

@@ -4,22 +4,18 @@ from .record import Record
 from .api_client import APIClient
 from .imports_config import *
 from .utils import get_config
+from dotenv import load_dotenv
 
-config = get_config()
+load_dotenv()
 class EntityManagerClient(APIClient):
     def __init__(self, token):
         super().__init__(token)
         self.token = token
-        self.facility = config['FACILITY']['ID']
-        self.visits_url = config["ENDPOINTS"]['GET']["VISITS"]
-        self.proposal_data_url = config['ENDPOINTS']['GET']['PROPOSAL_DATA']
-        self.proposal_url = config['ENDPOINTS']['GET']['PROPOSAL']
-
-        self.load_url()
-
-    def load_url(self) :
-        dev = config.get('DEV', 'LOCAL')
-        self.base_url = config['API'][dev]['ENTITY_BASE']
+        self.facility = os.getenv('ARIA_FACILITY_ID')
+        self.visits_url = os.getenv('ARIA_ENTITY_VISIT_URL')
+        self.proposal_data_url = os.getenv('ARIA_ENTITY_PROPOSAL_DATA_URL')
+        self.proposal_url = os.getenv('ARIA_ENTITY_PULL_PROPOSAL_URL')
+        self.base_url = os.getenv('ARIA_ENTITY_URL')
 
         
     def pull_fac_visits(self, vid : int = None) -> Union[dict, list] :
