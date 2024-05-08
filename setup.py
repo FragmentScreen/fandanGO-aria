@@ -6,7 +6,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name='fandanGO-aria',
-    version='1.1.0',
+    version='2.0.0',
     description="ARIA plguin for data deposition in FandanGO",
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -14,7 +14,7 @@ setup(
     author_email="lui.holliday@instruct-eric.org",
     license='MIT',
     packages=find_packages(exclude=['ez_setup', 'examples','tests', 'tests.*', 'release']),
-    url='https://github.com/FragmentScreen/fandango-aria-plugin',
+    url='https://github.com/FragmentScreen/fandanGO-aria',
     install_requires=[
         'click',
         'requests',
