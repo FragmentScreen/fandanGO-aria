@@ -11,12 +11,12 @@
 
 
 [![Connect on LinkedIn](https://img.shields.io/badge/Connect%20on-LinkedIn-blue.svg)](https://www.linkedin.com/company/instruct-eric/mycompany/)
-[![GitHub issues](https://img.shields.io/github/issues/FragmentScreen/fandango-aria-plugin)](https://github.com/FragmentScreen/fandango-aria-plugin/issues)
-[![GitHub forks](https://img.shields.io/github/forks/FragmentScreen/fandango-aria-plugin)](https://github.com/FragmentScreen/fandango-aria-plugin/network/members)
-[![GitHub contributors](https://img.shields.io/github/contributors/FragmentScreen/fandango-aria-plugin)](https://github.com/FragmentScreen/fandango-aria-plugin/graphs/contributors)
-[![PyPI version](https://badge.fury.io/py/fandango-aria-plugin.svg)](https://badge.fury.io/py/fandango-aria-plugin)
+[![GitHub issues](https://img.shields.io/github/issues/FragmentScreen/fandango-aria-plugin)](https://github.com/FragmentScreen/fandanGO-aria/issues)
+[![GitHub forks](https://img.shields.io/github/forks/FragmentScreen/fandango-aria-plugin)](https://github.com/FragmentScreen/fandanGO-aria/network/members)
+[![GitHub contributors](https://img.shields.io/github/contributors/FragmentScreen/fandanGO-aria)](https://github.com/FragmentScreen/fandanGO-aria/graphs/contributors)
+[![PyPI version](https://badge.fury.io/py/fandanGO-aria.svg)](https://badge.fury.io/py/fandango-aria-plugin)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Documentation](https://img.shields.io/badge/Documentation-Wiki-brightgreen)](https://github.com/FragmentScreen/fandango-aria-plugin/wiki)
+[![Documentation](https://img.shields.io/badge/Documentation-Wiki-brightgreen)](https://github.com/FragmentScreen/fandanGO-aria/wiki)
 
 
 
