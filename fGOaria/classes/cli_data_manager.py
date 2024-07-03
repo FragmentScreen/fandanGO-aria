@@ -1,6 +1,6 @@
 from .data_manager import DataManager
-from .utils import *
-from .imports_config import Union
+from ..utils.utility_functions import *
+from ..utils.imports_config import Union
 import click
 
 

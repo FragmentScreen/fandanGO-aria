@@ -1,8 +1,7 @@
-from .imports_config import *
-from .utils import *
-from .abstract_bucket import AbstractBucket
+from ..utils.imports_config import *
+from ..utils.utility_functions import *
 
-class Bucket(AbstractBucket):
+class Bucket():
     def __init__(self, entity_id : int, entity_type : str, embargo_date : str, **kwargs):
         self._entity_type = entity_type
         self._entity_id = entity_id

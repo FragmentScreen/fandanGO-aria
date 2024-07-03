@@ -1,8 +1,7 @@
-from .imports_config import *
-from .abstract_record import AbstractRecord
-from .utils import *
+from ..utils.imports_config import *
+from ..utils.utility_functions import *
 
-class Record(AbstractRecord):
+class Record():
     def __init__(self, bucket_id: str, schema: str):
         self._bucket_id = bucket_id
         self._schema_type = schema

@@ -6,9 +6,7 @@ def space() : click.echo('')
 
 def print_with_spaces(str) :
     """Print a str with a space above and below in the terminal"""
-    click.echo('')
-    click.echo(str)
-    click.echo('')
+    click.echo(f'\n{str}\n')
 
 def pretty_print(obj) :
     """Print an object with indentation to represent nesting""" 

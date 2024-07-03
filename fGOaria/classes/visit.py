@@ -1,5 +1,5 @@
-from .imports_config import *
-from .utils import *
+from ..utils.imports_config import *
+from ..utils.utility_functions import *
 class Visit:
     def __init__(self, data):
         required_fields = ['id', 'vid', 'pid']

@@ -1,5 +1,5 @@
-from .imports_config import *
-from .utils import *
+from ..utils.imports_config import *
+from ..utils.utility_functions import *
 from .visit import Visit
 from .client_entity_manager import EntityManagerClient as EntityClient
 

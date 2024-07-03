@@ -1,5 +1,5 @@
-from .imports_config import *
-from .utils import set_headers, get_config
+from ..utils.imports_config import *
+from ..utils.utility_functions import set_headers, get_config
 from dotenv import load_dotenv
 
 load_dotenv()

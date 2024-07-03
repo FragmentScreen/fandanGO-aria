@@ -2,8 +2,8 @@ from .field import Field
 from .bucket import Bucket
 from .record import Record
 from .api_client import APIClient
-from .imports_config import *
-from .utils import get_config
+from ..utils.imports_config import *
+from ..utils.utility_functions import get_config
 from dotenv import load_dotenv
 
 load_dotenv()

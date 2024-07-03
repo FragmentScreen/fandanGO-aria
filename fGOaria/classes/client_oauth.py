@@ -1,5 +1,5 @@
 from .api_client import APIClient
-from .imports_config import requests
+from ..utils.imports_config import *
 
 class ClientOauth(APIClient) :
 
