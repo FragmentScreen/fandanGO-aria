@@ -1,1 +1,0 @@
-ACTION_DEPOSIT_FIELD = 'send-metadata'
