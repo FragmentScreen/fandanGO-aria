@@ -1,6 +1,6 @@
-from .utils import get_formatted_datetime, print_with_spaces, check_headers, space
+from ..utils.utility_functions import get_formatted_datetime, print_with_spaces, check_headers, space
 from .client_oauth import ClientOauth
-from .imports_config import *
+from ..utils.imports_config import *
 from .token import Token
 
 

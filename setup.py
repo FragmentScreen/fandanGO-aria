@@ -22,8 +22,5 @@ setup(
         'python-dotenv',
         'questionary',
         'PyYAML',
-    ],
-    entry_points={
-        'fandango.plugin' : 'fandanGO-aria = fGOaria'
-    },
+    ]
 )

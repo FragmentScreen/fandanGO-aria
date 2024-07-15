@@ -1,8 +1,7 @@
-from .utils import *
-from .imports_config import *
-from .abstract_field import AbstractField
+from ..utils.utility_functions import *
+from ..utils.imports_config import *
 
-class Field(AbstractField) :
+class Field() :
     def __init__(self, record_id: str, field_type : str, content : str, options : dict = None, order: int = 0, **kwargs):
         self._record_id = record_id
         self._field_type = field_type

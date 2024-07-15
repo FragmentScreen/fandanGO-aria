@@ -13,6 +13,7 @@ __pycache__/
 
 # test files
 test_*
+test*
 
 # build or python virtual env files
 /venv
