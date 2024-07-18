@@ -10,21 +10,21 @@ class AriaClient :
     '''
     Super class. New instances initiated in the `commands`. All functionality will start with one of these methods.
     '''
-    def __init__(self, login=False):
-        self.oauth = OAuth()
-        if login:
-            self.login()
-        self._fetch_token()
-        
 
+    def __init__(self, login=False,):
+        self.oauth = OAuth()
+        if not login:
+            self._fetch_token()
+        
     @property
     def token(self):
         if not self._token:
             self._fetch_token()
         return self._token
         
-    def login(self):
-        self.oauth.login()
+    def login(self, username = None, password = None):
+        self.oauth.login(username, password)
+        self._fetch_token()
 
     def new_data_manager(self, id, type, populate=False):
         return (DataManager(self.token, id, type, populate))
