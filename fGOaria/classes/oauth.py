@@ -20,8 +20,10 @@ class OAuth :
 
     # LOGIN
 
-    def login(self) -> None:
+    def login(self, username, password) -> None:
         '''username and password passed from the commands 'login'. Gets login_data from pre-set config vars.'''
+        self.username = username if username is not None else self.username
+        self.password = password if password is not None else self.password
         login_data = self.get_login_data(self.username, self.password)
         try : 
             response = self.client.login(login_data)
