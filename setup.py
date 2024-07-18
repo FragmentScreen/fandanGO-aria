@@ -22,5 +22,10 @@ setup(
         'python-dotenv',
         'questionary',
         'PyYAML',
-    ]
+    ],
+    entry_points={
+        'console_scripts': [
+            'goaria=fGOaria.commands.cli:cli',
+        ],
+    }
 )
