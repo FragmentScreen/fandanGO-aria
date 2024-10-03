@@ -1,6 +1,7 @@
 from .technical_review import TechEvaluation
-from ..utils.utility_functions import command_with_options, pretty_print, print_with_spaces, print_created_message
+from ..utils.utility_functions import command_with_options, pretty_print, print_with_spaces
 import click
+import sys
 
 class TechEvalCLI:
     def __init__(self, token):
@@ -18,7 +19,7 @@ class TechEvalCLI:
         action = command_with_options('What would you like to do?', ['Retrieve Visit Fields', 'Submit Visit Evaluation', 'Exit'])
         if action == 'Exit':
             print('Closing Menu...')
-            return
+            sys.exit()
         if action == 'Retrieve Visit Fields':
             self.retrieve_fields_cli()
         elif action == 'Submit Visit Evaluation':
@@ -36,7 +37,7 @@ class TechEvalCLI:
             pretty_print(fields)
         else:
             print(f"No fields found for Visit: {vid}")
-        self.menu()
+        return self.menu()
 
     # SUBMIT EVALUATION
 
@@ -69,4 +70,4 @@ class TechEvalCLI:
         else:
             print("Failed to submit evaluation.")
         
-        self.menu()
+        return self.menu()
