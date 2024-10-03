@@ -1,7 +1,6 @@
 from .oauth import OAuth
 from .data_manager import DataManager
-from .bucket import Bucket
-from .visit import Visit
+from .cli_techeval import TechEvalCLI
 from .data_manager import DataManager
 from .cli_data_manager import DataManagerCLI
 from .token import Token
@@ -34,6 +33,9 @@ class AriaClient :
     
     def new_entity_manager(self) :
         return (EntityManager(self.token))
+    
+    def new_cli_tech_eval(self) :
+        return (TechEvalCLI(self.token))
 
     def new_data_managers(self, entities=None):
         if entities is None:
