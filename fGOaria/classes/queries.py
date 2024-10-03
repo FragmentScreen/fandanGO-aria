@@ -4,14 +4,14 @@ GQLQuery = namedtuple('GQLQuery', ['query', 'return_key'])
 
 CREATE_DATA_BUCKET = GQLQuery(
     query = """
-        mutation ($input: CreateBucketInput!) {
+        mutation($input: CreateBucketInput!) {
             createDataBucket(input: $input) {
-                id
-                embargoed_until
-                owner
-                created
-                updated
-                aria_entity_type
+                id,
+                embargoed_until,
+                owner,
+                created,
+                updated,
+                aria_entity_type,
                 aria_id
             }
         }""",
@@ -20,7 +20,7 @@ CREATE_DATA_BUCKET = GQLQuery(
 
 CREATE_DATA_RECORD = GQLQuery(
     query= """
-        mutation ($input: CreateRecordInput!) {
+        mutation($input: CreateRecordInput!) {
             createDataRecord(input: $input) {
                 id,
                 bucket,
@@ -34,7 +34,7 @@ CREATE_DATA_RECORD = GQLQuery(
 
 CREATE_DATA_FIELD = GQLQuery(
     query = """
-        mutation ($input: CreateFieldInput!) {
+        mutation($input: CreateFieldInput!) {
             createDataField(input: $input) {
                 id,
                 record,

@@ -2,12 +2,13 @@ from .data_manager import DataManager
 from ..utils.utility_functions import *
 from ..utils.imports_config import Union
 import click
+import sys
 
 
 class DataManagerCLI(DataManager):
     def __init__(self, token, entity_id, entity_type, populate):
         """
-        Initialize DataManagerCLI instance.
+        Initiate DataManagerCLI instance.
 
         :param token: Token for authentication.
         :param entity_id: Entity ID.
@@ -22,8 +23,8 @@ class DataManagerCLI(DataManager):
         """
         action = command_with_options('What would you like to do?', ['Create', 'Print', 'Exit'])
         if action == 'Exit': 
-            print('Ciao!')
-            return
+            print('Closing Menu...')
+            sys.exit()
         data = command_with_options(f'What would you like to {action.lower()}?', ['Bucket', 'Record', 'Field'])
         if action == 'Create' :
             self.creator_cli(data)
@@ -42,7 +43,7 @@ class DataManagerCLI(DataManager):
 
     def create_bucket_cli(self, menu_return=True) -> Union[str, None] :
         embargo= click.prompt('Emargoed Until (dd/mm/yy)', type=click.DateTime(formats=['%d/%m/%y']), default='', show_default=False)
-        embargo = format_datetime_to_json_serializable(embargo)
+        embargo = format_datetime_json_serialisable(embargo)
         bucket = self.create_bucket(embargo)
         print_created_message(bucket)
         if menu_return :
@@ -89,6 +90,8 @@ class DataManagerCLI(DataManager):
 
     def select_bucket_cli(self) -> Union[str, None] :
         buckets_details = get_dicts_from_objects(self.buckets.values())
+        if not buckets_details :
+            return False
         bucket_fields = ['_id', '_embargo_date', '_created', '_owner']
         bucket = command_with_options('select bucket', buckets_details, True, bucket_fields)
         return bucket['_id']

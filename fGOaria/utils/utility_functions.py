@@ -92,17 +92,9 @@ def get_dicts_from_objects(objects) -> list :
     """Returns the properties of each object in a list."""
     return [obj.__dict__ for obj in objects]
 
-def format_datetime_to_json_serializable(date):
-    """
-    Converts a datetime object to a string in the format 'dd-mm-yyyy 00:00:00'.
-    
-    Args:
-        dt (datetime): The datetime object to be formatted.
-        
-    Returns:
-        str: The formatted datetime string.
-    """
-    return date.strftime('%d-%m-%Y 00:00:00')
+def format_datetime_json_serialisable(dt: datetime) -> str:
+    return dt.isoformat() + "Z"  
+
 
 def get_entity() -> dict :
     aria_id = click.prompt('Set ARIA ID', type=int)
