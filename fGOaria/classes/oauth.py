@@ -81,9 +81,7 @@ class OAuth :
     def get_keyring_token_data(self) -> Union[dict, None] :
         token_data_str = keyring.get_password(self.token_str_key, '')
         if not token_data_str :
-            logging.error(' Either the password entered is incorrect, or no access token is stored.')
-            print_with_spaces('Please login to ARIA to retrieve another token if the problem persists or type aria-help for more options.')
-            return None
+            raise Exception(' Either the password entered is incorrect, or no access token is stored.')
         return json.loads(token_data_str)
     
     def set_token_keyring_data(self, token : Token) -> None :
