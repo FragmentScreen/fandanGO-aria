@@ -7,5 +7,5 @@ def create_bucket():
     """Create a new Bucket for a Visit or Proposal"""
     cli = AriaClient()
     entity_details = get_entity()
-    manager = cli.new_cli_manager(entity_details.get('id'),entity_details.get('type'),True)
+    manager = cli.new_cli_manager(entity_details['id'],entity_details['type'],True)
     manager.create_bucket_cli()

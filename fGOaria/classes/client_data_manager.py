@@ -1,88 +1,89 @@
+import os
+import json
+from typing import Union, Dict, Any
 from .field import Field
 from .bucket import Bucket
 from .record import Record
 from .api_client import APIClient
 from ..utils.imports_config import *
-from ..utils.utility_functions import get_config
+from .queries import CREATE_DATA_BUCKET, CREATE_DATA_RECORD, CREATE_DATA_FIELD, BUCKET_ITEMS, RECORD_ITEMS, FIELD_ITEMS
 from dotenv import load_dotenv
 
 load_dotenv()
+
 class DataManagerClient(APIClient):
-    def __init__(self, token, entity_id, entity_type):
+    def __init__(self, token: str, entity_id: int, entity_type: str):
         super().__init__(token)
-        self.token = token
-        self.pull_buckets_url = os.getenv('ARIA_ENDPOINTS_PULL_BUCKETS')
-        self.pull_records_url = os.getenv('ARIA_ENDPOINTS_PULL_RECORDS')
-        self.pull_fields_url = os.getenv('ARIA_ENDPOINTS_PULL_FIELDS')
-        self.create_bucket_url = os.getenv('ARIA_ENDPOINTS_CREATE_BUCKET')
-        self.create_record_url = os.getenv('ARIA_ENDPOINTS_CREATE_RECORD')
-        self.create_field_url = os.getenv('ARIA_ENDPOINTS_CREATE_FIELD')
-        self.base_url = os.getenv('ARIA_DATA_DEPOSITION_URL')
         self.id = entity_id
         self.type = entity_type
 
     # BUCKETS
-        
-    def push_bucket(self, bucket : Bucket) -> Union[dict, None] :
-        data = {
-            'aria_id': bucket.entity_id,
-            "aria_entity_type" : bucket.entity_type, 
-            'embargoed_until' : bucket.embargo_date
+    def push_bucket(self, bucket: Bucket) -> Union[Dict[str, Any], None]:
+        """Create a new data bucket."""
+        variables = {
+            "input": {
+                "aria_id": bucket.entity_id,
+                "aria_entity_type": bucket.entity_type,
+                "embargoed_until": bucket.embargo_date
+            }
         }
-        response = self.post(self.create_bucket_url, data)
-        bucket = response['data']['items'][0]
-        return bucket
-    
-    def pull_buckets(self, id : int, type : str) : 
-        data = {
-            'aria_id' : id,
-            'aria_entity_type': type
+        response = self.gql_query(CREATE_DATA_BUCKET.query, variables)
+        return response['data'][CREATE_DATA_BUCKET.return_key]
+
+    def pull_buckets(self, id: int, type: str) -> Union[Dict[str, Any], None]:
+        """Pull data buckets from database based on aria id & entity."""
+        variables = {
+            "filters": {
+                "aria_id": id,
+                "aria_entity_type": type
+            }
         }
-        response = self.get(self.pull_buckets_url, data)
-        buckets = response['data']['items']
-        return buckets
-    
+        response = self.gql_query(BUCKET_ITEMS.query, variables)
+        return response['data'][BUCKET_ITEMS.return_key]
+
     # RECORDS
-    
-    def push_record(self, record : Record) -> Union[dict, list] :
-        data = {
-            "bucket" : record.bucket_id,
-            "schema" : record.schema_type
+    def push_record(self, record: Record) -> Union[Dict[str, Any], None]:
+        """Create a new data record."""
+        variables = {
+            "input": {
+                "bucket": record.bucket_id,
+                "schema": record.schema_type
+            }
         }
-        response = self.post(self.create_record_url, data)
-        record = response['data']['items'][0]
-        return record
+        response = self.gql_query(CREATE_DATA_RECORD.query, variables)
+        return response['data'][CREATE_DATA_RECORD.return_key]
 
-    def pull_records(self, bucket_id : str) : 
-        data = {
-            'bucket' : bucket_id,
+    def pull_records(self, bucket_id: str) -> Union[Dict[str, Any], None]:
+        """Pull data records from database based on Bucket ID."""
+        variables = {
+            "filters": {
+                "bucket": bucket_id
+            }
         }
-        response = self.get(self.pull_records_url, data)
-        records = response['data']['items']
-        return records
+        response = self.gql_query(RECORD_ITEMS.query, variables)
+        return response['data'][RECORD_ITEMS.return_key]
 
-    # FIELDS 
-
-    def push_field(self, field : Field) -> Union[dict, None] :
+    # FIELDS
+    def push_field(self, field: Field) -> Union[Dict[str, Any], None]:
+        """Create a new data field."""
         field.content = json.dumps(field.content)
-        data = {
-            "record" : field.record_id,
-            "type" : field.field_type,
-            "content" : field.content,
-            "options" : field.options
+        variables = {
+            "input": {
+                "record": field.record_id,
+                "type": field.field_type,
+                "content": field.content,
+                "options": field.options
+            }
         }
-        response = self.post(self.create_field_url, data)
-        field = response['data']['items'][0]
-        return field
-    
-    def pull_fields(self, record_id : str) : 
-        data = {
-            'record' : record_id,
+        response = self.gql_query(CREATE_DATA_FIELD.query, variables)
+        return response['data'][CREATE_DATA_FIELD.return_key]
+
+    def pull_fields(self, record_id: str) -> Union[Dict[str, Any], None]:
+        """Pull data fields from database based on Record ID."""
+        variables = {
+            "filters": {
+                "record": record_id
+            }
         }
-        response = self.get(self.pull_fields_url, data)
-        records = response['data']['items']
-        return records
-
-
-    
-
+        response = self.gql_query(FIELD_ITEMS.query, variables)
+        return response['data'][FIELD_ITEMS.return_key]

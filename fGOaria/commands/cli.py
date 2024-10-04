@@ -6,6 +6,7 @@ from fGOaria.commands.create_field import create_field
 from fGOaria.commands.list_buckets import list_buckets
 from fGOaria.commands.list_records import list_records
 from fGOaria.commands.list_fields import list_fields
+from fGOaria.commands.tech_eval import tech_eval
 
 
 @click.group()
@@ -22,6 +23,7 @@ def cli():
 
 cli.add_command(login)
 cli.add_command(create_bucket)
+cli.add_command(tech_eval)
 cli.add_command(create_record)
 cli.add_command(create_field)
 cli.add_command(list_buckets)

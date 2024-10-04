@@ -2,7 +2,7 @@ from ..utils.imports_config import *
 from ..utils.utility_functions import *
 
 class Bucket():
-    def __init__(self, entity_id : int, entity_type : str, embargo_date : str, **kwargs):
+    def __init__(self, entity_id : int, entity_type : str, embargo_date : datetime, **kwargs):
         self._entity_type = entity_type
         self._entity_id = entity_id
         self._embargo_date = embargo_date

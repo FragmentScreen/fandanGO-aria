@@ -2,17 +2,16 @@ from ..utils.imports_config import *
 from ..utils.utility_functions import *
 class Visit:
     def __init__(self, data):
-        required_fields = ['id', 'vid', 'pid']
+        required_fields = ['id', 'proposal_id', 'access_id']
         for field in required_fields:
             if field not in data:
                 raise ValueError(f"Missing required field: {field}")
 
         self._id = data.get('id')
-        self._vid = data.get('vid')
         self._pid = data.get('pid')
         self._plid = data.get('plid')
         self._status = data.get('status')
-        self._acid = data.get('acid')
+        self._acid = data.get('access_id')
         self._order = data.get('order')
         self._confirmed = data.get('confirmed')
         self._completed = data.get('completed')

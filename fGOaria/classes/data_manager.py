@@ -27,23 +27,6 @@ class DataManager:
         self.buckets[bucket._id] = bucket
         return bucket
 
-    def push(self, obj) -> None:
-        """Push an object to the appropriate client endpoint"""
-
-        if isinstance(obj, Bucket):
-            new_bucket = self.client.push_bucket(obj)
-            obj.populate(new_bucket)
-            self.buckets[obj._id] = obj
-        elif isinstance(obj, Record):
-            new_record = self.client.push_record(obj)
-            obj.populate(new_record)
-            self.records[obj._id] = obj
-        elif isinstance(obj, Field):
-            new_field = self.client.push_field(obj)
-            obj.populate(new_field)
-            self.fields[obj._id] = obj
-        else:
-            raise ValueError("Unsupported object type for pushing")
 
     def create_record(self, bucket_id : str, schema_type : str) -> Record : 
         """Create a record and push to the DataManager Class Records dictionary"""
@@ -62,6 +45,24 @@ class DataManager:
         field.populate(created_field)
         self.fields[field.id] = field
         return field
+    
+    def push(self, obj) -> None:
+        """Push an object to the appropriate client endpoint"""
+
+        if isinstance(obj, Bucket):
+            new_bucket = self.client.push_bucket(obj)
+            obj.populate(new_bucket)
+            self.buckets[obj._id] = obj
+        elif isinstance(obj, Record):
+            new_record = self.client.push_record(obj)
+            obj.populate(new_record)
+            self.records[obj._id] = obj
+        elif isinstance(obj, Field):
+            new_field = self.client.push_field(obj)
+            obj.populate(new_field)
+            self.fields[obj._id] = obj
+        else:
+            raise ValueError("Unsupported object type for pushing")
 
     def populate(self) -> None : 
         """Populate new Bucket classes and add to Data Manager based on API request"""

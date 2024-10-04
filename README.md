@@ -24,7 +24,9 @@
 
 Welcome to the fandanGO-aria package.
 
-This package acts as a broker for ARIA's metadata deposition REST endpoints.
+This package allows the user to do the following:
+- Metadata Deposition in ARIA
+- Manage Access in ARIA
 
 Please refer to our [Wiki](https://github.com/FragmentScreen/fandanGO-aria/wiki) for full documentation. 
 
@@ -43,23 +45,23 @@ Here, you will be required to complete the following:
 
 ### All Connections
 
-- Login URL
-    - Note: You will need slgihtly different URLS for BETA/LOCAL token retrieval 
-- Client Secret
-- Client ID
-- Grant Type
-- Scope
-- Session Key
-- Facility ID
+- ARIA_CONNECTION_LOGIN_URL
+- ARIA_CONNECTION_GRANT_TYPE
+- ARIA_CONNECTION_SCOPE
+- ARIA_CLIENT_ID
+- ARIA_CLIENT_SECRET
+- ARIA_CONNECTION_REFRESH_GRANT
+- DEV (Set to LIVE unless in development/beta)
+- ARIA_FACILITY_ID
+
 
 
 ### Caveats
 
 The following `env` options are not neccessary and are mostly used for development : 
 
-- Email : If a CLI user, this will remove the need to re-enter your login email
-- Password : Similar to Email. Use with caution if on a communal computer.
-- Username
+- ARIA_CONNECTION_USERNAME : If a CLI user, this will remove the need to re-enter your login email
+- ARIA_CONNECTION_PASSWORD : Similar to Email. Use with caution if on a communal computer.
 
 ### Post Setup
 
