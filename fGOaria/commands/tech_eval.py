@@ -5,6 +5,7 @@ from fGOaria.classes.aria_client import AriaClient
 
 @click.command()
 def tech_eval():
+    """Retrieve & Submit Technical Review for a Visit"""
 
     cli = AriaClient()
     tech = cli.new_cli_tech_eval()
