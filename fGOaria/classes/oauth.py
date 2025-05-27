@@ -2,6 +2,7 @@ from ..utils.utility_functions import get_formatted_datetime, print_with_spaces,
 from .client_oauth import ClientOauth
 from ..utils.imports_config import *
 from .token import Token
+from ..utils.encryption import TokenEncryption
 
 
 class OAuth :
@@ -16,6 +17,7 @@ class OAuth :
         self.client_secret =  os.getenv('ARIA_CLIENT_SECRET')
         self.token_str_key = os.getenv('ARIA_KEYRING')
         self.refresh_grant = os.getenv('ARIA_CONNECTION_REFRESH_GRANT')
+        self.token_encryption = TokenEncryption()
 
 
     # LOGIN
@@ -79,19 +81,34 @@ class OAuth :
     #  KEYRING STORAGE
             
     def get_keyring_token_data(self) -> Union[dict, None] :
-        token_data_str = keyring.get_password(self.token_str_key, '')
-        if not token_data_str :
-            raise Exception(' Either the password entered is incorrect, or no access token is stored.')
-        return json.loads(token_data_str)
+        try:
+            token_data_str = keyring.get_password(self.token_str_key, '')
+            if not token_data_str :
+                token_data = self.token_encryption.decrypt_token(self.password)
+                if token_data:
+                    return token_data
+                raise Exception(' Either the password entered is incorrect, or no access token is stored.')
+            return json.loads(token_data_str)
+        except Exception as e:
+            token_data = self.token_encryption.decrypt_token(self.password)
+            if token_data:
+                return token_data
+            raise Exception('Failed to retrieve token from both keyring and fallback storage.')
     
     def set_token_keyring_data(self, token : Token) -> None :
         try :
             click.echo('Attempting to store Token...')
             token_json = json.dumps(token.to_dict())
-            keyring.set_password(self.token_str_key, '', token_json)
-            print_with_spaces('Token data successfully stored in keyring.')
-        except key_err.PasswordSetError as e :
-            logging.error(f"Error setting keyring: {e}")
+            try:
+                keyring.set_password(self.token_str_key, '', token_json)
+                print_with_spaces('Token data successfully stored in keyring.')
+            except key_err.PasswordSetError as e :
+                logging.warning(f"Keyring storage failed, using fallback encryption: {e}")
+                self.token_encryption.encrypt_token(token.to_dict(), self.password)
+                print_with_spaces('Token data successfully stored using fallback encryption.')
+        except Exception as e:
+            logging.error(f"Error storing token: {e}")
+            raise Exception("Failed to store token in both keyring and fallback storage.")
 
 
     # GET DATA OBJECTS
