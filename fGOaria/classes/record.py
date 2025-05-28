@@ -70,6 +70,15 @@ class Record():
         """Setter for the Record updated timestamp."""
         self._updated = value
 
+    @property
+    def description(self):
+        """Getter for the Record description."""
+        return self._description
+    
+    @description.setter
+    def description(self, value):
+        """Setter for the Record description."""
+
     def populate(self, data):
         """Populate record with additional properties."""
         self._id = data.get('id')
