@@ -71,6 +71,16 @@ class Field() :
         """Setter for the Field ID."""
         self._id = value
 
+    @property
+    def description(self):
+        """Getter for the Field description."""
+        return self._description
+    
+    @description.setter
+    def description(self, value):
+        """Setter for the Field description."""
+        self._description = value
+
     def populate(self, data):
         """Populate field with additional properties after pushing to the database."""
         self._id = data.get('id')
