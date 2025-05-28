@@ -6,7 +6,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name='fandanGO-aria',
-    version='2.2.2',
+    version='2.2.3',
     description="ARIA connection for managing access and metadata deposition, primarily through fandanGO",
     long_description=long_description,
     long_description_content_type='text/markdown',
