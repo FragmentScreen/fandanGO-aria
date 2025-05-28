@@ -3,6 +3,7 @@ from .client_oauth import ClientOauth
 from ..utils.imports_config import *
 from .token import Token
 from ..utils.encryption import TokenEncryption
+from pathlib import Path
 
 
 class OAuth :
@@ -18,6 +19,7 @@ class OAuth :
         self.token_str_key = os.getenv('ARIA_KEYRING')
         self.refresh_grant = os.getenv('ARIA_CONNECTION_REFRESH_GRANT')
         self.token_encryption = TokenEncryption()
+        self.token_file = Path.home() / '.aria_token.json'
 
 
     # LOGIN
@@ -83,32 +85,76 @@ class OAuth :
     def get_keyring_token_data(self) -> Union[dict, None] :
         try:
             token_data_str = keyring.get_password(self.token_str_key, '')
-            if not token_data_str :
-                token_data = self.token_encryption.decrypt_token(self.password)
-                if token_data:
-                    return token_data
-                raise Exception(' Either the password entered is incorrect, or no access token is stored.')
-            return json.loads(token_data_str)
+            if token_data_str:
+                print_with_spaces('Token data successfully retrieved from keyring.')
+                return json.loads(token_data_str)
         except Exception as e:
+            logging.warning(f"Keyring storage failed: {e}")
+
+        try:
             token_data = self.token_encryption.decrypt_token(self.password)
+            print_with_spaces('Token data successfully retrieved from encrypted storage.')
             if token_data:
                 return token_data
-            raise Exception('Failed to retrieve token from both keyring and fallback storage.')
+        except Exception as e:
+            logging.warning(f"Encrypted storage failed: {e}")
+
+        try:
+            token_data = self.get_json_token_data()
+            print_with_spaces('Token data successfully retrieved from JSON file.')
+            if token_data:
+                return token_data
+        except Exception as e:
+            logging.warning(f"JSON file storage failed: {e}")
+
+        raise Exception('No access token found in any storage method.')
     
     def set_token_keyring_data(self, token : Token) -> None :
-        try :
-            click.echo('Attempting to store Token...')
-            token_json = json.dumps(token.to_dict())
-            try:
-                keyring.set_password(self.token_str_key, '', token_json)
-                print_with_spaces('Token data successfully stored in keyring.')
-            except key_err.PasswordSetError as e :
-                logging.warning(f"Keyring storage failed, using fallback encryption: {e}")
-                self.token_encryption.encrypt_token(token.to_dict(), self.password)
-                print_with_spaces('Token data successfully stored using fallback encryption.')
+        click.echo('Attempting to store Token...')
+        token_json = json.dumps(token.to_dict())
+        
+        try:
+            keyring.set_password(self.token_str_key, '', token_json)
+            print_with_spaces('Token data successfully stored in keyring.')
+            return
         except Exception as e:
-            logging.error(f"Error storing token: {e}")
-            raise Exception("Failed to store token in both keyring and fallback storage.")
+            logging.warning(f"Keyring storage failed: {e}")
+
+        try:
+            self.token_encryption.encrypt_token(token.to_dict(), self.password)
+            print_with_spaces('Token data successfully stored using encryption.')
+            return
+        except Exception as e:
+            logging.warning(f"Encrypted storage failed: {e}")
+
+        try:
+            self.set_json_token_data(token.to_dict())
+            print_with_spaces('Token data successfully stored in JSON file.')
+            return
+        except Exception as e:
+            logging.warning(f"JSON file storage failed: {e}")
+
+        raise Exception("Failed to store token in any available storage method.")
+
+    def get_json_token_data(self) -> Union[dict, None]:
+        """Retrieve token data from JSON file storage."""
+        try:
+            if self.token_file.exists():
+                with open(self.token_file, 'r') as f:
+                    return json.load(f)
+            return None
+        except Exception as e:
+            logging.error(f"Error reading JSON token file: {e}")
+            return None
+
+    def set_json_token_data(self, token_data: dict) -> None:
+        """Store token data in JSON file storage."""
+        try:
+            with open(self.token_file, 'w') as f:
+                json.dump(token_data, f)
+        except Exception as e:
+            logging.error(f"Error writing JSON token file: {e}")
+            raise Exception("Failed to write token to JSON file storage.")
 
 
     # GET DATA OBJECTS
