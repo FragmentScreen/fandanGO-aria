@@ -4,6 +4,10 @@ config.yml
 # development productivity files 
 TODO.md
 
+# ide config files
+.vscode/*
+.idea/*
+
 # auto-gen files
 __pycache__/
 
@@ -11,9 +15,9 @@ __pycache__/
 *.egg-info/
 *.egg
 
-# test files
-test_*
-test*
+## test files
+#test_*
+#test*
 
 # build or python virtual env files
 /venv
