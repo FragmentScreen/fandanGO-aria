@@ -1,11 +1,10 @@
-from ..utils.imports_config import *
-from .api_client import APIClient
 from dotenv import load_dotenv
-from .queries import PULL_VISITS, TECHNICAL_REVIEW_FIELDS, SAVE_TECH_EVAL
+from fGOaria.classes.aria_client import AriaClient
+from fGOaria.utils.queries import PULL_VISITS, TECHNICAL_REVIEW_FIELDS, SAVE_TECH_EVAL
 
 load_dotenv()
 
-class ReviewClient(APIClient):
+class ReviewClient(AriaClient):
     def __init__(self, token):
         super().__init__(token)
 

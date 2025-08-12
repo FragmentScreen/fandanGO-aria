@@ -1,5 +1,5 @@
 from ..utils.utility_functions import get_formatted_datetime, print_with_spaces, check_headers, space
-from .client_oauth import ClientOauth
+from .client_oauth import AriaOauthClient
 from ..utils.imports_config import *
 from .token import Token
 from ..utils.encryption import TokenEncryption
@@ -8,7 +8,7 @@ from pathlib import Path
 
 class OAuth :
     def __init__(self) -> None:
-        self.client = ClientOauth()
+        self.client = AriaOauthClient()
         self.username = os.getenv('ARIA_CONNECTION_USERNAME')
         self.password = os.getenv('ARIA_CONNECTION_PASSWORD')
         self.grant_type = os.getenv('ARIA_CONNECTION_GRANT_TYPE')

@@ -1,17 +1,18 @@
-import os
-import json
 from typing import Union, Dict, Any
-from .field import Field
-from .bucket import Bucket
-from .record import Record
-from .api_client import APIClient
-from ..utils.imports_config import *
-from .queries import CREATE_DATA_BUCKET, CREATE_DATA_RECORD, CREATE_DATA_FIELD, BUCKET_ITEMS, RECORD_ITEMS, FIELD_ITEMS
 from dotenv import load_dotenv
+from fGOaria.classes.field import Field
+from fGOaria.classes.bucket import Bucket
+from fGOaria.classes.record import Record
+from fGOaria.classes.aria_client import AriaClient
+from fGOaria.utils.imports_config import *
+from fGOaria.utils.queries import (
+    CREATE_DATA_BUCKET, CREATE_DATA_RECORD, CREATE_DATA_FIELD,
+    BUCKET_ITEMS, RECORD_ITEMS, FIELD_ITEMS
+)
 
 load_dotenv()
 
-class DataManagerClient(APIClient):
+class DataManagerClient(AriaClient):
     def __init__(self, token: str, entity_id: int, entity_type: str):
         super().__init__(token)
         self.id = entity_id

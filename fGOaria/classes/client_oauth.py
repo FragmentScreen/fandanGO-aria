@@ -1,7 +1,7 @@
-from .api_client import APIClient
+from .aria_client import AriaClient
 from ..utils.imports_config import *
 
-class ClientOauth(APIClient) :
+class AriaOauthClient(AriaClient) :
 
     def __init__(self, token=None):
         super().__init__(token)

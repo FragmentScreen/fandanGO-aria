@@ -1,6 +1,6 @@
 from fGOaria.utils.utility_functions import get_entity
 from fGOaria.utils.imports_config import click, os
-from fGOaria.classes.aria_client import AriaClient
+from fGOaria.classes.aria_manager import ARIA
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -20,8 +20,8 @@ def login(username, password):
     """Login to ARIA and retrieve a token. Store in keyring."""
 
     if password_default_prompt == password :
-        aria_cli = AriaClient(True)
+        aria_cli = ARIA(True)
         aria_cli.login(username, password_default)
     else :
-        aria_cli = AriaClient(True)
+        aria_cli = ARIA(True)
         aria_cli.login(username, password)
