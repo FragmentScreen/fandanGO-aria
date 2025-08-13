@@ -1,18 +1,27 @@
+from abc import ABC, abstractmethod
 from ..utils.imports_config import *
-from ..utils.utility_functions import set_headers, get_config
-from dotenv import load_dotenv
 
-load_dotenv()
-class APIClient:
+
+class APIClient(ABC):
+    """
+    Generic API client class
+    """
+
     def __init__(self, token):
         self.token = token
-        self.dev = os.getenv('DEV', 'LOCAL')
-        if self.dev == 'LOCAL':
-            self.aria_login_url = os.getenv('ARIA_CONNECTION_LOGIN_URL_LOCAL')
-        else: 
-            self.aria_login_url = os.getenv('ARIA_CONNECTION_LOGIN_URL')
-        self.headers = set_headers(self.token) if self.token else None
-        self.base_url = os.getenv(f'ARIA_GQL_{self.dev}')
+
+    @property
+    @abstractmethod
+    def base_url(self) -> str:
+        pass
+
+    @property
+    def headers(self) -> dict:
+        return self.headers
+
+    @headers.setter
+    def headers(self, value):
+        self.headers = {'Authorization': f'Bearer {self.token}'} if self.token else None
 
     def get(self, endpoint, params=None):
         url = f"{self.base_url}/{endpoint}"
@@ -23,11 +32,10 @@ class APIClient:
         resp.raise_for_status()
         return resp.json()
 
-    def post(self, endpoint : str, data : dict = None):
+    def post(self, endpoint: str, data: dict = None):
         resp = requests.post(endpoint, json=data, headers=self.headers)
         resp.raise_for_status()
         return resp.json()
-    
 
     def gql_query(self, query: str, variables: dict = None):
         """GraphQL POST request."""

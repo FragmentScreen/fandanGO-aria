@@ -39,11 +39,6 @@ def check_headers(json):
             return False
     return True
 
-def set_headers(token) :
-    """Return a variable that holds a token to be used in a request"""
-    return  {'Authorization': f'Bearer {token}'}
-
-
 
 # CONFIG
 

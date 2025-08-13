@@ -134,3 +134,19 @@ SAVE_TECH_EVAL =  """
     }
     """
 
+# TODO: separate queries and mutations
+# TODO: use graphQL queries/mutations
+# GET_STORAGE_PROVIDERS - GQLQuery(
+#     query = """""",
+#     return_key = "storageProviderItems"
+# )
+#
+# FETCH_STORAGE_TOKENS = GQLMutation(
+#     mutation = """""",
+#     return_key = "storageTokenItems"
+# )
+#
+# CHECK_STORAGE_VALIDITY = GQLMutation(
+#     mutation = """""",
+#     return_key = "storageTokenItems"
+# )
