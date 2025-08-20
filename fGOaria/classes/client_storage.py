@@ -1,6 +1,5 @@
 import os
 from dotenv import load_dotenv
-from typing import Dict
 from fGOaria.classes.aria_client import AriaClient
 from fGOaria.classes.credentials import Credentials
 from fGOaria.classes.storage_provider import StorageProvider
@@ -21,7 +20,7 @@ class StorageClient(AriaClient):
         self.id = entity_id
         self.type = entity_type
 
-    def get_provider_options(self) -> Dict[str, StorageProvider]:
+    def get_provider_options(self) -> dict[str, StorageProvider]:
         """
         Retrieve all available storage provider options
         @todo use ARIA storageProviders query
@@ -43,7 +42,7 @@ class StorageClient(AriaClient):
         Retrieve the token for a specific provider
         @todo use ARIA getStorageTokens mutation
         """
-        print(f'Pulling token')
+        print(f'Pulling token for provider {provider_id}')
         return Token({
             'access_token': os.getenv("ONEDATA_ACCESS_TOKEN"),
             'expires_in': None,

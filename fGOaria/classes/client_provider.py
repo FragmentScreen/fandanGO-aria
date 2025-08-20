@@ -25,7 +25,7 @@ class ProviderClient(APIClient, ABC):
         return self._file_id
 
     @property
-    def _file_id(self) -> str:
+    def _file_id(self) -> str: # this may seem redundant, but is required for a private setter
         return self._file_id
 
     @_file_id.setter
