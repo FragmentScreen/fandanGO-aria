@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from typing import Dict
 from fGOaria.classes.aria_client import AriaClient
+from fGOaria.classes.credentials import Credentials
 from fGOaria.classes.storage_provider import StorageProvider
 from fGOaria.classes.token import Token
 # from fGOaria.utils.queries import GET_STORAGE_PROVIDERS, FETCH_STORAGE_TOKENS, CHECK_STORAGE_VALIDITY
@@ -30,11 +31,11 @@ class StorageClient(AriaClient):
             provider_id='1',
             name="OneData",
             description="High-performance data management solution",
-            credentials={
-                'host_endpoint': os.getenv("ONEDATA_HOST_ENDPOINT"),
-                'token': self.get_provider_token('1'),
-                'space_id': os.getenv("ONEDATA_SPACE_ID"),
-            }
+            credentials=Credentials(
+                host_endpoint=os.getenv("ONEDATA_HOST_ENDPOINT"),
+                token=self.get_provider_token('1'),
+                options={'space_id': os.getenv("ONEDATA_SPACE_ID")}
+            )
         )}
 
     def get_provider_token(self, provider_id: str) -> Token or None:
