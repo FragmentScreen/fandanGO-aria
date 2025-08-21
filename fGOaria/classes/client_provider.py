@@ -14,14 +14,22 @@ class ProviderClient(APIClient, ABC):
 
     @property
     def _token(self) -> Token:
-        return Token(self._provider.credentials)
+        return self._provider.credentials.token
+
+    @property
+    def provider_host(self) -> str:
+        return self._provider.credentials.host_endpoint
 
     @property
     def file_id(self) -> str:
         return self._file_id
 
-    @file_id.setter
-    def file_id(self, file_id: str):
+    @property
+    def _file_id(self) -> str: # this may seem redundant, but is required for a private setter
+        return self._file_id
+
+    @_file_id.setter
+    def _file_id(self, file_id: str):
         self._file_id = file_id
 
     @abstractmethod
@@ -52,8 +60,7 @@ class OneDataClient(ProviderClient):
 
     def __init__(self, provider: StorageProvider):
         super().__init__(provider)
-        self.provider_host = provider.credentials.get('host_endpoint')
-        self.space_id = provider.credentials.get('space_id')
+        self.space_id = provider.credentials.options.get('space_id')
 
     @property
     def base_url(self) -> str:
@@ -72,7 +79,7 @@ class OneDataClient(ProviderClient):
         print(f"Push: {response.status_code} - {response.text}")
         # TODO: handle bad status codes
         if response.status_code in range(200, 300):
-            self.file_id = response.file_id
+            self._file_id = response.file_id
         return response
 
     def download(self, file_id) -> object:
