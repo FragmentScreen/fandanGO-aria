@@ -96,7 +96,7 @@ class OneDataClient(ProviderClient):
     def upload(self, filename) -> object:
         """@todo get this working"""
         self.headers['Content-Type'] = 'application/octet-stream'
-        endpoint = f"{self.data_url}/children?name={filename}&override=true"
+        endpoint = f"{self.data_endpoint}/children?name={filename}&override=true"
         with open(filename, 'rb') as file:
             response = self.post(endpoint, {'file': file})
         print(f"Push: {response.status_code} - {response.text}")
