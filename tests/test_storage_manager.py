@@ -42,6 +42,8 @@ class StorageClientTestCase(UnitTestCase):
         client = self.storage.select(self.test_provider_client)
         self.assertIsNotNone(client.data_space(), "Could not get space details")
         self.assertIsNotNone(client.data_space().keys().__contains__(self.test_space_identifier),
+                             "Could not find data space")
+        self.assertIsNotNone(client.data_space()[self.test_space_identifier],
                              "Could not get information for data space")
 
     def testUploadFile(self):
