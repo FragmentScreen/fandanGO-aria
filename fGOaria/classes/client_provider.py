@@ -25,12 +25,17 @@ class ProviderClient(APIClient, ABC):
         return self._file_id
 
     @property
-    def _file_id(self) -> str: # this may seem redundant, but is required for a private setter
+    def _file_id(self) -> str: # this may seem redundant, but is required for a protected setter
         return self._file_id
 
     @_file_id.setter
     def _file_id(self, file_id: str):
         self._file_id = file_id
+
+    @abstractmethod
+    def data_space(self) -> dict:
+        """Get the details of the provider's available data space"""
+        pass
 
     @abstractmethod
     def locate(self, file_id) -> object:
@@ -64,7 +69,25 @@ class OneDataClient(ProviderClient):
 
     @property
     def base_url(self) -> str:
-        return f"{self.provider_host}/api/v3/oneprovider/data/{self.space_id}/"
+        return f"{self.provider_host}/api/v3"
+
+    @property
+    def space_endpoint(self) -> str:
+        return f"onezone/spaces/{self.space_id}"
+
+    @property
+    def data_endpoint(self) -> str:
+        return f"oneprovider/data/{self.space_id}"
+
+    @property
+    def headers(self):
+        return {'x-auth-token': self.token} if self.token else None
+
+    def data_space(self) -> dict:
+        """
+        Get the details of the current OneData data space
+        """
+        return self.get(self.space_endpoint)
 
     def locate(self, file_id) -> object:
         """@todo find the location of the file on OneData"""
@@ -73,7 +96,7 @@ class OneDataClient(ProviderClient):
     def upload(self, filename) -> object:
         """@todo get this working"""
         self.headers['Content-Type'] = 'application/octet-stream'
-        endpoint = f"{self.base_url}children?name={filename}&override=true"
+        endpoint = f"{self.data_endpoint}/children?name={filename}&override=true"
         with open(filename, 'rb') as file:
             response = self.post(endpoint, {'file': file})
         print(f"Push: {response.status_code} - {response.text}")
