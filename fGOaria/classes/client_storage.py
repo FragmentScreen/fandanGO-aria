@@ -26,12 +26,12 @@ class StorageClient(AriaClient):
         @todo use ARIA storageProviders query
         """
         print(f'Getting provider options for {self.type} ID {self.id}')
-        return {'OneDataClient': StorageProvider(
+        return {f"{os.getenv('TEST_PROVIDER_CLIENT')}Client": StorageProvider(
             provider_id='1',
-            name="OneData",
+            name=os.getenv('TEST_PROVIDER_CLIENT'),
             description="High-performance data management solution",
             credentials=Credentials(
-                host_endpoint=os.getenv("ONEDATA_HOST_ENDPOINT"),
+                host_endpoint=os.getenv("TEST_PROVIDER_HOST_ENDPOINT"),
                 token=self.get_provider_token('1'),
                 options={'space_id': os.getenv("ONEDATA_SPACE_ID")}
             )
@@ -44,7 +44,7 @@ class StorageClient(AriaClient):
         """
         print(f'Pulling token for provider {provider_id}')
         return Token({
-            'access_token': os.getenv("ONEDATA_ACCESS_TOKEN"),
+            'access_token': os.getenv("TEST_PROVIDER_TOKEN"),
             'expires_in': None,
             'refresh_expires_in': None,
             'refresh_token': None,
