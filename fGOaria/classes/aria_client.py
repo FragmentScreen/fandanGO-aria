@@ -25,3 +25,7 @@ class AriaClient(APIClient, ABC):
     @base_url.setter
     def base_url(self, value):
         self.base_url = os.getenv(f'ARIA_GQL_{self.dev}')
+
+    @property
+    def headers(self) -> dict:
+        return {'Authorization': f'Bearer {self.token}'} if self.token else None

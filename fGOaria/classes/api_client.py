@@ -16,12 +16,9 @@ class APIClient(ABC):
         pass
 
     @property
+    @abstractmethod
     def headers(self) -> dict:
-        return self.headers
-
-    @headers.setter
-    def headers(self, value):
-        self.headers = {'Authorization': f'Bearer {self.token}'} if self.token else None
+        pass
 
     def get(self, endpoint, params=None):
         url = f"{self.base_url}/{endpoint}"
