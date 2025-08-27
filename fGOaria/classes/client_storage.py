@@ -26,9 +26,9 @@ class StorageClient(AriaClient):
         @todo use ARIA storageProviders query
         """
         print(f'Getting provider options for {self.type} ID {self.id}')
-        return {f"{os.getenv('TEST_PROVIDER_CLIENT')}Client": StorageProvider(
+        return {f"{os.getenv('TEST_PROVIDER')}Client": StorageProvider(
             provider_id='1',
-            name=os.getenv('TEST_PROVIDER_CLIENT'),
+            name=os.getenv('TEST_PROVIDER'),
             description="High-performance data management solution",
             credentials=Credentials(
                 host_endpoint=os.getenv("TEST_PROVIDER_HOST_ENDPOINT"),

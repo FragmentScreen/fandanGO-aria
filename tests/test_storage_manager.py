@@ -11,7 +11,7 @@ class StorageClientTestCase(UnitTestCase):
         load_dotenv()
         self.aria_password_default = os.getenv('ARIA_CONNECTION_PASSWORD')
         self.aria_email_default = os.getenv('ARIA_CONNECTION_USERNAME')
-        self.test_provider = os.getenv('TEST_PROVIDER_CLIENT')
+        self.test_provider = os.getenv('TEST_PROVIDER')
         self.test_provider_client = f"{self.test_provider}Client"
         self.test_provider_endpoint = os.getenv("TEST_PROVIDER_HOST_ENDPOINT")
         self.test_provider_token = os.getenv("TEST_PROVIDER_TOKEN")
