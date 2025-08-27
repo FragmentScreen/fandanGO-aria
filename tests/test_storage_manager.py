@@ -13,7 +13,6 @@ class StorageClientTestCase(UnitTestCase):
         self.aria_email_default = os.getenv('ARIA_CONNECTION_USERNAME')
         self.test_provider = os.getenv('TEST_PROVIDER_CLIENT')
         self.test_provider_client = f"{self.test_provider}Client"
-        self.test_space_identifier = os.getenv('TEST_DATA_SPACE_IDENTIFIER_NAME')
         self.test_provider_endpoint = os.getenv("TEST_PROVIDER_HOST_ENDPOINT")
         self.test_provider_token = os.getenv("TEST_PROVIDER_TOKEN")
         self.storage = StorageManager(None, '1', 'proposal')
