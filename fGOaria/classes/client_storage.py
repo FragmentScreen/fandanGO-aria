@@ -33,7 +33,7 @@ class StorageClient(AriaClient):
             credentials=Credentials(
                 host_endpoint=os.getenv("TEST_PROVIDER_HOST_ENDPOINT"),
                 token=self.get_provider_token('1'),
-                options={'space_id': os.getenv("ONEDATA_SPACE_ID")}
+                options={'space_id': os.getenv("TEST_PROVIDER_DATA_SPACE_ID")}
             )
         )}
 
