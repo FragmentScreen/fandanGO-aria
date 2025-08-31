@@ -1,34 +1,41 @@
 import os
 import unittest
 from dotenv import load_dotenv
+from tests.test_case import UnitTestCase
 from fGOaria.classes.client_provider import ProviderClient
 from fGOaria.classes.storage_manager import StorageManager
 from fGOaria.classes.storage_provider import StorageProvider
 
-class StorageClientTestCase(unittest.TestCase):
+class StorageClientTestCase(UnitTestCase):
     def setUp(self):
         load_dotenv()
-        self.password_default = os.getenv('ARIA_CONNECTION_PASSWORD')
-        self.email_default = os.getenv('ARIA_CONNECTION_USERNAME')
-        self.storage_manager = StorageManager(None, '1', 'proposal')
-        self.test_provider = "OneDataClient"
+        self.aria_password_default = os.getenv('ARIA_CONNECTION_PASSWORD')
+        self.aria_email_default = os.getenv('ARIA_CONNECTION_USERNAME')
+        self.test_provider = os.getenv('TEST_PROVIDER')
+        self.test_provider_client = f"{self.test_provider}Client"
+        self.test_provider_endpoint = os.getenv("TEST_PROVIDER_HOST_ENDPOINT")
+        self.test_provider_token = os.getenv("TEST_PROVIDER_TOKEN")
+        self.storage = StorageManager(None, '1', 'proposal')
 
     def testGetProviders(self):
         """Test retrieving storage providers"""
-        self.assertIsNotNone(self.storage_manager.providers, "Providers not set")
-        self.assertIsInstance(self.storage_manager.providers, dict, "GetProviders did not return a dict")
-        self.assertIsNotNone(self.storage_manager.providers.get(self.test_provider), f"{self.test_provider} not found")
-        self.assertIsInstance(self.storage_manager.providers.get(self.test_provider), StorageProvider, "StorageProvider obj not found")
+        self.assertIsNotNone(self.storage.providers, "Providers not set")
+        self.assertIsInstance(self.storage.providers, dict, "GetProviders did not return a dict")
+        self.assertIsNotNone(self.storage.providers.get(self.test_provider_client),
+                             f"{self.test_provider_client} not found")
+        self.assertIsInstance(self.storage.providers.get(self.test_provider_client), StorageProvider,
+                              "StorageProvider obj not found")
 
     def testOption(self):
-        print("test opt", self.storage_manager.providers.keys())
-        clients = list(self.storage_manager.providers.keys())
-        self.assertEqual(clients[0], self.test_provider, f"Couldn't find {self.test_provider}")
+        print("test opt", self.storage.providers.keys())
+        clients = list(self.storage.providers.keys())
+        self.assertEqual(clients[0], self.test_provider_client, f"Couldn't find {self.test_provider_client}")
 
     def testSelect(self):
-        client = self.storage_manager.select(self.test_provider)
+        client = self.storage.select(self.test_provider_client)
         self.assertIsInstance(client, ProviderClient, "Select did not return a ProviderClient")
-        self.assertIs(client.__class__.__name__, self.test_provider, f"Select did not return a {self.test_provider}")
+        self.assertEqual(client.__class__.__name__, self.test_provider_client,
+                         f"Select did not return a {self.test_provider_client}")
 
     def testUploadFile(self):
         """@todo"""
