@@ -28,7 +28,7 @@ class ARIA:
     def new_data_manager(self, id, type, populate=False):
         return (DataManager(self.token, id, type, populate))
     
-    def new_cli_manager(self, id, type, populate=False) :
+    def new_cli_data_manager(self, id, type, populate=False) :
         return (DataManagerCLI(self.token, id, type, populate))
     
     
