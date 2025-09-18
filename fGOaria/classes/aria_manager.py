@@ -1,3 +1,4 @@
+from fGOaria.classes.storage_manager import StorageManager
 from fGOaria.classes.oauth import OAuth
 from fGOaria.classes.data_manager import DataManager
 from fGOaria.classes.cli_techeval import TechEvalCLI
@@ -30,8 +31,10 @@ class ARIA:
     
     def new_cli_data_manager(self, id, type, populate=False) :
         return (DataManagerCLI(self.token, id, type, populate))
-    
-    
+
+    def new_storage_manager(self, id, type):
+        return (StorageManager(self.token, id, type))
+
     def new_cli_tech_eval(self) :
         return (TechEvalCLI(self.token))
 
