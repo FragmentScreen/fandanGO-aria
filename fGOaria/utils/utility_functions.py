@@ -53,10 +53,12 @@ def get_config(config_file='config.yml'):
 
 # CLI
 
-def command_with_options(prompt_message, options, json_param=False, json_fields=None):
+def command_with_options(prompt_message: str, options: list, json_param=False, json_fields=None):
     """Create a 'questionary' selection tool in the commands line
         Can accept strings or lists as an argument.
     """
+    if os.getenv('DEBUG', 'FALSE') == 'TRUE':
+        return debug_command_with_options(prompt_message, options, json_param, json_fields)
 
     if json_param and json_fields:
         options_display = []
@@ -82,6 +84,21 @@ def command_with_options(prompt_message, options, json_param=False, json_fields=
         else:
             if option == selected_option:
                 return option
+
+def debug_command_with_options(prompt_message: str, options: list, json_param=False, json_fields=None):
+    """
+    Use if DEBUG=TRUE: Debugger-friendly version that doesn't require arrow keys to select
+    """
+    if json_param and json_fields:
+        options_display = []
+        for option in options:
+            display_info = " - ".join([f"{field[1:]}: {option[field]}" for field in json_fields])
+            options_display.append(display_info)
+    else:
+        options_display = "\n".join([f"{opt}" for opt in options])
+
+    print(prompt_message)
+    return click.prompt(options_display+"\n", type=str, prompt_suffix="")
             
 def get_dicts_from_objects(objects) -> list :
     """Returns the properties of each object in a list."""
@@ -93,7 +110,7 @@ def format_datetime_json_serialisable(dt: datetime) -> str:
 
 def get_entity() -> dict :
     aria_id = click.prompt('Set ARIA ID', type=int)
-    aria_entity_type = command_with_options('aria entity', ['proposal', 'visit'])
+    aria_entity_type = command_with_options('ARIA Entity', ['proposal', 'visit'])
     return {
         'id': aria_id,
         'type': aria_entity_type
