@@ -4,6 +4,7 @@ warnings.filterwarnings("ignore")
 from fGOaria.utils.imports_config import click
 from fGOaria.commands.login import login
 from fGOaria.commands import data
+from fGOaria.commands import storage
 from fGOaria.commands import visit
 
 
@@ -25,6 +26,7 @@ cli.add_command(data.create_field, 'create-field')
 cli.add_command(data.list_buckets, 'list-buckets')
 cli.add_command(data.list_records, 'list-records')
 cli.add_command(data.list_fields, 'list-fields')
+cli.add_command(storage.provision_storage_option, 'manage-storage')
 cli.add_command(visit.tech_eval, 'tech-eval')
 
 if __name__ == '__main__':
