@@ -84,4 +84,3 @@ class StorageClient(AriaClient):
         """
         if self.type != 'visit':
             raise Exception('The ARIA storage broker currently only accepts visit IDs')
-
