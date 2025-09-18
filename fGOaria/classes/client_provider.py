@@ -90,7 +90,7 @@ class OneDataClient(ProviderClient):
         """
         Get the details of the current OneData data space
         """
-        return self.get(self.data_endpoint)
+        return self.get(self.space_endpoint)
 
     def locate(self, file_id) -> object:
         """@todo find the location of the file on OneData"""
