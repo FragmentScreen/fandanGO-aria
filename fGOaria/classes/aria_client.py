@@ -10,18 +10,18 @@ class AriaClient(APIClient, ABC):
     Abstract client to interface with ARIA's APIs, extend for specific APIs such as access/data mgmt, etc
     """
 
-    def __init__(self, token):
+    def __init__(self, token: str):
         super().__init__(token)
         self.dev = os.getenv('DEV', 'LOCAL')
         if self.dev == 'LOCAL':
             self.aria_login_url = os.getenv('ARIA_CONNECTION_LOGIN_URL_LOCAL')
-        else: 
+        else:
             self.aria_login_url = os.getenv('ARIA_CONNECTION_LOGIN_URL')
 
     @property
     def base_url(self) -> str:
-        return self.base_url
+        return os.getenv(f'ARIA_GQL_{self.dev}')
 
-    @base_url.setter
-    def base_url(self, value):
-        self.base_url = os.getenv(f'ARIA_GQL_{self.dev}')
+    @property
+    def headers(self) -> dict:
+        return {'Authorization': f'Bearer {self.token}'} if self.token else None

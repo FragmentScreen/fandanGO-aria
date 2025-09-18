@@ -5,7 +5,7 @@ class Credentials:
     Represents the credentials required to connect to a client
     """
 
-    def __init__(self, host_endpoint: str, token: Token, options: dict):
+    def __init__(self, host_endpoint: str, token: Token, options: dict or None = None):
         self._host_endpoint = host_endpoint
         self._token = token
         self._options = options

@@ -1,7 +1,11 @@
-from .api_client import APIClient
-from .token import Token
-from .storage_provider import StorageProvider
+import json
+from urllib import parse
 from abc import ABC, abstractmethod
+from requests.exceptions import HTTPError
+from fGOaria.classes.api_client import APIClient
+from fGOaria.classes.token import Token
+from fGOaria.classes.storage_provider import StorageProvider
+
 
 class ProviderClient(APIClient, ABC):
     """
@@ -17,7 +21,7 @@ class ProviderClient(APIClient, ABC):
         return self._provider.credentials.token
 
     @property
-    def provider_host(self) -> str:
+    def host_endpoint(self) -> str:
         return self._provider.credentials.host_endpoint
 
     @property
@@ -25,7 +29,7 @@ class ProviderClient(APIClient, ABC):
         return self._file_id
 
     @property
-    def _file_id(self) -> str: # this may seem redundant, but is required for a private setter
+    def _file_id(self) -> str: # this may seem redundant, but is required for a protected setter
         return self._file_id
 
     @_file_id.setter
@@ -60,26 +64,54 @@ class OneDataClient(ProviderClient):
 
     def __init__(self, provider: StorageProvider):
         super().__init__(provider)
+        self.token_type = provider.credentials.token.token_type
         self.space_id = provider.credentials.options.get('space_id')
 
     @property
     def base_url(self) -> str:
-        return f"{self.provider_host}/api/v3/oneprovider/data/{self.space_id}/"
+        return f"{self.host_endpoint}"
+
+    @property
+    def space_endpoint(self) -> str:
+        return f"onezone/spaces/{self.space_id}"
+
+    @property
+    def data_endpoint(self) -> str:
+        return f"oneprovider/data/{self.space_id}"
+
+    @property
+    def headers(self):
+        return {
+            self.token_type: self.token,
+            'content-type': 'application/octet-stream',
+        } if self.token else None
+
+    def data_space(self) -> dict:
+        """Get the details of the current OneData data space"""
+        return self.get(self.space_endpoint)
 
     def locate(self, file_id) -> object:
         """@todo find the location of the file on OneData"""
         pass
 
     def upload(self, filename) -> object:
-        """@todo get this working"""
-        self.headers['Content-Type'] = 'application/octet-stream'
-        endpoint = f"{self.base_url}children?name={filename}&override=true"
+        """Upload a file to OneData"""
+
+        endpoint = f"{self.data_endpoint}/children?"
+        options = parse.urlencode({
+            # 'spaceId': self.space_id,
+            'name': filename,
+            'override': 'true'
+        })
+
         with open(filename, 'rb') as file:
-            response = self.post(endpoint, {'file': file})
-        print(f"Push: {response.status_code} - {response.text}")
-        # TODO: handle bad status codes
-        if response.status_code in range(200, 300):
-            self._file_id = response.file_id
+            if file is None:
+                raise FileNotFoundError("File not found.")
+            try:
+                response = self.post(f"{endpoint}{options}", data=file, json=False)
+            except HTTPError as e:
+                self._handle_http_errors(e, "uploading file")
+
         return response
 
     def download(self, file_id) -> object:
@@ -89,3 +121,12 @@ class OneDataClient(ProviderClient):
     def delete(self, file_id) -> object:
         """@todo"""
         pass
+
+    def _handle_http_errors(self, error: HTTPError, context: str):
+        response = error.response.content
+        if isinstance(response, str) and json.loads(response) is not None:
+            details = json.loads(response).get('error')
+            if details is not None:
+                error.response.message = details
+                raise HTTPError(f"Error {context} \"{details.id}\": {details.description}.")
+        raise error
