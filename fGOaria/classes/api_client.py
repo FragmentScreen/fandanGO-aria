@@ -7,7 +7,7 @@ class APIClient(ABC):
     Generic API client class
     """
 
-    def __init__(self, token):
+    def __init__(self, token: str):
         self.token = token
 
     @property

@@ -12,6 +12,15 @@ class Token:
         self._scope = token_data.get('scope', None)
         self._timestamp = token_data.get('timestamp', None)
 
+    def __dict__(self):
+        return self.to_dict()
+
+    def __str__(self):
+        return str(self.__dict__())
+
+    def __repr__(self):
+        return self.__str__()
+
     @property
     def access_token(self):
         return self._access_token

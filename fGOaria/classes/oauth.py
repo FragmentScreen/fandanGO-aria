@@ -52,7 +52,7 @@ class OAuth :
 
     # TOKEN 
         
-    def get_access_token(self) -> Union[dict, None]:
+    def get_access_token(self) -> Union[Token, None]:
         token_data = self.get_keyring_token_data()
         
         if token_data is None or not check_headers(token_data):

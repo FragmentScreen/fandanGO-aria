@@ -1,6 +1,7 @@
 from collections import namedtuple
 
 GQLQuery = namedtuple('GQLQuery', ['query', 'return_key'])
+GQLMutation = namedtuple('GQLMutation', ['mutation', 'return_key'])
 
 CREATE_DATA_BUCKET = GQLQuery(
     query = """
@@ -126,27 +127,54 @@ TECHNICAL_REVIEW_FIELDS = GQLQuery(
     return_key='access_technical_review_fieldsItems'
 )
 
-SAVE_TECH_EVAL =  """
-    mutation($input: SaveTechnicalEvaluationInputType!) {
-      saveTechnicalEvaluation(input: $input) {
-        vid
-      }
-    }
-    """
+SAVE_TECH_EVAL =  GQLMutation(
+    mutation="""
+        mutation($input: SaveTechnicalEvaluationInputType!) {
+          saveTechnicalEvaluation(input: $input) {
+            vid
+          }
+        }""",
+    return_key = "saveTechnicalEvaluation"
+)
 
-# TODO: separate queries and mutations
-# TODO: use graphQL queries/mutations
-# GET_STORAGE_PROVIDERS - GQLQuery(
-#     query = """""",
-#     return_key = "storageProviderItems"
-# )
-#
-# FETCH_STORAGE_TOKENS = GQLMutation(
-#     mutation = """""",
-#     return_key = "storageTokenItems"
-# )
-#
-# CHECK_STORAGE_VALIDITY = GQLMutation(
-#     mutation = """""",
-#     return_key = "storageTokenItems"
-# )
+GET_STORAGE_PROVIDERS = GQLQuery(
+    query = """
+        query {
+            storageProvidersItemFeed(
+                first: 0
+                filters: {}
+            ) {
+                totalCount
+                nodes {
+                    id
+                    name
+                    description
+                    engine
+                }
+                pageInfo {
+                    endCursor
+                    hasNext
+                    nextIndex
+                    hasNextSlice
+                }
+            }
+        }""",
+    return_key = "storageProvidersItemFeed"
+)
+
+FETCH_STORAGE_TOKENS = GQLMutation(
+    mutation = """
+        mutation($input: GetStorageTokensInput!) {
+            getStorageTokens(input: $input) {
+                storageProviderId
+                visit_id
+                token
+            }
+        }""",
+    return_key = "getStorageTokens"
+)
+
+CHECK_STORAGE_VALIDITY = GQLMutation(
+    mutation = """""",
+    return_key = "storageTokenItems"
+)
