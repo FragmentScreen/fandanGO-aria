@@ -32,8 +32,14 @@ class APIClient(ABC):
         resp.raise_for_status()
         return resp.json()
 
-    def post(self, endpoint: str, data: dict = None):
-        resp = requests.post(endpoint, json=data, headers=self.headers)
+    def post(self, endpoint: str, data: any = None, json: bool = True):
+        url = f"{self.base_url}/{endpoint}"
+        if (json is True and not isinstance(data, dict)):
+            raise Exception("To post non-JSON data, set `json=False`")
+        resp = requests.post(url=url,
+                             data=data if json is False else None,
+                             json=data if json is True else None,
+                             headers=self.headers)
         resp.raise_for_status()
         return resp.json()
 

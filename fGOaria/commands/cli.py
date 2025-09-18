@@ -1,34 +1,33 @@
+import warnings
+warnings.filterwarnings("ignore")
+
 from fGOaria.utils.imports_config import click
 from fGOaria.commands.login import login
-from fGOaria.commands.create_bucket import create_bucket
-from fGOaria.commands.create_record import create_record
-from fGOaria.commands.create_field import create_field
-from fGOaria.commands.list_buckets import list_buckets
-from fGOaria.commands.list_records import list_records
-from fGOaria.commands.list_fields import list_fields
-from fGOaria.commands.tech_eval import tech_eval
+from fGOaria.commands import data
+from fGOaria.commands import storage
+from fGOaria.commands import visit
 
 
 @click.group()
 def cli():
     """
-    💃🕺 💃🕺 💃🕺💃 🕺💃🕺 💃🕺💃 🕺💃🕺 💃🕺 💃🕺 💃🕺
-    
-                Welcome to fandanGO-aria
-       
-    
-    💃🕺 💃🕺 💃🕺💃 🕺💃 🕺💃🕺 💃🕺 💃🕺💃 🕺💃🕺 💃🕺
+    💃🕺 💃🕺 💃🕺💃 🕺💃🕺 💃🕺💃 🕺💃🕺 💃🕺 💃🕺 💃🕺 💃🕺
+
+         Welcome to the fandanGO-aria demonstration tool
+
+    💃🕺 💃🕺 💃🕺💃 🕺💃 🕺💃🕺 💃🕺 💃🕺💃 🕺💃🕺 💃🕺 💃🕺
     """
     pass
 
 cli.add_command(login)
-cli.add_command(create_bucket)
-cli.add_command(tech_eval)
-cli.add_command(create_record)
-cli.add_command(create_field)
-cli.add_command(list_buckets)
-cli.add_command(list_records)
-cli.add_command(list_fields)
+cli.add_command(data.create_bucket, 'create-bucket')
+cli.add_command(data.create_record, 'create-record')
+cli.add_command(data.create_field, 'create-field')
+cli.add_command(data.list_buckets, 'list-buckets')
+cli.add_command(data.list_records, 'list-records')
+cli.add_command(data.list_fields, 'list-fields')
+cli.add_command(storage.provision_storage_option, 'manage-storage')
+cli.add_command(visit.tech_eval, 'tech-eval')
 
 if __name__ == '__main__':
     cli()

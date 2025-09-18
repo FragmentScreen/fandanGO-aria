@@ -85,23 +85,32 @@ class StorageProvisioningTestCase(UnitTestCase):
     #                      "Could not find data space")
 
     def testUploadFile(self):
-        """@todo"""
-        # self.storage_manager.select('OneDataClient').upload('thing')
-        pass
+        self.storage.select(self.test_provider_id)
+        self.storage.provision()
+
+        return_json = self.storage.client.upload(self.test_file_name)
+        self.assertIsNotNone(return_json, "Upload did not return any data")
+        self.assertIsInstance(return_json, dict, "Return data is not a valid JSON object")
+        self.assertIn(self.test_provider_file_id_name, return_json.keys(), "Return data does not contain file ID")
+
+        file_id = return_json.get(self.test_provider_file_id_name)
+        self.assertIsNotNone(file_id,  "Return data does not contain file ID data")
+        self.assertIsInstance(file_id, str, "Return data file ID is not a string")
+        self.assertNotEqual(file_id, '', "Return data did not return a file ID")
 
     def testFindLocationFile(self):
         """@todo"""
-        # self.file_id or self.location = self.storage_manager.select('OneDataClient').locate('thing')
+        # self.file_id or self.location = self.storage.select('OneDataClient').locate('thing')
         pass
 
     def testDownloadFile(self):
         """@todo"""
-        # self.storage_manager.select('OneDataClient').download('thing', self.file_id)
+        # self.storage.select('OneDataClient').download('thing', self.file_id)
         pass
 
     def testDeleteFile(self):
         """@todo"""
-        # self.storage_manager.select('OneDataClient').delete('thing', self.file_id)
+        # self.storage.select('OneDataClient').delete('thing', self.file_id)
         pass
 
 
