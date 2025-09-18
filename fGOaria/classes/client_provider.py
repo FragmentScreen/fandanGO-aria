@@ -97,11 +97,7 @@ class OneDataClient(ProviderClient):
         pass
 
     def upload(self, filename) -> str:
-        """
-        Upload a file to OneData
-        :param filename: filename to upload
-        :return: OneData file_id
-        """
+        """Upload a file to OneData"""
 
         endpoint = f"{self.data_endpoint}/children?"
         options = parse.urlencode({
