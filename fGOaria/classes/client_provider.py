@@ -96,7 +96,7 @@ class OneDataClient(ProviderClient):
         """@todo find the location of the file on OneData"""
         pass
 
-    def upload(self, filename) -> str:
+    def upload(self, filename) -> object:
         """Upload a file to OneData"""
 
         endpoint = f"{self.data_endpoint}/children?"
