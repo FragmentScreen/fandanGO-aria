@@ -87,9 +87,7 @@ class OneDataClient(ProviderClient):
         } if self.token else None
 
     def data_space(self) -> dict:
-        """
-        Get the details of the current OneData data space
-        """
+        """Get the details of the current OneData data space"""
         return self.get(self.space_endpoint)
 
     def locate(self, file_id) -> object:
