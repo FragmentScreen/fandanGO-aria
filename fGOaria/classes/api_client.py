@@ -43,6 +43,18 @@ class APIClient(ABC):
         resp.raise_for_status()
         return resp.json()
 
+  
+    def delete(self, endpoint):
+        url = f"{self.base_url}/{endpoint}"
+       
+        # Copy and prepare headers
+        headers = getattr(self, "headers", {}).copy()
+ 
+        resp = requests.delete(url, headers=headers, timeout=10)
+        resp.raise_for_status()
+        return resp
+
+ 
     def gql_query(self, query: str, variables: dict = None):
         """GraphQL POST request."""
         payload = {"query": query}

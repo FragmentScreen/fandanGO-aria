@@ -52,7 +52,7 @@ class ProviderClient(APIClient, ABC):
         pass
 
     @abstractmethod
-    def delete(self, file_id) -> object:
+    def deletefile(self, file_id) -> object:
         """Delete file from external storage provider"""
         pass
 
@@ -74,6 +74,10 @@ class OneDataClient(ProviderClient):
     @property
     def space_endpoint(self) -> str:
         return f"onezone/spaces/{self.space_id}"
+    
+    @property
+    def base_data_endpoint(self) -> str:
+        return "oneprovider/data"
 
     @property
     def data_endpoint(self) -> str:
@@ -113,14 +117,38 @@ class OneDataClient(ProviderClient):
                 self._handle_http_errors(e, "uploading file")
 
         return response
+    
+    def locate(self, filename) -> object:
+        """Find the OneData file ID by filename."""
+        endpoint = f"{self.data_endpoint}/children?"
+        try:
+            response = self.get(endpoint)
+        except Exception as e:
+            raise ConnectionError(f"Error fetching children: {e}")
+
+        files = response.get("children", []) or response.get("entries", [])
+        for f in files:
+            if f.get("name") == filename:
+                return f.get("id")
+        
+        raise FileNotFoundError(f"File '{filename}' not found in OneData.")
+
 
     def download(self, file_id) -> object:
         """@todo """
         pass
 
-    def delete(self, file_id) -> object:
-        """@todo"""
-        pass
+    def deletefile(self, file_id) -> object:
+        """Delete a file to OneData"""
+       
+        endpoint = f"{self.base_data_endpoint}/{file_id}"
+        
+        try:
+            resp = super().delete(endpoint)   
+        except Exception as e:
+            raise ConnectionError(f"Error deleting file '{file_id}': {e}")
+        return resp.status_code
+    
 
     def _handle_http_errors(self, error: HTTPError, context: str):
         response = error.response.content
