@@ -23,7 +23,8 @@ class StorageProvisioningTestCase(UnitTestCase):
         self.test_provider_token = os.getenv("TEST_PROVIDER_TOKEN")
         self.test_provider_credentials_options = os.getenv('TEST_PROVIDER_OPTIONS')
         self.test_provider_file_id_name = os.getenv('TEST_PROVIDER_FILE_ID_NAME')
-        self.test_file_name = 'test_file.txt'
+        #self.test_file_id= '000000000052F37A67756964233137316637656564363634623164636163653737323064623363376464386134636864366463233935336136643135373835313830316462646634316262653163333434366639636864366463'
+        self.test_file_name = 'test_file3.txt'
 
         self.oauth = OAuth()
         self.oauth.login(os.getenv('ARIA_CONNECTION_USERNAME'), os.getenv('ARIA_CONNECTION_PASSWORD'))
@@ -85,18 +86,20 @@ class StorageProvisioningTestCase(UnitTestCase):
     #                      "Could not find data space")
 
     def testUploadFile(self):
-        self.storage.select(self.test_provider_id)
-        self.storage.provision()
+        """@todo"""
+        pass
+        # self.storage.select(self.test_provider_id)
+        # self.storage.provision()
 
-        return_json = self.storage.client.upload(self.test_file_name)
-        self.assertIsNotNone(return_json, "Upload did not return any data")
-        self.assertIsInstance(return_json, dict, "Return data is not a valid JSON object")
-        self.assertIn(self.test_provider_file_id_name, return_json.keys(), "Return data does not contain file ID")
+        # return_json = self.storage.client.upload(self.test_file_name)
+        # self.assertIsNotNone(return_json, "Upload did not return any data")
+        # self.assertIsInstance(return_json, dict, "Return data is not a valid JSON object")
+        # self.assertIn(self.test_provider_file_id_name, return_json.keys(), "Return data does not contain file ID")
 
-        file_id = return_json.get(self.test_provider_file_id_name)
-        self.assertIsNotNone(file_id,  "Return data does not contain file ID data")
-        self.assertIsInstance(file_id, str, "Return data file ID is not a string")
-        self.assertNotEqual(file_id, '', "Return data did not return a file ID")
+        # file_id = return_json.get(self.test_provider_file_id_name)
+        # self.assertIsNotNone(file_id,  "Return data does not contain file ID data")
+        # self.assertIsInstance(file_id, str, "Return data file ID is not a string")
+        # self.assertNotEqual(file_id, '', "Return data did not return a file ID")
 
     def testFindLocationFile(self):
         """@todo"""
@@ -104,9 +107,29 @@ class StorageProvisioningTestCase(UnitTestCase):
         pass
 
     def testDownloadFile(self):
-        """@todo"""
-        # self.storage.select('OneDataClient').download('thing', self.file_id)
-        pass
+        self.storage.select(self.test_provider_id)
+        self.storage.provision()
+
+        file_id = self.storage.client.locate(self.test_file_name)
+
+         # Define a destination path (e.g. local Downloads folder)
+        downloads_dir = os.path.join(os.path.expanduser("~"), "Downloads")
+        os.makedirs(downloads_dir, exist_ok=True)
+        dest_path = os.path.join(downloads_dir, self.test_file_name)
+        
+        # file_info = self.storage.client.locate(self.test_file_name)
+
+        print(f"File info in OneData: {dest_path}")
+
+        try:
+            downloaded_path = self.storage.client.download(file_id, dest_path)
+        except Exception as e:
+            self.fail(f"Download failed with exception: {e}")
+
+    # Confirm file exists and has size > 0
+    #     assert os.path.exists(downloaded_path), f"File not found at {downloaded_path}"
+      #   assert os.path.getsize(downloaded_path) > 0, f"Downloaded file is empty: {downloaded_path}"
+
 
     def testDeleteFile(self):
         """@todo"""

@@ -44,10 +44,10 @@ class ProviderClient(APIClient, ABC):
     @abstractmethod
     def upload(self, file_location) -> object:
         """Push file to external storage provider"""
-        pass
+    pass
 
     @abstractmethod
-    def download(self, file_id) -> object:
+    def download(self, file_id, dest_path) -> object:
         """Download file from external storage provider"""
         pass
 
@@ -55,8 +55,6 @@ class ProviderClient(APIClient, ABC):
     def delete(self, file_id) -> object:
         """Delete file from external storage provider"""
         pass
-
-
 class OneDataClient(ProviderClient):
     """
     Provider client for OneData
@@ -78,6 +76,11 @@ class OneDataClient(ProviderClient):
     @property
     def data_endpoint(self) -> str:
         return f"oneprovider/data/{self.space_id}"
+    
+    @property
+    def base_data_endpoint(self) -> str:
+        return "oneprovider/data"
+
 
     @property
     def headers(self):
@@ -90,9 +93,28 @@ class OneDataClient(ProviderClient):
         """Get the details of the current OneData data space"""
         return self.get(self.space_endpoint)
 
-    def locate(self, file_id) -> object:
-        """@todo find the location of the file on OneData"""
-        pass
+    def locate(self, file) -> object:
+        """Find the OneData file ID by filename."""
+        endpoint = f"{self.data_endpoint}/children?"
+        try:
+            response = self.get(endpoint)
+        except Exception as e:
+            raise ConnectionError(f"Error fetching children: {e}")
+
+        files = response.get("children", []) or response.get("entries", [])
+        print(f"[locate] Found files: {[f.get('name') for f in files]}")
+        
+        for f in files:
+            if f.get("name") == file:
+                file_id = f.get("file_id")
+                print(f"[locate] Matched file_id: {file_id}")
+                return file_id
+       
+        print(f"[locate] Files in folder: {[f.get('name') for f in files]}")
+
+        
+        raise FileNotFoundError(f"File '{file}' not found in OneData.")
+
 
     def upload(self, filename) -> object:
         """Upload a file to OneData"""
@@ -113,10 +135,14 @@ class OneDataClient(ProviderClient):
                 self._handle_http_errors(e, "uploading file")
 
         return response
+    def download(self, file_id, dest_path) -> object:
+   
+        endpoint = f"{self.base_url}/{self.base_data_endpoint}/{file_id}/content"
+        
+        result = APIClient.download(self, endpoint, dest_path)
+    
+        return result
 
-    def download(self, file_id) -> object:
-        """@todo """
-        pass
 
     def delete(self, file_id) -> object:
         """@todo"""
