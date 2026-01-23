@@ -25,6 +25,7 @@ class StorageProvisioningTestCase(UnitTestCase):
         self.test_provider_file_id_name = os.getenv('TEST_PROVIDER_FILE_ID_NAME')
         self.test_local_file_name = 'test_file.txt'
         self.test_remote_file_name = 'test_file3.txt'
+        self.test_file_id = os.getenv("TEST_FILE_ID")
 
         self.oauth = OAuth()
         self.oauth.login(os.getenv('ARIA_CONNECTION_USERNAME'), os.getenv('ARIA_CONNECTION_PASSWORD'))
@@ -89,7 +90,7 @@ class StorageProvisioningTestCase(UnitTestCase):
         self.storage.select(self.test_provider_id)
         self.storage.provision()
 
-        return_json = self.storage.client.upload(self.test_local_file_name)
+        return_json = self.storage.client.file_upload(self.test_local_file_name)
         self.assertIsNotNone(return_json, "Upload did not return any data")
         self.assertIsInstance(return_json, dict, "Return data is not a valid JSON object")
         self.assertIn(self.test_provider_file_id_name, return_json.keys(), "Return data does not contain file ID")
@@ -99,17 +100,17 @@ class StorageProvisioningTestCase(UnitTestCase):
         self.assertIsInstance(file_id, str, "Return data file ID is not a string")
         self.assertNotEqual(file_id, '', "Return data did not return a file ID")
 
-    def testFindFile(self):
+    def testGetFileID(self):
         self.storage.select(self.test_provider_id)
         self.storage.provision()
-        file_id = self.storage.client.locate(self.test_remote_file_name)
+        file_id = self.storage.client.get_file_id(self.test_remote_file_name)
         self.assertIsNotNone(file_id, "File not found; no file ID returned")
 
     def testDownloadFile(self):
         self.storage.select(self.test_provider_id)
         self.storage.provision()
 
-        file_id = self.storage.client.locate(self.test_remote_file_name)
+        file_id = self.storage.client.get_file_id(self.test_remote_file_name)
 
          # Define a destination path (e.g. local Downloads folder)
         downloads_dir = os.path.join(os.path.expanduser("~"), "Downloads")
@@ -117,7 +118,7 @@ class StorageProvisioningTestCase(UnitTestCase):
         dest_path = os.path.join(downloads_dir, self.test_remote_file_name)
 
         try:
-            downloaded_path = self.storage.client.download(file_id, dest_path)
+            downloaded_path = self.storage.client.file_download(file_id, dest_path)
         except Exception as e:
             self.fail(f"Download failed with exception: {e}")
 
@@ -126,9 +127,12 @@ class StorageProvisioningTestCase(UnitTestCase):
         assert os.path.getsize(downloaded_path) > 0, f"Downloaded file is empty: {downloaded_path}"
 
     def testDeleteFile(self):
-        """@todo"""
-        # self.storage.select('OneDataClient').delete('thing', self.file_id)
-        pass
+        self.storage.select(self.test_provider_id)
+        self.storage.provision()
+        # Delete the file by id (uses locate() + delete() under the hood)
+        response = self.storage.client.file_delete(self.test_file_id)
+        # Verify HTTP success
+        self.assertEqual(response, 204, f"Expected 204 No Content, got {response}")
 
 
 if __name__ == '__main__':

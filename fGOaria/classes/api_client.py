@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from requests import Response
 from ..utils.imports_config import *
 
 
@@ -62,6 +63,16 @@ class APIClient(ABC):
 
         except Exception as e:
             raise ConnectionError(f"Error downloading file from '{endpoint}': {e}")
+
+    def delete(self, endpoint) -> Response:
+        url = f"{self.base_url}/{endpoint}"
+       
+        # Copy and prepare headers
+        headers = getattr(self, "headers", {}).copy()
+ 
+        resp = requests.delete(url, headers=headers, timeout=10)
+        resp.raise_for_status()
+        return resp
 
     def gql_query(self, query: str, variables: dict = None):
         """GraphQL POST request."""
