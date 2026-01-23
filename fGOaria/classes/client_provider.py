@@ -135,7 +135,7 @@ class OneDataClient(ProviderClient):
 
         raise FileNotFoundError(f"File '{filename}' not found in OneData.")
 
-    def file_download(self, file_id: str or None = None, dest_path) -> object:
+    def file_download(self, file_id: str or None, dest_path) -> object:
 
         if file_id is None and self.file_id is not None:
             file_id = self.file_id
@@ -144,7 +144,7 @@ class OneDataClient(ProviderClient):
             raise Exception("No file id provided.")
 
         endpoint = f"{self.base_url}/{self.base_data_endpoint}/{file_id}/content"
-        result = super().download(self, endpoint, dest_path)
+        result = super().download(endpoint, dest_path)
 
         return result
 

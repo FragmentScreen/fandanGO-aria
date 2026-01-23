@@ -44,7 +44,7 @@ class APIClient(ABC):
         resp.raise_for_status()
         return resp.json()
     
-    def download(self, endpoint, dest_path):
+    def download(self, endpoint: str, dest_path):
         """Download a file from the provider to the given destination path."""
         headers = getattr(self, "headers", {}).copy()
         token = getattr(self, "token", None)
