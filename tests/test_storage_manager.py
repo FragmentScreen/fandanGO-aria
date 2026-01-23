@@ -113,9 +113,9 @@ class StorageProvisioningTestCase(UnitTestCase):
         self.storage.select(self.test_provider_id)
         self.storage.provision()
         # Delete the file by id (uses locate() + delete() under the hood)
-        response = self.storage.client.file_delete(self.test_file_id)
+        status_code = self.storage.client.file_delete(self.test_file_id)
         # Verify HTTP success
-        self.assertEqual(response, 204, f"Expected 204 No Content, got {response}")
+        self.assertEqual(status_code, 204, f"Expected 204 No Content, got {status_code}")
 
 
 if __name__ == '__main__':
