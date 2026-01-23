@@ -44,9 +44,7 @@ class APIClient(ABC):
         return resp.json()
     
     def download(self, endpoint, dest_path):
-        """
-    Download a file from the provider to the given destination path.
-    """
+        """Download a file from the provider to the given destination path."""
         headers = getattr(self, "headers", {}).copy()
         token = getattr(self, "token", None)
         if token:
