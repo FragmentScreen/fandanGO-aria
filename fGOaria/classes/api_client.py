@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from requests import Response
 from ..utils.imports_config import *
 
 
@@ -43,8 +44,7 @@ class APIClient(ABC):
         resp.raise_for_status()
         return resp.json()
 
-  
-    def delete(self, endpoint):
+    def delete(self, endpoint) -> Response:
         url = f"{self.base_url}/{endpoint}"
        
         # Copy and prepare headers
@@ -54,7 +54,6 @@ class APIClient(ABC):
         resp.raise_for_status()
         return resp
 
- 
     def gql_query(self, query: str, variables: dict = None):
         """GraphQL POST request."""
         payload = {"query": query}

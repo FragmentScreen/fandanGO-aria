@@ -14,6 +14,7 @@ class ProviderClient(APIClient, ABC):
 
     def __init__(self, provider: StorageProvider):
         self._provider = provider
+        self._file_id = None
         super().__init__(self._token.access_token)
 
     @property
@@ -25,34 +26,34 @@ class ProviderClient(APIClient, ABC):
         return self._provider.credentials.host_endpoint
 
     @property
-    def file_id(self) -> str:
-        return self._file_id
+    def file_id(self) -> str or None:
+        return self._file_id if self._file_id else None
 
-    @property
-    def _file_id(self) -> str: # this may seem redundant, but is required for a protected setter
-        return self._file_id
-
-    @_file_id.setter
-    def _file_id(self, file_id: str):
+    def _set_file_id(self, file_id: str):
         self._file_id = file_id
 
     @abstractmethod
-    def locate(self, file_id) -> object:
-        """Get the location details of the file"""
+    def file_locate(self, file_id: str) -> object:
+        """Get the location details of a file"""
         pass
 
     @abstractmethod
-    def upload(self, file_location) -> object:
+    def file_upload(self, file_location: str) -> object:
         """Push file to external storage provider"""
         pass
 
     @abstractmethod
-    def download(self, file_id) -> object:
+    def get_file_id(self, filename: str) -> str:
+        """Get the ID of a file from its filename"""
+        pass
+
+    @abstractmethod
+    def file_download(self, file_id: str) -> object:
         """Download file from external storage provider"""
         pass
 
     @abstractmethod
-    def deletefile(self, file_id) -> object:
+    def file_delete(self, file_id: str):
         """Delete file from external storage provider"""
         pass
 
@@ -94,11 +95,11 @@ class OneDataClient(ProviderClient):
         """Get the details of the current OneData data space"""
         return self.get(self.space_endpoint)
 
-    def locate(self, file_id) -> object:
+    def file_locate(self, file_id: str) -> object:
         """@todo find the location of the file on OneData"""
         pass
 
-    def upload(self, filename) -> object:
+    def file_upload(self, filename: str) -> object:
         """Upload a file to OneData"""
 
         endpoint = f"{self.data_endpoint}/children?"
@@ -117,8 +118,8 @@ class OneDataClient(ProviderClient):
                 self._handle_http_errors(e, "uploading file")
 
         return response
-    
-    def locate(self, filename) -> object:
+
+    def get_file_id(self, filename: str) -> str:
         """Find the OneData file ID by filename."""
         endpoint = f"{self.data_endpoint}/children?"
         try:
@@ -129,26 +130,33 @@ class OneDataClient(ProviderClient):
         files = response.get("children", []) or response.get("entries", [])
         for f in files:
             if f.get("name") == filename:
-                return f.get("id")
-        
+                self._set_file_id(f.get("file_id"))
+                return f.get("file_id")
+
         raise FileNotFoundError(f"File '{filename}' not found in OneData.")
 
 
-    def download(self, file_id) -> object:
+    def file_download(self, file_id: str or None = None) -> object:
         """@todo """
         pass
 
-    def deletefile(self, file_id) -> object:
-        """Delete a file to OneData"""
-       
+    def file_delete(self, file_id: str or None = None) -> int:
+        """Delete a file from the OneData data space"""
+
+        if file_id is None and self.file_id is not None:
+            file_id = self.file_id
+
+        if file_id is None:
+            raise Exception("No file id provided.")
+
         endpoint = f"{self.base_data_endpoint}/{file_id}"
-        
+
         try:
-            resp = super().delete(endpoint)   
+            resp = super().delete(endpoint)
         except Exception as e:
-            raise ConnectionError(f"Error deleting file '{file_id}': {e}")
+            raise ConnectionError(f"Error deleting file '{file_id}' (Likely file not found): {e}")
+
         return resp.status_code
-    
 
     def _handle_http_errors(self, error: HTTPError, context: str):
         response = error.response.content
