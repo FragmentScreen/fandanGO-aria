@@ -48,7 +48,7 @@ class ProviderClient(APIClient, ABC):
         pass
 
     @abstractmethod
-    def file_download(self, file_id: str) -> object:
+    def file_download(self, file_id: str or None, dest_path) -> object:
         """Download file from external storage provider"""
         pass
 
@@ -75,7 +75,7 @@ class OneDataClient(ProviderClient):
     @property
     def space_endpoint(self) -> str:
         return f"onezone/spaces/{self.space_id}"
-    
+
     @property
     def base_data_endpoint(self) -> str:
         return "oneprovider/data"
@@ -135,10 +135,18 @@ class OneDataClient(ProviderClient):
 
         raise FileNotFoundError(f"File '{filename}' not found in OneData.")
 
+    def file_download(self, file_id: str or None, dest_path) -> object:
 
-    def file_download(self, file_id: str or None = None) -> object:
-        """@todo """
-        pass
+        if file_id is None and self.file_id is not None:
+            file_id = self.file_id
+
+        if file_id is None:
+            raise Exception("No file id provided.")
+
+        endpoint = f"{self.base_url}/{self.base_data_endpoint}/{file_id}/content"
+        result = super().download(endpoint, dest_path)
+
+        return result
 
     def file_delete(self, file_id: str or None = None) -> int:
         """Delete a file from the OneData data space"""
