@@ -23,7 +23,7 @@ class StorageFileMgmtTestCase(UnitTestCase):
         self.test_provider_file_id_name = os.getenv('TEST_PROVIDER_FILE_ID_NAME')
         self.test_local_file_name = 'test_file.txt'
         self.test_remote_file_name = 'test_file3.txt'
-        self.test_file_id = os.getenv("TEST_PROVIDER_FILE_ID")
+        self.test_remote_file_id_deletable = os.getenv("TEST_PROVIDER_DELETABLE_FILE_ID")
 
         self.oauth = OAuth()
         self.oauth.login(os.getenv('ARIA_CONNECTION_USERNAME'), os.getenv('ARIA_CONNECTION_PASSWORD'))
@@ -81,7 +81,7 @@ class StorageFileMgmtTestCase(UnitTestCase):
 
     def testDeleteFile(self):
         # Delete the file by id (uses locate() + delete() under the hood)
-        status_code = self.storage.client.file_delete(self.test_file_id)
+        status_code = self.storage.client.file_delete(self.test_remote_file_id_deletable)
         # Verify HTTP success
         self.assertEqual(status_code, 204, f"Expected 204 No Content, got {status_code}")
 
