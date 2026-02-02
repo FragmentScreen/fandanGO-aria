@@ -17,6 +17,7 @@
 [![PyPI version](https://badge.fury.io/py/fandanGO-aria.svg)](https://badge.fury.io/py/fandanGO-aria)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Documentation](https://img.shields.io/badge/Documentation-Wiki-brightgreen)](https://github.com/FragmentScreen/fandanGO-aria/wiki)
+[![OSV Scanner](https://github.com/FragmentScreen/fandanGO-aria/actions/workflows/osv-scanner.yml/badge.svg)](https://github.com/FragmentScreen/fandanGO-aria/actions/workflows/osv-scanner.yml)
 
 
 
@@ -84,5 +85,26 @@ If problems arise when storing tokens on a Linux device, it may be required to d
 
 Please use the [dbus package](https://pypi.org/project/dbus-python/) to solve the issue
 
+## Security Scanning
 
+This repo uses [OSV Scanner](https://github.com/google/osv-scanner) for vulnerability detection.
+
+**When it runs:**
+- Daily at 03:00 UTC (full scan)
+- On PRs targeting main (changed deps only)
+- On push to main (full scan)
+
+**If vulnerabilities are found:**
+1. Check the [Security tab](../../security) for alerts
+2. To ignore false positives, add entries to `osv-scanner.toml`:
+   ```toml
+   [[IgnoredVulns]]
+   id = "GHSA-xxxx-xxxx-xxxx"
+   reason = "Justification"
+   ```
+
+**References:**
+- [OSV Scanner docs](https://google.github.io/osv-scanner/)
+- [GitHub Action](https://github.com/google/osv-scanner-action)
+- [OSV Database](https://osv.dev/)
 
