@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from requests import Response
 from ..utils.imports_config import *
 
 
@@ -42,6 +43,36 @@ class APIClient(ABC):
                              headers=self.headers)
         resp.raise_for_status()
         return resp.json()
+    
+    def download(self, endpoint: str, dest_path):
+        """Download a file from the provider to the given destination path."""
+        headers = getattr(self, "headers", {}).copy()
+        token = getattr(self, "token", None)
+        if token:
+            headers["X-Auth-Token"] = token
+        try:
+            with requests.get(endpoint, headers=headers, stream=True, timeout=30) as resp:
+                resp.raise_for_status()
+
+                with open(dest_path, "wb") as f:
+                    for chunk in resp.iter_content(chunk_size=8192):
+                        if chunk:
+                            f.write(chunk)
+
+            return dest_path
+
+        except Exception as e:
+            raise ConnectionError(f"Error downloading file from '{endpoint}': {e}")
+
+    def delete(self, endpoint) -> Response:
+        url = f"{self.base_url}/{endpoint}"
+       
+        # Copy and prepare headers
+        headers = getattr(self, "headers", {}).copy()
+ 
+        resp = requests.delete(url, headers=headers, timeout=10)
+        resp.raise_for_status()
+        return resp
 
     def gql_query(self, query: str, variables: dict = None):
         """GraphQL POST request."""
