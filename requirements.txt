@@ -1,5 +1,5 @@
 click==8.1.7
-requests==2.32.3
+requests==2.32.4
 keyring==24.3.0
 python-dotenv==1.0.0
 questionary==2.0.1
