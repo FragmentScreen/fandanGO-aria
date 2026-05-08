@@ -1,3 +1,4 @@
+import json
 from types import MappingProxyType
 
 from fGOaria.classes.client_provider import ProviderClient
@@ -9,12 +10,14 @@ ACTION_UPLOAD = ProviderClient.upload.__name__
 ACTION_DOWNLOAD = ProviderClient.download.__name__
 ACTION_LOCATE = ProviderClient.locate.__name__
 ACTION_DELETE = ProviderClient.delete.__name__
+ACTION_DEPOSIT_METADATA = "deposit metadata to ARIA"
 
 PROVIDER_ACTIONS = MappingProxyType({
     0: ACTION_UPLOAD,
     1: ACTION_DOWNLOAD,
     2: ACTION_LOCATE,
-    3: ACTION_DELETE
+    3: ACTION_DELETE,
+    4: ACTION_DEPOSIT_METADATA
 })
 
 # @click.command()
@@ -55,3 +58,26 @@ def provision_storage_option():
             file_location = click.prompt('File name and location', type=str)
             file_id = manager.client.upload(file_location)
             utils.print_with_spaces(f"Successfully uploaded {file_location} to {selected}")
+
+        if (action == ACTION_DEPOSIT_METADATA):
+            # TODO: package metadata from deposition into record/fields
+            # TODO: turn these into helper funcs?
+
+            # TODO: check bucket exists, if not: create
+            # TODO: get bucket
+            bucket_id = ''
+            manager = cli.new_cli_data_manager(entity_id, entity_type, True)
+
+            # create record
+            record = manager.create_record(bucket_id, 'ARIA_StorageUpload')
+            utils.print_created_message(record)
+
+            # create field
+            field = manager.create_field(bucket_id, 'JSON_ARIA_StorageUpload', json.dumps({
+                "provider_id": selected,
+                "file_id": file_id
+            }))
+
+            # upload to ARIA
+            manager.push(record)
+            manager.push(field)
