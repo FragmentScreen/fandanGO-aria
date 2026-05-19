@@ -60,20 +60,20 @@ def provision_storage_option():
             utils.print_with_spaces(f"Successfully uploaded {file_location} to {selected}")
 
         if (action == ACTION_DEPOSIT_METADATA):
-            # TODO: package metadata from deposition into record/fields
-            # TODO: turn these into helper funcs?
+            if (file_id is None):
+                print("No file uploaded yet. Please upload a file before depositing metadata.")
+                continue
 
-            # TODO: check bucket exists, if not: create
-            # TODO: get bucket
-            bucket_id = ''
             manager = cli.new_cli_data_manager(entity_id, entity_type, True)
 
-            # create record
-            record = manager.create_record(bucket_id, 'ARIA_StorageUpload')
+            # package metadata from deposition into record/fields. TODO: turn this into helper func on StorageManager?
+
+            bucket = manager.create_bucket_cli(menu_return=False)
+
+            record = manager.create_record(bucket.id, 'ARIA_StorageUpload')
             utils.print_created_message(record)
 
-            # create field
-            field = manager.create_field(bucket_id, 'JSON_ARIA_StorageUpload', json.dumps({
+            field = manager.create_field(bucket.id, 'JSON_ARIA_StorageUpload', json.dumps({
                 "provider_id": selected,
                 "file_id": file_id
             }))
