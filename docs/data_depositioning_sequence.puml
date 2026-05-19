@@ -1,0 +1,63 @@
+@startuml
+skinparam style strictuml
+skinparam sequenceMessageAlign center
+
+actor "fandanGO user" as FGO
+participant "Storage API" as SAPI
+database "Storage Provider" as SP
+participant "DD API" as DD
+
+title Fedeated Storage Provision & Metadata Registration
+
+activate FGO
+
+== 1. Connect to a storage provider ==
+
+FGO -> SAPI: Reqest storage providers
+activate SAPI
+SAPI --> FGO: Return available options
+deactivate SAPI
+
+FGO -> FGO: Select option
+FGO -> SAPI: Request connection
+
+activate SAPI
+SAPI -> SAPI: Validate request
+
+SAPI -> SP: Request token
+activate SP
+SP --> SAPI: Return valid token
+deactivate SP
+
+SAPI --> FGO: Return valid storage provider token
+deactivate SAPI
+
+== 2. Upload and manage files ==
+
+FGO -> SP: Connect to provider using valid token
+activate SP
+
+FGO --> SP: Perform actions on provider, e.g. upload files
+FGO --> SP
+FGO --> SP
+
+SP --> FGO: Get file ID back
+deactivate SP
+
+== 3. Record storage deposition in ARIA ==
+
+FGO -> FGO: Package ARIA storage metadata\ninto Record/Fields structure\n(provider ID, location/file ID)
+
+FGO -> DD: Send ARIA federated storage deposition\nmetadata as Record/Fields associated with visit
+activate DD
+note left of DD
+  New ARIA federated storage record
+  and associated metadata fields
+  ---
+  Federated storage deposition is now
+  associated with visit's Bucket and
+  embargo period
+end note
+DD --> FGO: Response
+deactivate DD
+@enduml
