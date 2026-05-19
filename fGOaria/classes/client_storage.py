@@ -12,19 +12,20 @@ class StorageClient(AriaClient):
     """
     API client for ARIA's storage brokering API
     """
+    _options: dict[str, StorageProvider]
 
     def __init__(self, token: str, entity_id: str, entity_type: str = 'visit'):
         super().__init__(token)
         self.id = entity_id
         self.type = entity_type
-        self._options = None
+        self._options = {}
 
     @property
     def options(self) -> dict[str, StorageProvider]:
         """
         Retrieve all available storage provider options
         """
-        if self._options is None:
+        if not self._options:
             self._get_provider_options()
         return self._options
 
@@ -35,7 +36,7 @@ class StorageClient(AriaClient):
         """
         results = self.gql_query(GET_STORAGE_PROVIDERS.query)
 
-        if (results is None):
+        if results is None:
             raise Exception("Couldn't pull results ARIA's storage brokering API")
 
         options = results['data'][GET_STORAGE_PROVIDERS.return_key]['nodes']
@@ -49,7 +50,7 @@ class StorageClient(AriaClient):
                 provider_type=option['engine']
             )
 
-    def get_provider_credentials(self, provider_id: str) -> Credentials or None:
+    def get_provider_credentials(self, provider_id: str) -> Credentials:
         """
         Retrieve the token for a specific provider
         """
@@ -66,6 +67,13 @@ class StorageClient(AriaClient):
         })
 
         provider_token = results['data'][FETCH_STORAGE_TOKENS.return_key]
+
+        if provider_token.get('token') is None:
+            raise Exception("Couldn't fetch storage provider token")
+
+        if provider_token.get('token').get('host_endpoint') is None:
+            raise Exception("Couldn't fetch storage provider host endpoint")
+
         token = Token(provider_token['token'])
 
         return Credentials(
@@ -75,7 +83,7 @@ class StorageClient(AriaClient):
                 key: val for key, val in provider_token['token'].items()
                 if key not in ['host_endpoint', *(token.to_dict().keys())]
             }
-        ) if provider_token['token'] else None
+        )
 
     def check_provider_validity(self, provider_id: str):
         """
