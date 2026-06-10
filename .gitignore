@@ -16,9 +16,9 @@ __pycache__/
 *.egg-info/
 *.egg
 
-## test files
-#test_*
-#test*
+# test files
+test_*
+test*
 
 # build or python virtual env files
 /venv
