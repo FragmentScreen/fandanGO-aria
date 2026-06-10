@@ -1,5 +1,6 @@
 # local configuration files
-config.yml
+.config
+.env
 
 # development productivity files 
 TODO.md
@@ -21,4 +22,5 @@ test*
 /build
 /dist
 
-.env
+# IDE files
+/.idea
