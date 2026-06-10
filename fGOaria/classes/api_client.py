@@ -1,8 +1,9 @@
-from ..utils.imports_config import *
-from ..utils.utility_functions import set_headers, get_config
 from dotenv import load_dotenv
+from ..utils.imports_config import *
+from ..utils.utility_functions import set_headers
 
 load_dotenv()
+
 class APIClient:
     def __init__(self, token):
         self.token = token
@@ -35,6 +36,7 @@ class APIClient:
         if variables:
             payload["variables"] = variables
         response = requests.post(self.base_url, json=payload, headers=self.headers)
+        response.raise_for_status()
         json_resp = response.json()
         if 'errors' in json_resp:
             error_message = f"GraphQL Errors: {json_resp['errors']}"
