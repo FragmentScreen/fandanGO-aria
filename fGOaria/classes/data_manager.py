@@ -1,5 +1,5 @@
-from ..utils.imports_config import * 
-from ..utils.utility_functions import pretty_print, print_with_spaces, print_created_message
+from ..utils.imports_config import *
+from ..utils.utility_functions import retry_on_error
 from .bucket import Bucket
 from .record import Record 
 from .field import Field
@@ -45,7 +45,7 @@ class DataManager:
         field.populate(created_field)
         self.fields[field.id] = field
         return field
-    
+
     def push(self, obj) -> None:
         """Push an object to the appropriate client endpoint"""
 
@@ -63,6 +63,16 @@ class DataManager:
             self.fields[obj._id] = obj
         else:
             raise ValueError("Unsupported object type for pushing")
+
+    @retry_on_error(max_retries=5, delay=1, backoff=2, print_attempts=False)
+    def push_safe(self, obj) -> None:
+        """Push an object to the appropriate client endpoint (retry on failure)"""
+        return self.push(obj)
+
+    @retry_on_error(max_retries=5, delay=1, backoff=2, print_attempts=True)
+    def push_safe_cli(self, obj) -> None:
+        """Push an object to the appropriate client endpoint (retry on failure, prints attempts to stdout)"""
+        return self.push(obj)
 
     def populate(self) -> None : 
         """Populate new Bucket classes and add to Data Manager based on API request"""
