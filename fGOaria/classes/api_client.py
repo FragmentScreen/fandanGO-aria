@@ -1,6 +1,9 @@
 from abc import ABC, abstractmethod
 from requests import Response
+from dotenv import load_dotenv
 from ..utils.imports_config import *
+
+load_dotenv()
 
 
 class APIClient(ABC):
@@ -80,6 +83,7 @@ class APIClient(ABC):
         if variables:
             payload["variables"] = variables
         response = requests.post(self.base_url, json=payload, headers=self.headers)
+        response.raise_for_status()
         json_resp = response.json()
         if 'errors' in json_resp:
             error_message = f"GraphQL Errors: {json_resp['errors']}"

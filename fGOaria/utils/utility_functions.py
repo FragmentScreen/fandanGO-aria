@@ -1,4 +1,6 @@
+import time
 from .imports_config import *
+from functools import wraps
 
 #  PRINTING
 
@@ -117,11 +119,50 @@ def get_entity() -> dict :
     }
 
 def options_manager(options = {}) -> dict :
-        """CLI Tool for creating Key-Value pairs."""
-        if click.confirm('Would you like to add an option key-value?'):
-            key = click.prompt('Enter Key Name')
-            value = click.prompt(f'Enter Value for {key}')
-            options[key] = value
-            return options_manager(options)
-        else:
-            return options
+    """CLI Tool for creating Key-Value pairs."""
+    if click.confirm('Would you like to add an option key-value?'):
+        key = click.prompt('Enter Key Name')
+        value = click.prompt(f'Enter Value for {key}')
+        options[key] = value
+        return options_manager(options)
+    else:
+        return options
+
+
+# RETRY & ERROR HANDLING
+
+def retry_on_error(max_retries: int = 3, delay: int = 1, backoff: float = 1.5, print_attempts: bool = False):
+    """
+    Decorator to retry operations on failure with exponential backoff
+    
+    Args:
+        max_retries: Maximum number of retry attempts
+        delay: Initial delay between retries (seconds)
+        backoff: Multiplier for delay on each retry
+        print_attempts: Bool to print retry attempts to console
+    
+    Returns:
+        Result of the function call if successful, raises exception if max_retries is reached
+    """
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            current_delay = delay
+            for attempt in range(max_retries):
+                try:
+                    result = func(*args, **kwargs)
+                    if attempt > 0 and print_attempts:
+                        print(f"✓ Success on attempt {attempt + 1}")
+                    return result
+                except Exception as e:
+                    if (attempt == max_retries - 1) and print_attempts:
+                        print(f"✗ Final attempt {attempt + 1} failed: {e}")
+                        raise e
+                    if print_attempts:
+                        print(f"✗ Attempt {attempt + 1} failed: {e}")
+                        print(f"  Retrying in {current_delay:.1f}s...")
+                    time.sleep(current_delay)
+                    current_delay *= backoff
+            return None
+        return wrapper
+    return decorator
