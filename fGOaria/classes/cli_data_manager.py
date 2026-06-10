@@ -107,6 +107,8 @@ class DataManagerCLI(DataManager):
     # PRINT
 
     def printer_cli(self, data) -> None:
+        object_display = []
+
         if data == 'Bucket' :
             object_display = get_dicts_from_objects(self.buckets.values())
         if data == 'Record' :
