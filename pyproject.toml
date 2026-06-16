@@ -1,6 +1,6 @@
 [project]
 name = "fandanGO-aria"
-version = "2.2.5"
+version = "2.2.6"
 description = "A Python client library and CLI tool for interfacing with ARIA within the FandanGO ecosystem"
 readme = "README.md"
 requires-python = ">=3.8"
