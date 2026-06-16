@@ -9,7 +9,7 @@ class AriaClient :
     Super class. New instances initiated in the `commands`. All functionality will start with one of these methods.
     '''
 
-    def __init__(self, login=False,):
+    def __init__(self, login=False):
         self.oauth = OAuth()
         if not login:
             self._fetch_token()
