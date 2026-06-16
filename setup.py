@@ -22,7 +22,7 @@ setup(
         'python-dotenv',
         'questionary',
         'PyYAML',
-        'cryptography',
+        'cryptography>=48.0.1',
     ],
     entry_points={
         'console_scripts': [
