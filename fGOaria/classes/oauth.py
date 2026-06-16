@@ -1,3 +1,4 @@
+import traceback
 from ..utils.utility_functions import get_formatted_datetime, print_with_spaces, check_headers, space
 from .client_oauth import ClientOauth
 from ..utils.imports_config import *
@@ -35,6 +36,8 @@ class OAuth :
             click.echo('Successfully logged into ARIA.')
         except Exception as e : 
             logging.error(f' Login to ARIA failed : {e.args}')
+            if self.client.dev == 'LOCAL':
+                traceback.print_exc()
             print_with_spaces('Please check your credentials and try again.')
 
 
