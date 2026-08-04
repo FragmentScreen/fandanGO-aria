@@ -9,7 +9,7 @@ authors = [{ name = "FragmentScreen" }]
 dependencies = [
   "PyYAML>=6.0.2",
   "click>=8.1.8",
-  "cryptography>=48.0.1",
+  "cryptography>=50.0.0",
   "keyring>=25.6.0",
   "prompt_toolkit>=3.0.51",
   "python-dotenv>=1.1.1",
