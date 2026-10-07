@@ -12,8 +12,14 @@ class APIClient:
             self.aria_login_url = os.getenv('ARIA_CONNECTION_LOGIN_URL_LOCAL')
         else: 
             self.aria_login_url = os.getenv('ARIA_CONNECTION_LOGIN_URL')
-        self.headers = set_headers(self.token) if self.token else None
-        self.base_url = os.getenv(f'ARIA_GQL_{self.dev}')
+
+    @property
+    def base_url(self) -> str:
+        return os.getenv(f'ARIA_GQL_{self.dev}')
+
+    @property
+    def headers(self) -> dict:
+        return set_headers(self.token) if self.token else None
 
     def get(self, endpoint, params=None):
         url = f"{self.base_url}/{endpoint}"
