@@ -63,7 +63,7 @@ class Field() :
         self._order = value
     
     @property
-    def id(self) -> str:
+    def id(self) -> Union[str, None]:
         """Getter for the Field ID."""
         return self._id
 
