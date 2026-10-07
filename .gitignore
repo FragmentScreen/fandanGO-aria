@@ -13,8 +13,7 @@ __pycache__/
 *.egg
 
 # test files
-test_*
-test*
+test_file*
 
 # build or python virtual env files
 /venv

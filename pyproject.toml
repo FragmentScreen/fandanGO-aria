@@ -30,3 +30,6 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 include = ["fGOaria*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
