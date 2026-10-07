@@ -49,11 +49,14 @@ Here, you will be required to complete the following:
 - ARIA_CONNECTION_LOGIN_URL
 - ARIA_CONNECTION_GRANT_TYPE
 - ARIA_CONNECTION_SCOPE
+- ARIA_GQL_LIVE
+- ARIA_REST_LIVE
 - ARIA_CLIENT_ID
 - ARIA_CLIENT_SECRET
 - ARIA_CONNECTION_REFRESH_GRANT
-- DEV (Set to LIVE unless in development/beta)
-- ARIA_FACILITY_ID
+- DEV
+
+Set DEV to LIVE when connecting to ARIA's production environment, otherwise set to BETA when connecting to ARIA's beta environment
 
 
 
@@ -63,6 +66,16 @@ The following `env` options are not neccessary and are mostly used for developme
 
 - ARIA_CONNECTION_USERNAME : If a CLI user, this will remove the need to re-enter your login email
 - ARIA_CONNECTION_PASSWORD : Similar to Email. Use with caution if on a communal computer.
+
+Use these to connect to ARIA's Beta environments : 
+
+- ARIA_GQL_BETA
+- ARIA_REST_BETA
+
+Only set these to run the tests: 
+
+- TEST_VISIT_ID
+- TEST_RECORD_ID
 
 ### Post Setup
 
