@@ -11,7 +11,10 @@ class AriaFileUploadFieldCase(unittest.TestCase):
     def setUpClass(self):
         super().setUpClass()
         load_dotenv()
-        self.test_local_file_name = 'test_file.txt'
+        self.test_local_file_name = 'test_aria_field_upload_fixture.txt'
+        with open(self.test_local_file_name, 'w') as fixture:
+            fixture.write('ARIA field upload integration test')
+        self.addClassCleanup(os.remove, self.test_local_file_name)
         self.test_local_file_type = 'text/plain'
         self.test_record_id = os.getenv('TEST_RECORD_ID')
 

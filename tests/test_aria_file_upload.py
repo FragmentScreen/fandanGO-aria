@@ -9,7 +9,10 @@ class AriaFileUploadCase(unittest.TestCase):
     def setUpClass(self):
         super().setUpClass()
         load_dotenv()
-        self.test_local_file_name = 'test_file.txt'
+        self.test_local_file_name = 'test_aria_upload_fixture.txt'
+        with open(self.test_local_file_name, 'w') as fixture:
+            fixture.write('ARIA upload integration test')
+        self.addClassCleanup(os.remove, self.test_local_file_name)
 
         self.oauth = OAuth()
         self.oauth.login(os.getenv('ARIA_CONNECTION_USERNAME'), os.getenv('ARIA_CONNECTION_PASSWORD'))
