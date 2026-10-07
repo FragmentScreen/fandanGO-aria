@@ -66,7 +66,6 @@ class DataManagerClient(APIClient):
     # FIELDS
     def push_field(self, field: Field) -> Union[Dict[str, Any], None]:
         """Create a new data field."""
-        field.content = json.dumps(field.content)
         variables = {
             "input": {
                 "record": field.record_id,
