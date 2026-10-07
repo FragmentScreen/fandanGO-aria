@@ -8,7 +8,7 @@ class FileUploadField(Field) :
         self._file_path = file_path
         self._file_type = file_type
 
-    def upload(self, token: str = None):
+    def upload(self, token: str = None) -> None:
         response = AriaRest(token).upload(self._file_path, self._file_type)
         if not response.get('files'):
             raise Exception("File upload failed. Response: " + str(response))
