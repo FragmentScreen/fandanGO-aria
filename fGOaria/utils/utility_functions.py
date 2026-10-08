@@ -43,8 +43,8 @@ def check_headers(json):
 
 def set_headers(token) :
     """Return a variable that holds a token to be used in a request"""
-    return  {'Authorization': f'Bearer {token}'}
-
+    token_str = token.access_token if hasattr(token, 'access_token') else token
+    return {'Authorization': f'Bearer {token_str}'}
 
 
 # CONFIG

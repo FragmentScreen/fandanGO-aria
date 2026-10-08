@@ -13,78 +13,75 @@ class Field() :
         
 
     @property
-    def record_id(self):
+    def record_id(self) -> str:
         """Getter for the Field's Record ID."""
         return self._record_id
 
     @record_id.setter
-    def record_id(self, value):
+    def record_id(self, value: str):
         """Setter for the Field's Record ID."""
         self._record_id = value
 
     @property
-    def field_type(self):
+    def field_type(self) -> str:
         """Getter for the Field Type."""
         return self._field_type
 
     @field_type.setter
-    def field_type(self, value):
+    def field_type(self, value: str):
         """Setter for the Field Type."""
         self._field_type = value
 
     @property
-    def content(self):
+    def content(self) -> str:
         """Getter for the Field Content."""
         return self._content
 
     @content.setter
-    def content(self, value):
+    def content(self, value: str):
         """Setter for the Field Content."""
         self._content = value
 
     @property
-    def options(self):
+    def options(self) -> dict:
         """Getter for the Field Options."""
         return self._options
 
     @options.setter
-    def options(self, value):
+    def options(self, value: dict):
         """Setter for the Field Options."""
         self._options = value
 
     @property
-    def order(self):
+    def order(self) -> int:
         """Getter for the Field Order."""
         return self._order
 
     @order.setter
-    def order(self, value):
+    def order(self, value: int):
         """Setter for the Field Order."""
         self._order = value
     
     @property
-    def id(self):
+    def id(self) -> Union[str, None]:
         """Getter for the Field ID."""
         return self._id
 
     @id.setter
-    def id(self, value):
+    def id(self, value: str):
         """Setter for the Field ID."""
         self._id = value
 
     @property
-    def description(self):
+    def description(self) -> str:
         """Getter for the Field description."""
         return self._description
     
     @description.setter
-    def description(self, value):
+    def description(self, value: str):
         """Setter for the Field description."""
         self._description = value
 
-    def populate(self, data):
+    def populate(self, data: dict) -> None:
         """Populate field with additional properties after pushing to the database."""
         self._id = data.get('id')
-
-
-        
