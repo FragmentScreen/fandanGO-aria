@@ -1,23 +1,24 @@
 import os
 import unittest
+from tests.test_case import UnitTestCase
 from dotenv import load_dotenv
 from fGOaria.classes.oauth import OAuth
 from fGOaria.classes.aria_rest import AriaRest
 
-class AriaFileUploadCase(unittest.TestCase):
+class AriaFileUploadCase(UnitTestCase):
     @classmethod
-    def setUpClass(self):
+    def setUpClass(cls):
         super().setUpClass()
         load_dotenv()
-        self.test_local_file_name = 'test_aria_upload_fixture.txt'
-        with open(self.test_local_file_name, 'w') as fixture:
+        cls.test_local_file_name = 'test_aria_upload_fixture.txt'
+        with open(cls.test_local_file_name, 'w') as fixture:
             fixture.write('ARIA upload integration test')
-        self.addClassCleanup(os.remove, self.test_local_file_name)
+        cls.addClassCleanup(os.remove, cls.test_local_file_name)
 
-        self.oauth = OAuth()
-        self.oauth.login(os.getenv('ARIA_CONNECTION_USERNAME'), os.getenv('ARIA_CONNECTION_PASSWORD'))
+        cls.oauth = OAuth()
+        cls.oauth.login(os.getenv('ARIA_CONNECTION_USERNAME'), os.getenv('ARIA_CONNECTION_PASSWORD'))
 
-        self.aria = AriaRest(self.oauth.get_access_token())
+        cls.aria = AriaRest(cls.oauth.get_access_token())
 
 
     def testUploadFile(self):
