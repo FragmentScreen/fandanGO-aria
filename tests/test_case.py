@@ -1,6 +1,9 @@
 import os
 import unittest
 
+from dotenv import load_dotenv
+
+load_dotenv()
 RUN_TESTS = os.getenv("ARIA_RUN_TESTS") == "1"
 
 class UnitTestCase(unittest.TestCase):
