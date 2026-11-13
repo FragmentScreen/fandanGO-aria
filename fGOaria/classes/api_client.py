@@ -7,7 +7,7 @@ load_dotenv()
 class APIClient:
     def __init__(self, token):
         self.token = token
-        self.dev = os.getenv('DEV', 'LOCAL', 'TEST')
+        self.dev = os.getenv('DEV', 'LOCAL')
         if self.dev == 'LOCAL':
             self.aria_login_url = os.getenv('ARIA_CONNECTION_LOGIN_URL_LOCAL')
         else: 
