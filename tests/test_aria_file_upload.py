@@ -16,7 +16,7 @@ class AriaFileUploadCase(UnitTestCase):
         cls.addClassCleanup(os.remove, cls.test_local_file_name)
 
         cls.oauth = OAuth()
-        cls.oauth.login(os.getenv('ARIA_CONNECTION_USERNAME'), os.getenv('ARIA_CONNECTION_PASSWORD'))
+        cls.oauth.login(**cls.aria_credentials)
 
         cls.aria = AriaRest(cls.oauth.get_access_token())
 

@@ -20,7 +20,7 @@ class AriaFileUploadFieldCase(UnitTestCase):
         cls.test_record_id = os.getenv('TEST_RECORD_ID')
 
         cls.oauth = OAuth()
-        cls.oauth.login(os.getenv('ARIA_CONNECTION_USERNAME'), os.getenv('ARIA_CONNECTION_PASSWORD'))
+        cls.oauth.login(**cls.aria_credentials)
 
         cls.file_upload_field = FileUploadField(
             record_id=cls.test_record_id,
