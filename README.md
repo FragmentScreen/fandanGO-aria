@@ -7,9 +7,6 @@
 </div>
 
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
-
-
-
 [![Connect on LinkedIn](https://img.shields.io/badge/Connect%20on-LinkedIn-blue.svg)](https://www.linkedin.com/company/instruct-eric/mycompany/)
 [![GitHub issues](https://img.shields.io/github/issues/FragmentScreen/fandanGO-aria)](https://github.com/FragmentScreen/fandanGO-aria/issues)
 [![GitHub forks](https://img.shields.io/github/forks/FragmentScreen/fandanGO-aria)](https://github.com/FragmentScreen/fandanGO-aria/network/members)
@@ -18,7 +15,7 @@
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Documentation](https://img.shields.io/badge/Documentation-Wiki-brightgreen)](https://github.com/FragmentScreen/fandanGO-aria/wiki)
 [![OSV Scanner](https://github.com/FragmentScreen/fandanGO-aria/actions/workflows/osv-scanner.yml/badge.svg)](https://github.com/FragmentScreen/fandanGO-aria/actions/workflows/osv-scanner.yml)
-
+[![SQAaaS badge shields.io](https://img.shields.io/badge/sqaaas%20software-bronze-e6ae77)](https://sqaaas.eosc-synergy.eu/full-assessment/report/https://raw.githubusercontent.com/eosc-synergy/fandanGO-core.assess.sqaaas/main/.report/assessment_output.json "SQAaaS bronze badge achieved")
 
 
 ## Intro
@@ -133,3 +130,9 @@ This repo uses [OSV Scanner](https://github.com/google/osv-scanner) for vulnerab
 - [OSV Scanner docs](https://google.github.io/osv-scanner/)
 - [GitHub Action](https://github.com/google/osv-scanner-action)
 - [OSV Database](https://osv.dev/)
+
+## Software Quality
+
+**EOSC Synergy SQA compliant**
+
+[![SQAaaS badge](https://github.com/EOSC-synergy/SQAaaS/raw/master/badges/badges_150x116/badge_software_bronze.png)](https://sqaaas.eosc-synergy.eu/full-assessment/report/https://raw.githubusercontent.com/eosc-synergy/fandanGO-core.assess.sqaaas/main/.report/assessment_output.json "SQAaaS bronze badge achieved")
