@@ -25,14 +25,21 @@ class OAuth :
 
     # LOGIN
 
-    def login(self, username, password) -> None:
-        '''username and password passed from the commands 'login'. Gets login_data from pre-set config vars.'''
+    def login(self, username, password, use_keyring: bool = True) -> None:
+        '''
+        username and password passed from the commands 'login'. Gets login_data from pre-set config vars.
+
+        Args:
+            username (str): Username for ARIA.
+            password (str): Password for ARIA.
+            use_keyring (bool): Whether to use keyring for storing token data.
+        '''
         self.username = username if username is not None else self.username
         self.password = password if password is not None else self.password
         login_data = self.get_login_data(self.username, self.password)
         try : 
             response = self.client.login(login_data)
-            self.handle_auth_response(response)
+            self.handle_auth_response(response, use_keyring)
             click.echo('Successfully logged into ARIA.')
         except Exception as e : 
             logging.error(f' Login to ARIA failed : {e.args}')
@@ -43,20 +50,20 @@ class OAuth :
 
     # AUTH HANDLING
     
-    def handle_auth_response(self, response_data) -> Token:
+    def handle_auth_response(self, response_data, use_keyring: bool = True) -> Token:
         '''
         Timestamps token data before storing on keychain for expiry comparison upon reuse
         '''
         token = Token(response_data)
         token.timestamp = get_formatted_datetime()
-        self.set_token_keyring_data(token)
+        self.set_token_data(token, use_keyring)
         return token
 
 
     # TOKEN 
         
-    def get_access_token(self) -> Union[dict, None]:
-        token_data = self.get_keyring_token_data()
+    def get_access_token(self, use_keyring: bool = True) -> Union[dict, None]:
+        token_data = self.get_token_data(use_keyring)
         
         if token_data is None or not check_headers(token_data):
             raise Exception("Failed to fetch token.")
@@ -66,18 +73,19 @@ class OAuth :
             return token
         elif token.is_valid(True) :
             print_with_spaces('Refreshing token..')
-            return self.refresh_token(token)
+            return self.refresh_token(token, use_keyring)
         else:
             raise Exception("Token expired. Please log back into ARIA")
     
-    def refresh_token(self, token : Token) -> Union[Token, None] : 
+    def refresh_token(self, token : Token, use_keyring: bool = True) -> Union[Token, None] : 
         '''Posts refresh_token to retrieve new access_token. Some conversion between json string/object for storage and manipulation respectively '''
         refresh_token = token.refresh_token
         refresh_data = self.get_refresh_data(refresh_token)
         try :
             token_data = self.client.login(refresh_data)
-            token = self.handle_auth_response(token_data)
+            token = self.handle_auth_response(token_data, use_keyring)
             return token
+
         except requests.exceptions.RequestException as e:
             click.echo('Login failed. Please check your credentials and try again.')
             logging.error(f'Error refreshing token: {e}')
@@ -85,14 +93,15 @@ class OAuth :
 
     #  KEYRING STORAGE
             
-    def get_keyring_token_data(self) -> Union[dict, None] :
-        try:
-            token_data_str = keyring.get_password(self.token_str_key, '')
-            if token_data_str:
-                print_with_spaces('Token data successfully retrieved from keyring.')
-                return json.loads(token_data_str)
-        except Exception as e:
-            logging.warning(f"Keyring storage failed: {e}")
+    def get_token_data(self, use_keyring: bool = True) -> Union[dict, None] :
+        if use_keyring:
+            try:
+                token_data_str = keyring.get_password(self.token_str_key, '')
+                if token_data_str:
+                    print_with_spaces('Token data successfully retrieved from keyring.')
+                    return json.loads(token_data_str)
+            except Exception as e:
+                logging.warning(f"Keyring storage failed: {e}")
 
         try:
             token_data = self.token_encryption.decrypt_token(self.password)
@@ -112,16 +121,17 @@ class OAuth :
 
         raise Exception('No access token found in any storage method.')
     
-    def set_token_keyring_data(self, token : Token) -> None :
+    def set_token_data(self, token : Token, use_keyring: bool = True) -> None :
         click.echo('Attempting to store Token...')
         token_json = json.dumps(token.to_dict())
         
-        try:
-            keyring.set_password(self.token_str_key, '', token_json)
-            print_with_spaces('Token data successfully stored in keyring.')
-            return
-        except Exception as e:
-            logging.warning(f"Keyring storage failed: {e}")
+        if use_keyring:
+            try:
+                keyring.set_password(self.token_str_key, '', token_json)
+                print_with_spaces('Token data successfully stored in keyring.')
+                return
+            except Exception as e:
+                logging.warning(f"Keyring storage failed: {e}")
 
         try:
             self.token_encryption.encrypt_token(token.to_dict(), self.password)
