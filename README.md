@@ -104,10 +104,12 @@ python -m pip install -e . pytest
 python -m pytest
 ```
 
-The ARIA upload tests require credentials and test record IDs. They are skipped unless
-`ARIA_RUN_TESTS=1` is set; configure the required environment variables from the
-`.env.example` file before enabling them. GitHub Actions enables them only when all
-required connection, endpoint, and test ID secrets are configured.
+The ARIA upload tests require credentials and test record IDs. They are skipped locally
+unless `ARIA_RUN_TESTS=1` is set; configure the required environment variables from the
+`.env.example` file before enabling them. GitHub Actions always enables these tests:
+credentials must be configured as Actions secrets, and other settings can be configured
+as Actions variables or secrets. Missing configuration causes the tests to fail rather
+than skip.
 
 ## Security Scanning
 
