@@ -18,7 +18,7 @@ class AriaFileUploadCase(UnitTestCase):
         cls.oauth = OAuth()
         cls.oauth.login(**cls.aria_credentials)
 
-        cls.aria = AriaRest(cls.oauth.get_access_token())
+        cls.aria = AriaRest(cls.oauth.get_access_token(use_keyring=False))
 
 
     def testUploadFile(self):

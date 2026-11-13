@@ -32,7 +32,7 @@ class AriaFileUploadFieldCase(UnitTestCase):
             description="Test file upload field"
         )
         cls.data_manager = DataManager(
-            token=cls.oauth.get_access_token(),
+            token=cls.oauth.get_access_token(use_keyring=False),
             entity_id=os.getenv('TEST_VISIT_ID'),
             entity_type='visit',
             populate=False
@@ -49,7 +49,7 @@ class AriaFileUploadFieldCase(UnitTestCase):
         self.assertEqual(self.file_upload_field.content, "", "Content is set before upload")
 
         # Test upload
-        self.file_upload_field.upload(token=self.oauth.get_access_token())
+        self.file_upload_field.upload(token=self.oauth.get_access_token(use_keyring=False))
         field_content = json.loads(self.file_upload_field.content)
         self.assertIsNotNone(field_content, "Content is not set after upload")
         self.assertIsNotNone(field_content.get('orig'), "Original file name is not set")
