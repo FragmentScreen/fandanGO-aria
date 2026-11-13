@@ -5,6 +5,10 @@
 # development productivity files 
 TODO.md
 
+# ide config files
+.vscode
+.idea
+
 # auto-gen files
 __pycache__/
 
@@ -12,14 +16,16 @@ __pycache__/
 *.egg-info/
 *.egg
 
-# test files
-test_file*
+# test documents (for file upload)
+test*.txt
 
 # build or python virtual env files
 /venv
+/.venv
 /myenv
 /build
 /dist
 
-# IDE files
-/.idea
+# OS files
+/.DS_Store
+Thumbs.db

@@ -95,6 +95,22 @@ If problems arise when storing tokens on a Linux device, it may be required to d
 
 Please use the [dbus package](https://pypi.org/project/dbus-python/) to solve the issue
 
+## Automated Tests
+
+GitHub Actions runs the Python test suite on pushes and pull requests. To run it locally:
+
+```bash
+python -m pip install -e . pytest
+python -m pytest
+```
+
+The ARIA upload tests require credentials and test record IDs. They are skipped locally
+unless `ARIA_RUN_TESTS=1` is set; configure the required environment variables from the
+`.env.example` file before enabling them. GitHub Actions always enables these tests:
+credentials must be configured as Actions secrets, and other settings can be configured
+as Actions variables or secrets. Missing configuration causes the tests to fail rather
+than skip.
+
 ## Security Scanning
 
 This repo uses [OSV Scanner](https://github.com/google/osv-scanner) for vulnerability detection.

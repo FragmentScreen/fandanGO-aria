@@ -1,37 +1,38 @@
 import json
 import os
 import unittest
+from tests.test_case import UnitTestCase
 from dotenv import load_dotenv
 from fGOaria.classes.oauth import OAuth
 from fGOaria.classes.file_upload_field import FileUploadField
 from fGOaria.classes.data_manager import DataManager
 
-class AriaFileUploadFieldCase(unittest.TestCase):
+class AriaFileUploadFieldCase(UnitTestCase):
     @classmethod
-    def setUpClass(self):
+    def setUpClass(cls):
         super().setUpClass()
         load_dotenv()
-        self.test_local_file_name = 'test_aria_field_upload_fixture.txt'
-        with open(self.test_local_file_name, 'w') as fixture:
+        cls.test_local_file_name = 'test_aria_field_upload_fixture.txt'
+        with open(cls.test_local_file_name, 'w') as fixture:
             fixture.write('ARIA field upload integration test')
-        self.addClassCleanup(os.remove, self.test_local_file_name)
-        self.test_local_file_type = 'text/plain'
-        self.test_record_id = os.getenv('TEST_RECORD_ID')
+        cls.addClassCleanup(os.remove, cls.test_local_file_name)
+        cls.test_local_file_type = 'text/plain'
+        cls.test_record_id = os.getenv('TEST_RECORD_ID')
 
-        self.oauth = OAuth()
-        self.oauth.login(os.getenv('ARIA_CONNECTION_USERNAME'), os.getenv('ARIA_CONNECTION_PASSWORD'))
+        cls.oauth = OAuth()
+        cls.oauth.login(**cls.aria_credentials)
 
-        self.file_upload_field = FileUploadField(
-            record_id=self.test_record_id,
-            file_path=self.test_local_file_name,
-            file_name=self.test_local_file_name,
-            file_type=self.test_local_file_type,
+        cls.file_upload_field = FileUploadField(
+            record_id=cls.test_record_id,
+            file_path=cls.test_local_file_name,
+            file_name=cls.test_local_file_name,
+            file_type=cls.test_local_file_type,
             options={"allowMultiple": False, "strict_mime_types": False},
             order=0,
             description="Test file upload field"
         )
-        self.data_manager = DataManager(
-            token=self.oauth.get_access_token(),
+        cls.data_manager = DataManager(
+            token=cls.oauth.get_access_token(use_keyring=False),
             entity_id=os.getenv('TEST_VISIT_ID'),
             entity_type='visit',
             populate=False
@@ -48,7 +49,7 @@ class AriaFileUploadFieldCase(unittest.TestCase):
         self.assertEqual(self.file_upload_field.content, "", "Content is set before upload")
 
         # Test upload
-        self.file_upload_field.upload(token=self.oauth.get_access_token())
+        self.file_upload_field.upload(token=self.oauth.get_access_token(use_keyring=False))
         field_content = json.loads(self.file_upload_field.content)
         self.assertIsNotNone(field_content, "Content is not set after upload")
         self.assertIsNotNone(field_content.get('orig'), "Original file name is not set")
