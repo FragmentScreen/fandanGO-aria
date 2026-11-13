@@ -23,9 +23,25 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -e . pytest
       - name: Run tests
-        run: python -m pytest
+        run: |
+          if [ -n "$ARIA_CONNECTION_USERNAME" ] \
+            && [ -n "$ARIA_CONNECTION_PASSWORD" ] \
+            && [ -n "$ARIA_CONNECTION_LOGIN_URL" ] \
+            && [ -n "$ARIA_CONNECTION_GRANT_TYPE" ] \
+            && [ -n "$ARIA_CONNECTION_SCOPE" ] \
+            && [ -n "$ARIA_GQL_TEST" ] \
+            && [ -n "$ARIA_REST_TEST" ] \
+            && [ -n "$ARIA_CLIENT_ID" ] \
+            && [ -n "$ARIA_CLIENT_SECRET" ] \
+            && [ -n "$ARIA_CONNECTION_REFRESH_GRANT" ] \
+            && [ -n "$TEST_VISIT_ID" ] \
+            && [ -n "$TEST_RECORD_ID" ]; then
+            export ARIA_RUN_TESTS=1
+          else
+            echo "Skipping ARIA integration tests because required secrets are unavailable."
+          fi
+          python -m pytest
         env:
-          ARIA_RUN_TESTS: "1"
           ARIA_CONNECTION_USERNAME: ${{ secrets.ARIA_CONNECTION_USERNAME }}
           ARIA_CONNECTION_PASSWORD: ${{ secrets.ARIA_CONNECTION_PASSWORD }}
           ARIA_CONNECTION_LOGIN_URL: ${{ secrets.ARIA_CONNECTION_LOGIN_URL }}
