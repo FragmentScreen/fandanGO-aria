@@ -24,3 +24,18 @@ jobs:
           python -m pip install -e . pytest
       - name: Run tests
         run: python -m pytest
+        env:
+          ARIA_RUN_TESTS: "1"
+          ARIA_CONNECTION_USERNAME: ${{ secrets.ARIA_CONNECTION_USERNAME }}
+          ARIA_CONNECTION_PASSWORD: ${{ secrets.ARIA_CONNECTION_PASSWORD }}
+          ARIA_CONNECTION_LOGIN_URL: ${{ secrets.ARIA_CONNECTION_LOGIN_URL }}
+          ARIA_CONNECTION_GRANT_TYPE: ${{ secrets.ARIA_CONNECTION_GRANT_TYPE }}
+          ARIA_CONNECTION_SCOPE: ${{ secrets.ARIA_CONNECTION_SCOPE }}
+          ARIA_GQL_TEST: ${{ secrets.ARIA_GQL_TEST }}
+          ARIA_REST_TEST: ${{ secrets.ARIA_REST_TEST }}
+          ARIA_CLIENT_ID: ${{ secrets.ARIA_CLIENT_ID }}
+          ARIA_CLIENT_SECRET: ${{ secrets.ARIA_CLIENT_SECRET }}
+          ARIA_CONNECTION_REFRESH_GRANT: ${{ secrets.ARIA_CONNECTION_REFRESH_GRANT }}
+          DEV: "TEST"
+          TEST_VISIT_ID: ${{ secrets.TEST_VISIT_ID }}
+          TEST_RECORD_ID: ${{ secrets.TEST_RECORD_ID }}
