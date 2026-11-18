@@ -1,21 +1,26 @@
 import json
 import os
 import unittest
+import pytest
+from unittest.mock import patch
 from tests.test_case import UnitTestCase
 from dotenv import load_dotenv
 from fGOaria.classes.oauth import OAuth
 from fGOaria.classes.file_upload_field import FileUploadField
 from fGOaria.classes.data_manager import DataManager
 
+@pytest.mark.integration
 class AriaFileUploadFieldCase(UnitTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         load_dotenv()
+        required = ('TEST_RECORD_ID', 'TEST_VISIT_ID', f"ARIA_GQL_{os.getenv('DEV', 'LOCAL')}")
+        missing = [name for name in required if not os.getenv(name)]
+        if missing:
+            raise ValueError("Missing GraphQL test configuration: " + ", ".join(missing))
+
         cls.test_local_file_name = 'test_aria_field_upload_fixture.txt'
-        with open(cls.test_local_file_name, 'w') as fixture:
-            fixture.write('ARIA field upload integration test')
-        cls.addClassCleanup(os.remove, cls.test_local_file_name)
         cls.test_local_file_type = 'text/plain'
         cls.test_record_id = os.getenv('TEST_RECORD_ID')
 
@@ -48,9 +53,28 @@ class AriaFileUploadFieldCase(UnitTestCase):
         self.assertEqual(self.file_upload_field.description, "Test file upload field", "Field description does not match")
         self.assertEqual(self.file_upload_field.content, "", "Content is set before upload")
 
-        # Test upload
-        self.file_upload_field.upload(token=self.oauth.get_access_token(use_keyring=False))
+        # Only file storage is mocked; OAuth and the GraphQL mutation remain live.
+        uploaded_file = {
+            'orig': self.test_local_file_name,
+            'name': 'mocked-aria-field-upload.txt',
+            'size': 34,
+            'url': 'https://example.invalid/mocked-aria-field-upload.txt',
+            'type': self.test_local_file_type,
+        }
+        token = self.oauth.get_access_token(use_keyring=False)
+        with patch(
+            'fGOaria.classes.file_upload_field.AriaRest.upload',
+            autospec=True,
+            return_value={'files': [uploaded_file]},
+        ) as upload:
+            self.file_upload_field.upload(token=token)
+        upload.assert_called_once()
+        rest_client, file_path, file_type = upload.call_args.args
+        self.assertIs(rest_client.token, token)
+        self.assertEqual(file_path, self.test_local_file_name)
+        self.assertEqual(file_type, self.test_local_file_type)
         field_content = json.loads(self.file_upload_field.content)
+        self.assertEqual(field_content, uploaded_file)
         self.assertIsNotNone(field_content, "Content is not set after upload")
         self.assertIsNotNone(field_content.get('orig'), "Original file name is not set")
         self.assertEqual(field_content.get('orig'), self.test_local_file_name, "Original file name is not equal to test local file name")
@@ -63,10 +87,13 @@ class AriaFileUploadFieldCase(UnitTestCase):
         created_field = self.data_manager.client.push_field(self.file_upload_field)
         self.assertIsNotNone(created_field, "Created field is not set")
         self.assertIsNotNone(created_field.get('id'), "Created field ID is not set")
+        self.assertEqual(created_field.get('type'), 'JSON_ARIA_FILE', "Created field type is not 'JSON_ARIA_FILE'")
+        self.assertEqual(created_field.get('content'), uploaded_file, "Created field content is not equal to uploaded file")
 
         # Test post-push population of local field
         self.file_upload_field.populate(created_field)
         self.assertIsNotNone(self.file_upload_field.id, "Field ID is not set after push")
+        self.assertEqual(self.file_upload_field.id, created_field['id'], "Field ID is not equal to created field ID after push")
         self.assertIsNotNone(self.file_upload_field.field_type, "Field type is not set after push")
         self.assertIsNotNone(self.file_upload_field.content, "Field content is not set after push")
 
