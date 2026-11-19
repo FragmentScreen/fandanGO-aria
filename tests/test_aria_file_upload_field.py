@@ -9,6 +9,38 @@ from fGOaria.classes.oauth import OAuth
 from fGOaria.classes.file_upload_field import FileUploadField
 from fGOaria.classes.data_manager import DataManager
 
+@pytest.mark.offline
+class AriaFileUploadFieldOfflineCase(UnitTestCase):
+    requires_live_aria = False
+
+    def testUploadSerialization(self):
+        file_path = 'test_aria_field_upload_fixture.txt'
+        file_type = 'text/plain'
+        field = FileUploadField(
+            record_id='test-record',
+            file_path=file_path,
+            file_type=file_type,
+        )
+        uploaded_file = {
+            'orig': file_path,
+            'name': 'mocked-aria-field-upload.txt',
+            'size': 34,
+            'url': 'https://example.invalid/mocked-aria-field-upload.txt',
+            'type': file_type,
+        }
+        token = 'test-token'
+        self.assertEqual(field.content, '')
+        with patch(
+            'fGOaria.classes.file_upload_field.AriaRest',
+            autospec=True,
+        ) as rest_client:
+            rest_client.return_value.upload.return_value = {'files': [uploaded_file]}
+            field.upload(token=token)
+        rest_client.assert_called_once_with(token)
+        rest_client.return_value.upload.assert_called_once_with(file_path, file_type)
+        self.assertEqual(json.loads(field.content), uploaded_file)
+
+
 @pytest.mark.integration
 class AriaFileUploadFieldCase(UnitTestCase):
     @classmethod
