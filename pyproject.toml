@@ -33,3 +33,8 @@ include = ["fGOaria*"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
+markers = [
+  "offline: tests that require no credentials or network access",
+  "integration: tests using live OAuth and ARIA APIs (mostly GraphQL)",
+  "rest_integration: tests requiring live ARIA REST APIs as well as OAuth"
+]

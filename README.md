@@ -95,6 +95,23 @@ If problems arise when storing tokens on a Linux device, it may be required to d
 
 Please use the [dbus package](https://pypi.org/project/dbus-python/) to solve the issue
 
+## Automated Tests
+
+GitHub Actions runs the Python test suite on pushes and pull requests. To run it locally:
+
+```bash
+python -m pip install -e . pytest
+python -m pytest
+```
+
+The live GraphQL tests require credentials and test record IDs. They are skipped locally
+unless `ARIA_RUN_TESTS=1` is set; configure the required environment variables from
+`.env.example` before enabling them. Real REST upload tests additionally require
+`ARIA_RUN_REST_TESTS=1`. GitHub Actions enables live GraphQL tests only for non-Dependabot
+runs on pushes, manual triggers, and same-repository pull requests; REST tests remain
+disabled. Configure credentials as Actions secrets and other settings as Actions variables
+or secrets. Missing configuration fails enabled live tests rather than skipping them.
+
 ## Security Scanning
 
 This repo uses [OSV Scanner](https://github.com/google/osv-scanner) for vulnerability detection.
