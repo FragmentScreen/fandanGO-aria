@@ -28,6 +28,20 @@ class UnitTestCase(unittest.TestCase):
         if missing:
             raise ValueError("Missing live test configuration: " + ", ".join(missing))
 
+        from pathlib import Path
+        from tempfile import TemporaryDirectory
+
+        token_dir = TemporaryDirectory()
+        cls.addClassCleanup(token_dir.cleanup)
+        for target in (
+            'fGOaria.classes.oauth.Path',
+            'fGOaria.utils.encryption.Path',
+        ):
+            path_patch = patch(target, wraps=Path)
+            isolated_path = path_patch.start()
+            cls.addClassCleanup(path_patch.stop)
+            isolated_path.home.return_value = Path(token_dir.name)
+
         cls.aria_credentials = {
             "username": os.getenv('ARIA_CONNECTION_USERNAME'),
             "password": os.getenv('ARIA_CONNECTION_PASSWORD'),
