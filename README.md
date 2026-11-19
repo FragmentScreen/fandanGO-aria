@@ -104,12 +104,13 @@ python -m pip install -e . pytest
 python -m pytest
 ```
 
-The ARIA upload tests require credentials and test record IDs. They are skipped locally
-unless `ARIA_RUN_TESTS=1` is set; configure the required environment variables from the
-`.env.example` file before enabling them. GitHub Actions always enables these tests:
-credentials must be configured as Actions secrets, and other settings can be configured
-as Actions variables or secrets. Missing configuration causes the tests to fail rather
-than skip.
+The live GraphQL tests require credentials and test record IDs. They are skipped locally
+unless `ARIA_RUN_TESTS=1` is set; configure the required environment variables from
+`.env.example` before enabling them. Real REST upload tests additionally require
+`ARIA_RUN_REST_TESTS=1`. GitHub Actions enables live GraphQL tests only for non-Dependabot
+runs on pushes, manual triggers, and same-repository pull requests; REST tests remain
+disabled. Configure credentials as Actions secrets and other settings as Actions variables
+or secrets. Missing configuration fails enabled live tests rather than skipping them.
 
 ## Security Scanning
 
